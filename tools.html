@@ -1,0 +1,143 @@
+<!-- Trang "Công cụ": mục tiêu tiết kiệm, lãi kép, trả góp, chia tiền nhóm, 50/30/20 và giao dịch định kỳ. -->
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Công cụ tài chính cá nhân: mục tiêu tiết kiệm, lãi kép, trả góp, chia tiền nhóm và giao dịch định kỳ">
+        <meta name="theme-color" content="#0B1A26">
+    <script>try{var r=document.documentElement,s=JSON.parse(localStorage.getItem("app_settings")||"{}");if(localStorage.getItem("app_theme")==="light")r.dataset.theme="light";if(s.palette)r.dataset.palette=s.palette;var v=typeof s.glass=="number"?s.glass:({soft:25,medium:50,strong:80})[s.glass];if(v==null)v=50;var t=v/100,m=t<=.5?1.84*t:1+2.2*(t-.5),b=t<=.5?44*t:22+36*(t-.5);r.style.setProperty("--glass-mul",m);r.style.setProperty("--glass-blur",b.toFixed(1)+"px");r.style.setProperty("--glass-sat",(100+120*t).toFixed(0)+"%");}catch(e){}</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <title>Công cụ - Quản lý Tài chính</title>
+    <link rel="stylesheet" href="css/tools.css">
+    <link rel="stylesheet" href="css/palettes.css">
+    <link rel="stylesheet" href="css/redesign.css">
+    <script src="js/motion.js"></script>
+</head>
+<body class="page-enter">
+    <div class="ambient" aria-hidden="true"></div>
+
+    <header class="topbar">
+        <div class="topbar__inner">
+            <div class="brand">
+                <h1 class="brand__title"><i data-icon="ph-wrench"></i> Công cụ</h1>
+                <p class="brand__sub">Tính toán tiết kiệm, vay, chia tiền và giao dịch định kỳ</p>
+            </div>
+            <nav class="nav-tabs" aria-label="Điều hướng chính">
+                <span class="nav-tabs__pill" aria-hidden="true"></span>
+                <a href="index.html" class="nav-link"><i data-icon="wallet"></i> <span class="nav-link__label" data-text="Giao dịch">Giao dịch</span></a>
+                <a href="analytics.html" class="nav-link"><i data-icon="chart"></i> <span class="nav-link__label" data-text="Biểu đồ &amp; Phân tích">Biểu đồ &amp; Phân tích</span></a>
+                <a href="tools.html" class="nav-link" aria-current="page"><i data-icon="ph-wrench"></i> <span class="nav-link__label" data-text="Công cụ">Công cụ</span></a>
+                <a href="guide.html" class="nav-link"><i data-icon="book"></i> <span class="nav-link__label" data-text="Hướng dẫn">Hướng dẫn</span></a>
+                <a href="settings.html" class="nav-link"><i data-icon="ph-gear"></i> <span class="nav-link__label" data-text="Cài đặt">Cài đặt</span></a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page">
+        <!-- THAO TÁC PHỤ: các máy tính nhanh, không ghi dữ liệu (gồm mục tiêu tiết kiệm). -->
+        <h2 class="section-caption" id="calcTitle">Máy tính nhanh</h2>
+        <div class="tools-grid tools-grid--calc" aria-labelledby="calcTitle">
+
+            <section class="panel tool-card" aria-labelledby="taxTitle">
+            <h2 class="panel__title" id="taxTitle"><i data-icon="chart"></i> Thuế thu nhập cá nhân</h2>
+            <p class="form-hint">Tính theo tháng: trừ bảo hiểm bắt buộc 10,5%, giảm trừ bản thân và người phụ thuộc, rồi áp thuế lũy tiến.</p>
+            <div class="tool-form">
+            <div class="form-group form-group--wide"><label class="form-label" for="taxGross">Lương gross mỗi tháng (VND)</label><input type="number" id="taxGross" class="form-input" data-money min="0" step="100000" inputmode="numeric" placeholder="VD: 20000000"></div>
+            <div class="form-group form-group--wide"><label class="form-label" for="taxDeps">Số người phụ thuộc</label><input type="number" id="taxDeps" class="form-input" min="0" max="20" step="1" inputmode="numeric" value="0"></div>
+            </div>
+            <div class="tool-result" id="taxResult" aria-live="polite"></div>
+            <details class="loan-help">
+                <summary>Các con số này nghĩa là gì?</summary>
+                <div class="loan-help__body"><dl><dt>Lương gross</dt><dd>Lương trước khi trừ bảo hiểm và thuế, nhập theo tháng.</dd><dt>Người phụ thuộc</dt><dd>Số người bạn đang nuôi dưỡng theo quy định. Mỗi người giảm thu nhập tính thuế thêm 6.200.000 đ mỗi tháng.</dd><dt>Bảo hiểm bắt buộc</dt><dd>Phần bạn đóng BHXH, BHYT, BHTN, bằng 10,5% lương gross. Mức đóng tối đa tính trên 46.800.000 đ.</dd><dt>Giảm trừ gia cảnh</dt><dd>15.500.000 đ cho bản thân, cộng 6.200.000 đ cho mỗi người phụ thuộc, tính mỗi tháng.</dd><dt>Thu nhập tính thuế</dt><dd>Lương gross trừ bảo hiểm và giảm trừ gia cảnh. Nếu kết quả âm thì tính bằng 0.</dd><dt>Thuế TNCN phải nộp</dt><dd>Áp biểu lũy tiến theo từng bậc, từ 5% đến 35%. Mỗi bậc chỉ tính trên phần thu nhập nằm trong bậc đó.</dd><dt>Thực nhận mỗi tháng</dt><dd>Lương gross trừ bảo hiểm và thuế TNCN.</dd></dl></div>
+            </details>
+            </section>
+
+            
+
+            <section class="panel tool-card" aria-labelledby="goalTitle">
+            <h2 class="panel__title" id="goalTitle"><i data-icon="target"></i> Mục tiêu tiết kiệm</h2>
+            <p class="form-hint">Tính số tháng cần để đạt số tiền mong muốn. Số dư và tiết kiệm mỗi tháng được gợi ý từ dữ liệu của bạn.</p>
+            <div class="tool-form">
+            <div class="form-group"><label class="form-label" for="goalTarget">Mục tiêu (VND)</label><input type="number" id="goalTarget" class="form-input" data-money min="1" step="100000" inputmode="numeric" placeholder="VD: 50000000"></div>
+            <div class="form-group"><label class="form-label" for="goalCurrent">Đã có (VND)</label><input type="number" id="goalCurrent" class="form-input" data-money min="0" step="100000" inputmode="numeric"></div>
+            <div class="form-group form-group--wide"><label class="form-label" for="goalMonthly">Tiết kiệm mỗi tháng (VND)</label><input type="number" id="goalMonthly" class="form-input" data-money min="0" step="100000" inputmode="numeric"></div>
+            </div>
+            <div class="tool-result" id="goalResult" aria-live="polite"></div>
+            <details class="loan-help">
+                <summary>Các con số này nghĩa là gì?</summary>
+                <div class="loan-help__body"><dl><dt>Mục tiêu</dt><dd>Số tiền bạn muốn đạt được.</dd><dt>Đã có</dt><dd>Số tiền bạn đang có sẵn. Được gợi ý từ số dư các giao dịch hiện tại.</dd><dt>Tiết kiệm mỗi tháng</dt><dd>Số tiền bạn để dành đều mỗi tháng. Được gợi ý từ dữ liệu thu chi của bạn.</dd><dt>Thời gian cần</dt><dd>Làm tròn lên của (mục tiêu trừ đã có) chia cho tiết kiệm mỗi tháng.</dd><dt>Đạt vào khoảng</dt><dd>Tháng hiện tại cộng với số tháng cần.</dd><dt>Còn thiếu hôm nay</dt><dd>Mục tiêu trừ đi số tiền đã có.</dd></dl></div>
+            </details>
+            </section>
+
+            <section class="panel tool-card" aria-labelledby="compTitle">
+            <h2 class="panel__title" id="compTitle"><i data-icon="trending-up"></i> Lãi kép và góp đều</h2>
+            <p class="form-hint">Lãi kép theo tháng. Lãi suất là lãi suất năm, ví dụ 7,5.</p>
+            <div class="tool-form">
+            <div class="form-group"><label class="form-label" for="compPrincipal">Số vốn ban đầu (VND)</label><input type="number" id="compPrincipal" class="form-input" data-money min="0" step="100000" inputmode="numeric" value="0"></div>
+            <div class="form-group"><label class="form-label" for="compMonthly">Góp thêm mỗi tháng (VND)</label><input type="number" id="compMonthly" class="form-input" data-money min="0" step="100000" inputmode="numeric" value="0"></div>
+            <div class="form-group"><label class="form-label" for="compRate">Lãi suất năm (%)</label><input type="number" id="compRate" class="form-input" min="0" max="100" step="0.1" inputmode="decimal" value="6"></div>
+            <div class="form-group"><label class="form-label" for="compInflation">Lạm phát năm (%), tùy chọn</label><input type="number" id="compInflation" class="form-input" min="0" max="100" step="0.1" inputmode="decimal" placeholder="Bỏ trống nếu không cần"></div>
+            <div class="form-group"><label class="form-label" for="compYears">Số năm</label><input type="number" id="compYears" class="form-input" min="1" max="60" step="1" inputmode="numeric" value="10"></div>
+            </div>
+            <div class="tool-result" id="compResult" aria-live="polite"></div>
+            <details class="loan-help">
+                <summary>Các con số này nghĩa là gì?</summary>
+                <div class="loan-help__body"><dl><dt>Số vốn ban đầu</dt><dd>Số tiền bỏ vào ngay từ đầu, có thể để 0.</dd><dt>Góp thêm mỗi tháng</dt><dd>Số tiền thêm vào đều đặn mỗi tháng trong suốt thời gian đầu tư.</dd><dt>Lãi suất năm</dt><dd>Lãi suất cả năm. Khi tính, lãi suất mỗi tháng bằng lãi suất năm chia cho 12, và lãi được cộng dồn mỗi tháng.</dd><dt>Lạm phát năm</dt><dd>Tùy chọn. Nếu nhập, máy sẽ tính lãi suất thực sau lạm phát: (1 + lãi danh nghĩa) / (1 + lạm phát) − 1.</dd><dt>Số năm</dt><dd>Thời gian đầu tư, từ 1 đến 60 năm.</dd><dt>Giá trị dự kiến</dt><dd>Vốn ban đầu nhân (1 + r)^n, cộng phần góp đều bằng góp mỗi tháng nhân ((1 + r)^n − 1) chia r. Trong đó r là lãi tháng, n là số tháng.</dd><dt>Tổng vốn đã góp</dt><dd>Vốn ban đầu cộng số góp mỗi tháng nhân số tháng.</dd><dt>Tiền lãi</dt><dd>Giá trị dự kiến trừ tổng vốn đã góp.</dd></dl></div>
+            </details>
+            </section>
+
+            <section class="panel tool-card" aria-labelledby="loanTitle">
+            <h2 class="panel__title" id="loanTitle"><i data-icon="calendar"></i> Vay trả góp đều</h2>
+            <p class="form-hint">Tính số tiền phải trả mỗi tháng theo công thức trả góp đều (gốc và lãi).</p>
+            <div class="tool-form">
+            <div class="form-group form-group--wide"><label class="form-label" for="loanSource">Ngân hàng hoặc công ty tài chính</label><select id="loanSource" class="form-select"></select><small class="form-hint" id="loanSourceInfo" aria-live="polite"></small></div>
+            <div class="form-group form-group--wide"><label class="form-label" for="loanMode">Cách tính</label><select id="loanMode" class="form-select"><option value="rate">Tôi biết lãi suất</option><option value="payment">Tôi biết số tiền trả mỗi tháng</option></select></div>
+            <div class="form-group"><label class="form-label" for="loanPrincipal">Số tiền vay (VND)</label><input type="number" id="loanPrincipal" class="form-input" data-money min="1" step="1000000" inputmode="numeric" placeholder="VD: 500000000"></div>
+            <div class="form-group" id="loanRateGroup"><label class="form-label" for="loanRate">Lãi suất năm (%)</label><input type="number" id="loanRate" class="form-input" min="0" max="100" step="0.1" inputmode="decimal" value="10"></div>
+            <div class="form-group" id="loanPaymentGroup"><label class="form-label" for="loanPayment">Số tiền trả mỗi tháng (VND)</label><input type="number" id="loanPayment" class="form-input" data-money inputmode="numeric" placeholder="VD: 886.802"></div>
+            <div class="form-group form-group--wide"><label class="form-label" for="loanMonths">Số tháng trả</label><input type="number" id="loanMonths" class="form-input" min="1" max="360" step="1" inputmode="numeric" value="60"></div>
+            </div>
+            <div class="tool-result" id="loanResult" aria-live="polite"></div>
+            <details class="loan-help">
+                <summary>Các con số này nghĩa là gì?</summary>
+                <div class="loan-help__body"><dl>
+                    <dt>Trả mỗi tháng</dt><dd>Số tiền bạn đóng đều mỗi tháng, gồm cả gốc và lãi.</dd>
+                    <dt>Tổng phải trả</dt><dd>Tổng tất cả các kỳ trả góp cộng lại, bằng số tiền trả mỗi tháng nhân số tháng.</dd>
+                    <dt>Tổng tiền lãi</dt><dd>Phần chênh lệch giữa tổng phải trả và số tiền vay. Đây là chi phí bạn trả để được vay.</dd>
+                    <dt>Lãi suất thực tế mỗi năm</dt><dd>Lãi tính trên số tiền còn nợ mỗi tháng, rồi quy ra một năm. Đây là con số nên dùng để so với lãi suất ngân hàng.</dd>
+                    <dt>Lãi suất kép tương đương mỗi năm</dt><dd>Nếu lãi được cộng dồn mỗi tháng trong cả năm thì lãi thực tế cao hơn một chút. Con số này dùng để so sánh với tiền gửi tiết kiệm.</dd>
+                    <dt>Lãi suất “tính trên gốc” mỗi năm</dt><dd>Lấy tổng tiền lãi chia cho số tiền vay gốc, rồi quy ra một năm. Cách này cho con số thấp hơn lãi thực tế, nên hay được dùng trong quảng cáo trả góp.</dd>
+                </dl></div>
+            </details>
+            </section>
+                </div>
+    </main>
+
+    <!-- CONFIRM MODAL -->
+    <div class="modal" id="confirmModal" role="alertdialog" aria-modal="true" aria-labelledby="confirmTitle" aria-describedby="confirmMessage">
+        <div class="modal__content">
+            <div class="modal__header"><h2 class="modal__title" id="confirmTitle">Xác nhận</h2></div>
+            <div class="modal__body"><p id="confirmMessage"></p></div>
+            <div class="modal__footer">
+                <button type="button" class="btn" id="confirmCancel">Hủy</button>
+                <button type="button" class="btn btn--danger" id="confirmOk">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+    <script src="js/icons.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/transition.js"></script>
+    <script src="js/topbar.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/calc.js"></script>
+    <script src="js/bank-rates.js"></script>
+    <script src="js/tools.js"></script>
+</body>
+</html>

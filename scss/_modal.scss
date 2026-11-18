@@ -1,0 +1,94 @@
+// ----------------------------------------------------------------------------
+// 9. Hộp thoại và thông báo
+// ----------------------------------------------------------------------------
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: var(--overlay);
+
+  &.active {
+    display: flex;
+  }
+
+  &__content {
+    width: min(31.25rem, 100%);
+    background: var(--glass-strong);
+    border: 1px solid var(--glass-border);
+    border-radius: 0.875rem;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+  }
+
+  &__header,
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 1rem 1.25rem;
+  }
+
+  &__header {
+    border-bottom: 1px solid var(--border);
+  }
+
+  &__footer {
+    justify-content: flex-end;
+    border-top: 1px solid var(--border);
+  }
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  &__body {
+    padding: 1.25rem;
+  }
+
+  &__close {
+    border: none;
+    background: none;
+    color: var(--text-3);
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--text);
+    }
+  }
+}
+
+.toast-container {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.toast {
+  max-width: 22rem;
+  padding: 0.75rem 1rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--info);
+  border-radius: 0.5rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  font-size: 0.9rem;
+
+  &--success { border-left-color: var(--income); }
+  &--error { border-left-color: var(--expense); }
+  &--info { border-left-color: var(--info); }
+}
+

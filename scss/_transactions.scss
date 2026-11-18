@@ -1,0 +1,655 @@
+// ----------------------------------------------------------------------------
+// 6. Trang giao dịch: cột trái (thời tiết, form) và cột phải (danh sách)
+// ----------------------------------------------------------------------------
+.layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 28%) minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.layout__side {
+  position: sticky;
+  top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  // Khi cột trái cao hơn màn hình, cuộn bên trong cột thay vì bị cắt.
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.layout__aside {
+  position: sticky;
+  top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  min-width: 0;
+}
+
+.layout__main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tools {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.5rem;
+  padding: 0.75rem;
+}
+
+.tools__end {
+  margin-top: 0.25rem;
+}
+
+#weatherBox .form-hint {
+  padding: 0.5rem 0;
+}
+
+.weather-panel {
+  min-width: 0;
+}
+
+.weather-widget {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  padding: 0.875rem 1rem 0.75rem;
+  border-radius: 1.25rem;
+  background: linear-gradient(160deg, var(--weather-a), var(--weather-b)), var(--glass-strong);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-lift);
+}
+
+.weather-widget__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.weather-widget__city {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-width: 0;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.weather-widget__city svg {
+  width: 0.75rem;
+  height: 0.75rem;
+  flex-shrink: 0;
+  fill: currentColor;
+}
+
+.weather-widget__refresh {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+  background: var(--glass);
+  color: var(--text-2);
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.weather-widget__refresh:hover {
+  color: var(--text);
+}
+
+.weather-widget__refresh svg {
+  width: 0.8rem;
+  height: 0.8rem;
+}
+
+.weather-widget__main {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.weather-widget__temp {
+  font-size: 2.75rem;
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.weather-widget__cond {
+  margin-top: 0.25rem;
+  font-size: 0.8125rem;
+  color: var(--text-2);
+}
+
+.weather-widget__icon {
+  color: var(--text);
+}
+
+.weather-widget__icon svg {
+  width: 2.25rem;
+  height: 2.25rem;
+  stroke-width: 1.4;
+}
+
+.weather-widget__hl {
+  font-size: 0.75rem;
+  color: var(--text-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.weather-widget__forecast {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.375rem;
+  margin: 0;
+  padding: 0.5rem 0 0;
+  list-style: none;
+  border-top: 1px solid var(--glass-border);
+}
+
+.weather-widget__day {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  min-width: 0;
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.weather-widget__day-name {
+  width: 1.75rem;
+  color: var(--text-3);
+}
+
+.weather-widget__day-icon svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.weather-widget__day-temp {
+  color: var(--text-2);
+  white-space: nowrap;
+}
+
+.weather-widget__error {
+  font-size: 0.8125rem;
+  color: var(--warn);
+}
+
+.weather-widget__retry {
+  align-self: flex-start;
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--glass-border);
+  border-radius: 0.5rem;
+  background: var(--glass);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.875rem 0.75rem;
+}
+
+.form-group {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+
+  &--wide {
+    grid-column: 1 / -1;
+  }
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-2);
+}
+
+.form-input,
+.form-select {
+  width: 100%;
+  min-height: 2.25rem;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background: var(--input);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.9rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+  &::placeholder {
+    color: var(--text-3);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+
+  &.is-invalid {
+    border-color: var(--expense);
+  }
+}
+
+.form-error {
+  min-height: 1em;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--expense);
+}
+
+.form-actions {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  border-top: 1px solid var(--border);
+}
+
+// Cảnh báo và thanh tiến độ ngân sách
+.alert {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--info);
+  border-radius: 0.5rem;
+  background: var(--info-soft);
+  color: var(--text);
+  font-size: 0.9rem;
+
+  strong {
+    display: block;
+    margin-bottom: 0.2rem;
+  }
+
+  &--info { border-left-color: var(--info); background: var(--info-soft); }
+  &--warning { border-left-color: var(--warn); background: var(--warn-soft); }
+  &--danger { border-left-color: var(--expense); background: var(--expense-soft); }
+}
+
+#budgetWarning:empty {
+  display: none;
+}
+
+.progress {
+  position: relative;
+  height: 1.5rem;
+  margin-top: 0.75rem;
+  border-radius: 0.375rem;
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+.progress__bar {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 100%;
+  height: 100%;
+  transform-origin: left center;
+  background: var(--accent);
+  transition: transform 0.45s cubic-bezier(0.32, 0.72, 0, 1);
+
+  &--warning { background: var(--warn); }
+  &--danger { background: var(--expense); }
+}
+
+.progress__label {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-2);
+}
+
+// Bộ lọc
+.filters {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.filter-group {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+
+  &--search {
+    grid-column: 1 / -1;
+  }
+}
+
+.filters__footer {
+  margin-top: 0.875rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.8125rem;
+  color: var(--text-3);
+}
+
+// Danh sách giao dịch
+.transactions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.transaction-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--input);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--border-strong);
+  border-radius: 0.625rem;
+
+  &.income { border-left-color: var(--income); }
+  &.expense { border-left-color: var(--expense); }
+}
+
+.transaction__title {
+  margin-bottom: 0.2rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.transaction__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.875rem;
+  font-size: 0.8125rem;
+  color: var(--text-3);
+
+  span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+}
+
+.transaction__status {
+  padding: 0.05rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+
+  &.completed {
+    color: var(--income);
+    background: var(--income-soft);
+  }
+
+  &.pending {
+    color: var(--warn);
+    background: var(--warn-soft);
+  }
+}
+
+.transaction__amount {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.2rem;
+  min-width: 9rem;
+  font-size: 1rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+
+  &.income { color: var(--income); }
+  &.expense { color: var(--expense); }
+}
+
+.transaction__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.load-more {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+// Điện thoại: tên và số tiền nằm một hàng; nút thao tác xuống hàng riêng để tên không bị ép thành cột hẹp.
+@media (max-width: 640px) {
+  .transaction-item {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .transaction__actions {
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+  }
+
+  .transaction__actions button {
+    white-space: nowrap;
+  }
+}
+
+/* Vòng tròn ngân sách (kiểu widget iOS). Màu đổi theo mức: ok, warn, danger. */
+.budget-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.budget-ring {
+  --ring-color: var(--income);
+  position: relative;
+  width: 4.5rem;
+  height: 4.5rem;
+  flex-shrink: 0;
+}
+
+.budget-ring--warn { --ring-color: var(--warn); }
+.budget-ring--danger { --ring-color: var(--expense); }
+
+.budget-ring svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.budget-ring circle {
+  fill: none;
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+
+.budget-ring__track { stroke: var(--border); }
+.budget-ring__bar { stroke: var(--ring-color); transition: stroke-dashoffset 0.6s ease; }
+
+.budget-ring__value {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.budget-card__text {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .budget-ring__bar { transition: none; }
+}
+
+/* Đồng hồ ngân sách bán nguyệt: vạch chia, kim đánh dấu và số ở giữa. Màu theo mức (data-level). */
+.budget-card { display: flex; align-items: center; gap: 1.25rem; }
+.budget-gauge { --gauge: var(--income); position: relative; width: 9.5rem; flex-shrink: 0; }
+.budget-gauge[data-level="warning"] { --gauge: var(--warn); }
+.budget-gauge[data-level="danger"] { --gauge: var(--expense); }
+.budget-gauge svg { display: block; width: 100%; height: auto; overflow: visible; }
+.budget-gauge__track, .budget-gauge__bar { fill: none; stroke-width: 9; stroke-linecap: round; }
+.budget-gauge__track { stroke: var(--surface-2); }
+.budget-gauge__bar { stroke: var(--gauge); }
+.budget-gauge__knob { fill: var(--gauge); stroke: var(--surface); stroke-width: 3; }
+.gauge-tick { stroke: var(--border-strong); stroke-width: 1.5; stroke-linecap: round; }
+.gauge-tick--major { stroke: var(--text-3); stroke-width: 2.5; }
+.budget-gauge__value { position: absolute; left: 0; right: 0; bottom: 0; text-align: center; font-size: 1.375rem; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; color: var(--text); }
+.budget-card__text { min-width: 0; display: flex; flex-direction: column; gap: 0.25rem; font-variant-numeric: tabular-nums; }
+@media (max-width: 480px) {
+  .budget-gauge { width: 7.5rem; }
+  .budget-gauge__value { font-size: 1.125rem; }
+}
+
+/* Cột trái ở trang Giao dịch hẹp: đồng hồ nhỏ hơn để chữ không bị ép. */
+.layout__side .budget-card { gap: 0.75rem; padding: 0.75rem; }
+.layout__side .budget-gauge { width: 6.75rem; }
+.layout__side .budget-gauge__value { font-size: 1.0625rem; }
+
+/* Ba nhóm ở cột giữa trang Giao dịch (dùng chung kiểu với trang Phân tích). */
+.tabs {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  align-self: flex-start;
+  padding: 0.25rem;
+  background: var(--input);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+
+.tabs__btn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--text-2);
+  font: inherit;
+  font-size: 0.875rem;
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 0.3s cubic-bezier(0.32, 0.72, 0, 1), color 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.tabs__btn:hover { color: var(--text); }
+.tabs__btn[aria-selected="true"] { background: var(--accent); color: var(--accent-on); }
+.tabs__btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.tab-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tab-panel[hidden] { display: none; }
+
+@media print {
+  .tab-panel[hidden] { display: flex !important; }
+}
+
+/* Viên trượt dưới tab đang chọn, cùng kiểu với thanh chọn ở Cài đặt. transform và width do analytics.js đặt. */
+.tabs { position: relative; }
+.tabs__pill { position: absolute; top: 0.25rem; bottom: 0.25rem; left: 0; width: 0; border-radius: 999px; background: var(--accent); opacity: 0; pointer-events: none; transition: transform 0.6s cubic-bezier(0.32, 0.72, 0, 1), width 0.6s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.2s ease; }
+.tabs__btn { position: relative; z-index: 1; transition: color 0.6s cubic-bezier(0.32, 0.72, 0, 1); }
+.tabs__btn[aria-selected="true"] { background: transparent; color: var(--accent-on); }
+html.is-switching .tabs__pill { transition: transform 0.6s cubic-bezier(0.32, 0.72, 0, 1), width 0.6s cubic-bezier(0.32, 0.72, 0, 1), background-color 0.6s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.2s ease !important; }
+
+/* Nội dung mỗi tab hiện dần và trượt nhẹ lên khi được chọn. Animation chạy lại mỗi lần nhóm được hiện. */
+@keyframes tab-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+.tab-panel:not([hidden]) { animation: tab-in 0.45s cubic-bezier(0.32, 0.72, 0, 1) both; }
+.tab-panel:not([hidden]) > .chart-grid > .chart-card,
+.tab-panel:not([hidden]) > .detail-grid > .panel,
+.tab-panel:not([hidden]) > .panel { animation: tab-in 0.45s cubic-bezier(0.32, 0.72, 0, 1) 0.05s both; }
+@media (prefers-reduced-motion: reduce) {
+  .tab-panel:not([hidden]), .tab-panel:not([hidden]) > * { animation: none; }
+}
+
+.layout__main .tabs { position: relative; align-self: flex-start; }
+
+/* Cột trái: thời tiết và công cụ xếp một cột. */
+.layout__side .secondary-zone__grid { grid-template-columns: minmax(0, 1fr); }
+
+/* Cột trái trang Giao dịch: nút công cụ xếp dọc đều nhau, mục ngân sách không bị lệch do khoảng cách của form. */
+.layout__side .tools { display: flex; flex-direction: column; flex-wrap: nowrap; align-items: stretch; gap: 0.5rem; }
+.layout__side .tools .btn { width: 100%; justify-content: center; }
+.layout__side .tools__end { margin-left: 0; margin-top: 0.25rem; }
+.layout__side .form-subsection { margin-top: 0; padding-top: 0; border-top: 0; }
+
+/* Điện thoại và máy tính bảng: nội dung chính (thêm, danh sách, định kỳ, chia tiền) lên trước; ngân sách, thời tiết và công cụ xuống dưới. */
+@media (max-width: 900px) {
+  .layout__main { order: 1; }
+  .layout__side { order: 2; position: static; }
+}
+
+/* Thanh tab trên điện thoại: giữ một dòng, các nút chia đều chiều rộng. */
+@media (max-width: 560px) {
+  .layout__main .tabs { display: flex; flex-wrap: nowrap; width: 100%; }
+  .layout__main .tabs__btn { flex: 1 1 0; min-width: 0; white-space: nowrap; padding: 0.45rem 0.4rem; font-size: 0.8125rem; }
+}
+
+/* Trên điện thoại, nhãn tab rút gọn để vừa một dòng. */
+@media (max-width: 560px) {
+  .layout__main .tabs__more { display: none; }
+}
+
+/* Đặt ngân sách tháng: thanh ngang ngay trên các tab, không chiếm cột trái. Cột trái không cuộn riêng nữa. */
+.layout .layout__side { position: static; max-height: none; overflow: visible; }
+.budget-strip { padding: 0.75rem 1rem; }
+.budget-strip .form-subsection { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; margin: 0; padding: 0; border: 0; }
+.budget-strip .form-subsection__title { margin: 0; }
+.budget-strip .form-hint { margin: 0; flex: 1 1 16rem; }

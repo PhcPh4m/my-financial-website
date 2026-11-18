@@ -1,0 +1,194 @@
+/* ============================================================================ */
+/* Bảng màu nền. Chỉ đổi nền và hiệu ứng nền; chữ và màu nhấn giữ nguyên. */
+/* Chọn qua html[data-palette] (đặt từ app_settings). "ocean" là mặc định, không cần quy tắc. */
+/* Quy tắc sáng đặt sau để có độ ưu tiên cao hơn quy tắc tối khi data-theme="light". */
+/* ============================================================================ */
+
+/* Đại dương (mặc định): xanh biển */
+
+html[data-palette="wine"]:not([data-theme="light"]) {
+  --bg: #2A1218; --surface: #3B1A24; --surface-2: #4C2230; --input: #1F0C12;
+  --blob-1: #8E3A4E; --blob-2: #B0556D;
+}
+html[data-palette="wine"][data-theme="light"] {
+  --bg: #FBEEF1; --surface: #FFFFFF; --surface-2: #F3DBE1; --input: #FFFFFF;
+  --blob-1: #E8AFBD; --blob-2: #D98BA0;
+}
+
+html[data-palette="violet"]:not([data-theme="light"]) {
+  --bg: #1E1435; --surface: #2C1E4D; --surface-2: #3A2A62; --input: #170F2B;
+  --blob-1: #6B4FD0; --blob-2: #8B6FE0;
+}
+html[data-palette="violet"][data-theme="light"] {
+  --bg: #F2EFFA; --surface: #FFFFFF; --surface-2: #E6E0F5; --input: #FFFFFF;
+  --blob-1: #C4B6EE; --blob-2: #A895E0;
+}
+
+html[data-palette="sand"]:not([data-theme="light"]) {
+  --bg: #2A2016; --surface: #3A2E20; --surface-2: #4A3B2A; --input: #1F180F;
+  --blob-1: #A67C3D; --blob-2: #C49A56;
+}
+html[data-palette="sand"][data-theme="light"] {
+  --bg: #F6F1E7; --surface: #FFFCF5; --surface-2: #EFE7D6; --input: #FFFCF5;
+  --blob-1: #D9C8A6; --blob-2: #C9B48C;
+}
+
+/* Ô màu nhỏ trên nút chọn bảng màu. */
+.swatch { display: inline-block; width: 0.75rem; height: 0.75rem; border-radius: 50%; margin-right: 0.4rem; vertical-align: middle; border: 1px solid var(--border-strong); }
+.swatch--ocean { background: #132A3B; }
+.swatch--wine { background: #3B1A24; }
+.swatch--violet { background: #2C1E4D; }
+.swatch--sand { background: #3A2E20; }
+
+/* Chuyển màu giao diện: nền và hiệu ứng nền đổi dần khi đổi bảng màu hoặc sáng/tối. */
+@property --bg { syntax: "<color>"; inherits: true; initial-value: #0B1A26; }
+@property --surface { syntax: "<color>"; inherits: true; initial-value: #132A3B; }
+@property --surface-2 { syntax: "<color>"; inherits: true; initial-value: #1A3448; }
+@property --input { syntax: "<color>"; inherits: true; initial-value: #0F2131; }
+@property --blob-1 { syntax: "<color>"; inherits: true; initial-value: #2C6A8E; }
+@property --blob-2 { syntax: "<color>"; inherits: true; initial-value: #3A7FA6; }
+
+@property --glass-blur { syntax: "<length>"; inherits: true; initial-value: 22px; }
+html { transition: --bg 0.6s cubic-bezier(0.32, 0.72, 0, 1), --surface 0.6s cubic-bezier(0.32, 0.72, 0, 1), --surface-2 0.6s cubic-bezier(0.32, 0.72, 0, 1), --input 0.6s cubic-bezier(0.32, 0.72, 0, 1), --blob-1 0.6s cubic-bezier(0.32, 0.72, 0, 1), --blob-2 0.6s cubic-bezier(0.32, 0.72, 0, 1), --glass-mul 0.6s cubic-bezier(0.32, 0.72, 0, 1), --glass-blur 0.6s cubic-bezier(0.32, 0.72, 0, 1); }
+html.is-switching { transition: --bg 0.6s cubic-bezier(0.32, 0.72, 0, 1), --surface 0.6s cubic-bezier(0.32, 0.72, 0, 1), --surface-2 0.6s cubic-bezier(0.32, 0.72, 0, 1), --input 0.6s cubic-bezier(0.32, 0.72, 0, 1), --blob-1 0.6s cubic-bezier(0.32, 0.72, 0, 1), --blob-2 0.6s cubic-bezier(0.32, 0.72, 0, 1), --glass-mul 0.6s cubic-bezier(0.32, 0.72, 0, 1), --glass-blur 0.6s cubic-bezier(0.32, 0.72, 0, 1) !important; }
+@media (prefers-reduced-motion: reduce) {
+  html, html.is-switching { transition: none !important; }
+}
+
+/* Màu biểu đồ cột theo ngày: xanh rừng ở chế độ tối, đậm hơn ở chế độ sáng. */
+:root { --chart-daily: #3DA374; }
+html[data-theme="light"] { --chart-daily: #237A55; }
+
+/* Bảng màu Rừng: nền xanh rừng và nhấn xanh lá. */
+html[data-palette="forest"]:not([data-theme="light"]) {
+  --bg: #0E1F17; --surface: #15301F; --surface-2: #1C3D29; --input: #0B1914;
+  --blob-1: #2E7D57; --blob-2: #3E9A6C;
+  --accent: #7FD3A5; --accent-dark: #4FAF82; --accent-soft: rgba(127, 211, 165, 0.14); --accent-on: #0B1A14;
+}
+html[data-palette="forest"][data-theme="light"] {
+  --bg: #EEF6F1; --surface: #FFFFFF; --surface-2: #DFEDE5; --input: #FFFFFF;
+  --blob-1: #9CD2B4; --blob-2: #7FC19B;
+  --accent: #1F7A55; --accent-dark: #185F43; --accent-soft: rgba(31, 122, 85, 0.12); --accent-on: #FFFFFF;
+}
+.swatch--forest { background: #15301F; }
+
+/* Bảng màu bổ sung (v96): hồng đào, than chì, đất nung, sương bạc, chàm đêm. */
+
+html[data-palette="hong"]:not([data-theme="light"]) {
+  --bg: #2A1A24; --surface: #3A2332; --surface-2: #4D2D42; --input: #1F1119;
+  --blob-1: #B4577E; --blob-2: #D2779B;
+  --accent: #F4A7C8; --accent-dark: #E07FAA; --accent-soft: rgba(244, 167, 200, 0.14); --accent-on: #2A1119;
+}
+html[data-palette="hong"][data-theme="light"] {
+  --bg: #FDF0F5; --surface: #FFFFFF; --surface-2: #F5DCE7; --input: #FFFFFF;
+  --blob-1: #F0B9CF; --blob-2: #E597B6;
+  --accent: #B0457A; --accent-dark: #8E3462; --accent-soft: rgba(176, 69, 122, 0.12); --accent-on: #FFFFFF;
+}
+
+html[data-palette="than"]:not([data-theme="light"]) {
+  --bg: #16191E; --surface: #1F242B; --surface-2: #2A3038; --input: #101317;
+  --blob-1: #3B4656; --blob-2: #4E5C70;
+}
+html[data-palette="than"][data-theme="light"] {
+  --bg: #F1F3F6; --surface: #FFFFFF; --surface-2: #E3E7ED; --input: #FFFFFF;
+  --blob-1: #C7CFDB; --blob-2: #AEB9C9;
+}
+
+html[data-palette="dat"]:not([data-theme="light"]) {
+  --bg: #2B1A12; --surface: #3D2519; --surface-2: #533424; --input: #1E120C;
+  --blob-1: #9C4F2E; --blob-2: #C0683F;
+}
+html[data-palette="dat"][data-theme="light"] {
+  --bg: #FBF1EB; --surface: #FFFFFF; --surface-2: #F2E0D3; --input: #FFFFFF;
+  --blob-1: #E7B49A; --blob-2: #D9906F;
+}
+
+html[data-palette="xanh"]:not([data-theme="light"]) {
+  --bg: #0F2427; --surface: #163236; --surface-2: #1F434A; --input: #0B1A1C;
+  --blob-1: #2F7C80; --blob-2: #3E9CA0;
+}
+html[data-palette="xanh"][data-theme="light"] {
+  --bg: #EFF7F7; --surface: #FFFFFF; --surface-2: #DCEDED; --input: #FFFFFF;
+  --blob-1: #A8D6D7; --blob-2: #86C2C4;
+}
+
+html[data-palette="cham"]:not([data-theme="light"]) {
+  --bg: #141A33; --surface: #1C2445; --surface-2: #293562; --input: #0E1328;
+  --blob-1: #3F56B0; --blob-2: #5A72CC;
+}
+html[data-palette="cham"][data-theme="light"] {
+  --bg: #EEF1FB; --surface: #FFFFFF; --surface-2: #DFE5F7; --input: #FFFFFF;
+  --blob-1: #B3C0EE; --blob-2: #97A8E3;
+}
+
+.swatch--hong { background: #2A1A24; }
+.swatch--than { background: #16191E; }
+.swatch--dat { background: #2B1A12; }
+.swatch--xanh { background: #0F2427; }
+.swatch--cham { background: #141A33; }
+
+/* Màu nhấn theo bảng màu (v97): nút, thanh tab và mục đang chọn đổi theo bảng, cả sáng và tối. */
+html[data-palette="wine"]:not([data-theme="light"]) { --accent: #E8919F; --accent-dark: #D4707F; --accent-soft: rgba(232, 145, 159, 0.14); --accent-on: #2A1218; }
+html[data-palette="wine"][data-theme="light"] { --accent: #9E2F4B; --accent-dark: #7E2439; --accent-soft: rgba(158, 47, 75, 0.12); --accent-on: #FFFFFF; }
+html[data-palette="violet"]:not([data-theme="light"]) { --accent: #B9A6FF; --accent-dark: #9A85F0; --accent-soft: rgba(185, 166, 255, 0.14); --accent-on: #1E1435; }
+html[data-palette="violet"][data-theme="light"] { --accent: #5A3FC0; --accent-dark: #4730A0; --accent-soft: rgba(90, 63, 192, 0.12); --accent-on: #FFFFFF; }
+html[data-palette="sand"]:not([data-theme="light"]) { --accent: #E2B872; --accent-dark: #C99A55; --accent-soft: rgba(226, 184, 114, 0.14); --accent-on: #2A2016; }
+html[data-palette="sand"][data-theme="light"] { --accent: #8A5E1E; --accent-dark: #6E4A15; --accent-soft: rgba(138, 94, 30, 0.12); --accent-on: #FFFFFF; }
+html[data-palette="hong"]:not([data-theme="light"]) { --accent: #F4A7C8; --accent-dark: #E07FAA; --accent-soft: rgba(244, 167, 200, 0.14); --accent-on: #2A1119; }
+html[data-palette="hong"][data-theme="light"] { --accent: #B0457A; --accent-dark: #8E3462; --accent-soft: rgba(176, 69, 122, 0.12); --accent-on: #FFFFFF; }
+html[data-palette="than"]:not([data-theme="light"]) { --accent: #B8C4D6; --accent-dark: #95A3B8; --accent-soft: rgba(184, 196, 214, 0.14); --accent-on: #16191E; }
+html[data-palette="than"][data-theme="light"] { --accent: #3E4C60; --accent-dark: #2E3A4C; --accent-soft: rgba(62, 76, 96, 0.12); --accent-on: #FFFFFF; }
+html[data-palette="dat"]:not([data-theme="light"]) { --accent: #E8A87C; --accent-dark: #D08A60; --accent-soft: rgba(232, 168, 124, 0.14); --accent-on: #2B1A12; }
+html[data-palette="dat"][data-theme="light"] { --accent: #A4502B; --accent-dark: #843F20; --accent-soft: rgba(164, 80, 43, 0.12); --accent-on: #FFFFFF; }
+html[data-palette="xanh"]:not([data-theme="light"]) { --accent: #7FD1C7; --accent-dark: #5DB5AB; --accent-soft: rgba(127, 209, 199, 0.14); --accent-on: #0F2427; }
+html[data-palette="xanh"][data-theme="light"] { --accent: #1B7A74; --accent-dark: #135E59; --accent-soft: rgba(27, 122, 116, 0.12); --accent-on: #FFFFFF; }
+html[data-palette="cham"]:not([data-theme="light"]) { --accent: #A9B8FF; --accent-dark: #8A9BEE; --accent-soft: rgba(169, 184, 255, 0.14); --accent-on: #141A33; }
+html[data-palette="cham"][data-theme="light"] { --accent: #3D52B5; --accent-dark: #2F3F92; --accent-soft: rgba(61, 82, 181, 0.12); --accent-on: #FFFFFF; }
+
+/* Thẻ bảng màu: xem trước đúng nền của từng chế độ, chấm nhấn đúng màu của bảng (v97). */
+html[data-theme="light"] .swatch--ocean { background: #EEF4F8; }
+html[data-theme="light"] .swatch--forest { background: #EEF6F1; }
+html[data-theme="light"] .swatch--wine { background: #FBEEF1; }
+.palette-card[data-value="wine"] .palette-card__chip { background: #E8919F; }
+html[data-theme="light"] .palette-card[data-value="wine"] .palette-card__chip { background: #9E2F4B; }
+html[data-theme="light"] .swatch--violet { background: #F2EFFA; }
+.palette-card[data-value="violet"] .palette-card__chip { background: #B9A6FF; }
+html[data-theme="light"] .palette-card[data-value="violet"] .palette-card__chip { background: #5A3FC0; }
+html[data-theme="light"] .swatch--sand { background: #F6F1E7; }
+.palette-card[data-value="sand"] .palette-card__chip { background: #E2B872; }
+html[data-theme="light"] .palette-card[data-value="sand"] .palette-card__chip { background: #8A5E1E; }
+html[data-theme="light"] .swatch--hong { background: #FDF0F5; }
+.palette-card[data-value="hong"] .palette-card__chip { background: #F4A7C8; }
+html[data-theme="light"] .palette-card[data-value="hong"] .palette-card__chip { background: #B0457A; }
+html[data-theme="light"] .swatch--than { background: #F1F3F6; }
+.palette-card[data-value="than"] .palette-card__chip { background: #B8C4D6; }
+html[data-theme="light"] .palette-card[data-value="than"] .palette-card__chip { background: #3E4C60; }
+html[data-theme="light"] .swatch--dat { background: #FBF1EB; }
+.palette-card[data-value="dat"] .palette-card__chip { background: #E8A87C; }
+html[data-theme="light"] .palette-card[data-value="dat"] .palette-card__chip { background: #A4502B; }
+html[data-theme="light"] .swatch--xanh { background: #EFF7F7; }
+.palette-card[data-value="xanh"] .palette-card__chip { background: #7FD1C7; }
+html[data-theme="light"] .palette-card[data-value="xanh"] .palette-card__chip { background: #1B7A74; }
+html[data-theme="light"] .swatch--cham { background: #EEF1FB; }
+.palette-card[data-value="cham"] .palette-card__chip { background: #A9B8FF; }
+html[data-theme="light"] .palette-card[data-value="cham"] .palette-card__chip { background: #3D52B5; }
+.palette-card[data-value="ocean"] .palette-card__chip { background: #8FBEDD; }
+html[data-theme="light"] .palette-card[data-value="ocean"] .palette-card__chip { background: #2A6A90; }
+.palette-card[data-value="forest"] .palette-card__chip { background: #7FD3A5; }
+html[data-theme="light"] .palette-card[data-value="forest"] .palette-card__chip { background: #1F7A55; }
+.palette-card__preview { background: var(--surface); }
+.palette-card__preview .swatch { border-radius: 0; }
+.settings__block { display: flex; flex-direction: column; gap: 0.75rem; padding: 0.875rem 0; border-top: 1px solid var(--border); }
+.settings__heading + .settings__block { border-top: 0; }
+.settings__block .settings__text { flex: none; width: 100%; }
+
+/* ---------- v98: đạt tương phản 4.5:1 cho chữ nhấn trên nền và trên bề mặt (chế độ sáng) ---------- */
+html[data-palette="forest"][data-theme="light"] { --accent: #1E7552; --accent-dark: #17603F; }
+html[data-palette="hong"][data-theme="light"] { --accent: #A24071; --accent-dark: #843358; }
+html[data-palette="dat"][data-theme="light"] { --accent: #9E4D29; --accent-dark: #7F3D20; }
+html[data-palette="xanh"][data-theme="light"] { --accent: #19736D; --accent-dark: #145C57; }
+.palette-card[data-value="forest"] .palette-card__chip,
+html[data-theme="light"] .palette-card[data-value="forest"] .palette-card__chip { background: #1E7552; }
+html[data-theme="light"] .palette-card[data-value="hong"] .palette-card__chip { background: #A24071; }
+html[data-theme="light"] .palette-card[data-value="dat"] .palette-card__chip { background: #9E4D29; }
+html[data-theme="light"] .palette-card[data-value="xanh"] .palette-card__chip { background: #19736D; }

@@ -1,0 +1,159 @@
+/* ----- Trang Công cụ ----- */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: stretch;
+}
+
+.tool-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.tool-card--wide {
+  grid-column: 1 / -1;
+}
+
+.tool-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.tool-form .form-group--wide {
+  grid-column: 1 / -1;
+}
+
+.tool-result {
+  display: flex;
+  flex-direction: column;
+  padding: 0.25rem 0.875rem;
+  border: 1px solid var(--glass-border);
+  border-radius: 0.75rem;
+  background: var(--glass);
+}
+
+.tool-result__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--border);
+  font-size: 0.875rem;
+  color: var(--text-2);
+}
+
+.tool-result__row:first-child {
+  border-top: 0;
+}
+
+.tool-result__row strong {
+  font-size: 1rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  text-align: right;
+}
+
+.tool-result__row--good strong {
+  color: var(--income);
+}
+
+.tool-result__row--bad strong {
+  color: var(--expense);
+}
+
+.split-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.split-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  gap: 0.5rem;
+}
+
+.recurring-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.recurring-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--glass-border);
+  border-left: 3px solid var(--border-strong);
+  border-radius: 0.75rem;
+  background: var(--glass);
+}
+
+.recurring-item--income {
+  border-left-color: var(--income);
+}
+
+.recurring-item--expense {
+  border-left-color: var(--expense);
+}
+
+.recurring-item__info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.recurring-item__meta {
+  font-size: 0.75rem;
+  color: var(--text-3);
+}
+
+.recurring-item__amount {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.recurring-item__amount.income {
+  color: var(--income);
+}
+
+.recurring-item__amount.expense {
+  color: var(--expense);
+}
+
+
+
+.form-group.is-disabled { opacity: 0.45; }
+.form-group.is-disabled .form-input { cursor: not-allowed; }
+
+.loan-help {
+  margin-top: 0.25rem;
+  font-size: 0.8125rem;
+  color: var(--text-2);
+}
+.loan-help summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text);
+  padding: 0.25rem 0;
+}
+.loan-help dl {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: 0.5rem 0.875rem;
+  margin: 0.5rem 0 0;
+}
+.loan-help dt { font-weight: 600; color: var(--text); }
+.loan-help dd { margin: 0; line-height: 1.5; }
+@media (max-width: 600px) {
+  .loan-help dl { grid-template-columns: minmax(0, 1fr); }
+}
+
+.loan-help__body { overflow: hidden; }

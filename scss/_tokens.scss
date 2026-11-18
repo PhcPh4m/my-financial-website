@@ -1,0 +1,96 @@
+// ============================================================================
+// Quản lý Tài chính Cá nhân - bố cục dày thông tin, một nguồn màu theo chủ đề.
+// Biên dịch: sass scss/style.scss css/style.css --no-source-map
+// Kích thước dùng rem và % để co giãn theo cỡ chữ và chiều rộng khung hình.
+// ============================================================================
+
+// ----------------------------------------------------------------------------
+// 1. Màu theo chủ đề. Tối là mặc định; html[data-theme="light"] là sáng.
+// ----------------------------------------------------------------------------
+:root {
+  color-scheme: dark;
+  --font-sans: "Be Vietnam Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  --bg: #0B1A26;
+  --surface: #132A3B;
+  --surface-2: #1A3448;
+  --input: #0F2131;
+  --border: rgba(170, 200, 220, 0.12);
+  --border-strong: rgba(170, 200, 220, 0.22);
+
+  --text: #E8F1F7;
+  --text-2: #A9C0CF;
+  --text-3: #8AA3B4;
+
+  --accent: #8FBEDD;
+  --accent-dark: #6A9CC0;
+  --accent-soft: rgba(143, 190, 221, 0.14);
+  --accent-on: #0B1A26;
+
+  --income: #5FCB9E;
+  --income-soft: rgba(95, 203, 158, 0.12);
+  --expense: #F08A7F;
+  --expense-soft: rgba(240, 138, 127, 0.12);
+  --warn: #E8B04A;
+  --warn-soft: rgba(232, 176, 74, 0.12);
+  --info: #8FBEDD;
+  --info-soft: rgba(143, 190, 221, 0.1);
+
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-lift: inset 0 1px 0 rgba(232, 241, 247, 0.06), 0 12px 28px -16px rgba(0, 0, 0, 0.6);
+  --overlay: rgba(4, 12, 20, 0.6);
+
+  --glass: color-mix(in srgb, var(--surface) min(100%, calc(38% * var(--glass-mul, 1))), transparent);
+  --glass-strong: color-mix(in srgb, var(--surface) min(100%, calc(62% * var(--glass-mul, 1))), transparent);
+  --glass-border: rgba(200, 225, 240, 0.18);
+  --blur: blur(var(--glass-blur, 22px)) saturate(var(--glass-sat, 160%));
+  --blob-1: #2C6A8E;
+  --blob-2: #3A7FA6;
+  --blob-opacity: 0.5;
+  --weather-a: rgba(143, 190, 221, 0.22);
+  --weather-b: rgba(44, 106, 142, 0.12);
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
+
+  --bg: #EEF4F8;
+  --surface: #FFFFFF;
+  --surface-2: #E2ECF3;
+  --input: #FFFFFF;
+  --border: rgba(19, 40, 58, 0.12);
+  --border-strong: rgba(19, 40, 58, 0.22);
+
+  --text: #13283A;
+  --text-2: #3D5769;
+  --text-3: #5C7384;
+
+  --accent: #2A6A90;
+  --accent-dark: #1F5173;
+  --accent-soft: rgba(42, 106, 144, 0.12);
+  --accent-on: #FFFFFF;
+
+  --income: #1F7A55;
+  --income-soft: rgba(31, 122, 85, 0.1);
+  --expense: #B5443A;
+  --expense-soft: rgba(181, 68, 58, 0.1);
+  --warn: #8A5A0E;
+  --warn-soft: rgba(138, 90, 14, 0.1);
+  --info: #2A6A90;
+  --info-soft: rgba(42, 106, 144, 0.08);
+
+  --shadow: 0 1px 2px rgba(19, 40, 58, 0.06);
+  --shadow-lift: 0 1px 2px rgba(19, 40, 58, 0.05), 0 12px 26px -16px rgba(19, 40, 58, 0.25);
+  --overlay: rgba(19, 40, 58, 0.35);
+
+  --glass: color-mix(in srgb, var(--surface) min(100%, calc(60% * var(--glass-mul, 1))), transparent);
+  --glass-strong: color-mix(in srgb, var(--surface) min(100%, calc(82% * var(--glass-mul, 1))), transparent);
+  --glass-border: rgba(255, 255, 255, 0.85);
+  --blur: blur(var(--glass-blur, 22px)) saturate(var(--glass-sat, 160%));
+  --blob-1: #A9CDE2;
+  --blob-2: #7FAECB;
+  --blob-opacity: 0.7;
+  --weather-a: rgba(42, 106, 144, 0.16);
+  --weather-b: rgba(255, 255, 255, 0.4);
+}
+

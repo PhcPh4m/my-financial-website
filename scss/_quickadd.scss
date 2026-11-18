@@ -1,0 +1,61 @@
+/* ----- Nhập nhanh, thông báo có hoàn tác ----- */
+.quick-add {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.quick-add__row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.quick-add__row .form-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.toast__action {
+  flex-shrink: 0;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--glass-border);
+  border-radius: 0.4rem;
+  background: var(--glass);
+  color: var(--accent);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Ngân sách tháng: một khối con nằm ngay trong khung "Thêm giao dịch", cách form bằng một đường kẻ.
+   Cùng cột với form nên toàn bộ việc thêm dữ liệu nằm trong một khung dọc liên tục. */
+.form-subsection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.form-subsection__title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.form-subsection .btn {
+  align-self: flex-start;
+}

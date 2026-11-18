@@ -1,0 +1,45 @@
+// BỐ CỤC v9: chỉ đổi vị trí và thêm nhãn, không đổi màu hay kiểu chữ của v8.
+// Nguyên tắc chung: thao tác chính ở trên, chiếm phần lớn diện tích; thao tác phụ ở dưới, có nhãn riêng.
+
+// Trang Giao dịch: khu vực thao tác phụ (thời tiết và công cụ dữ liệu) đặt cạnh nhau dưới danh sách.
+.secondary-zone {
+  margin-top: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+// Trong cột trái, thời tiết và công cụ dữ liệu xếp dọc.
+.secondary-zone__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+}
+
+// Hàng trên cùng cột giữa: thanh ngân sách (trái) và khung thêm giao dịch (phải).
+.main-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 1100px) {
+  .main-top {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+// Trang Công cụ: nhóm thao tác chính và nhóm máy tính phụ, mỗi nhóm có lưới riêng.
+.tools-grid--primary,
+.tools-grid--calc {
+  margin-bottom: 0;
+}
+
+// Nhãn nhóm phụ: cùng kiểu với các nhãn khác, nằm rõ ràng giữa hai nhóm.
+.section-caption {
+  margin: 0.5rem 0 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-2);
+}

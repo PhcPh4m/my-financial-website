@@ -1,0 +1,134 @@
+// TRANG HƯỚNG DẪN: mục lục bên trái, nội dung bên phải. Dùng lại màu và khung của v8.
+
+.guide-layout {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.guide-toc {
+  position: sticky;
+  top: 1rem;
+  padding: 1rem;
+}
+
+.guide-toc__title {
+  margin: 0 0 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.guide-toc ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.25rem;
+}
+
+.guide-toc a {
+  display: block;
+  padding: 0.375rem 0.5rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: var(--text-2);
+  text-decoration: none;
+}
+
+.guide-toc a:hover {
+  color: var(--text);
+  background: var(--surface-2);
+}
+
+.guide-content {
+  display: grid;
+  min-width: 0;
+}
+
+.guide-section {
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--border);
+  scroll-margin-top: 6rem;
+}
+
+.guide-section:last-child {
+  border-bottom: 0;
+}
+
+.guide-section h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+}
+
+.guide-section h3 {
+  margin: 1rem 0 0.25rem;
+  font-size: 1rem;
+}
+
+.guide-section p,
+.guide-section li {
+  max-width: 70ch;
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  color: var(--text-2);
+}
+
+.guide-section p {
+  margin: 0.5rem 0;
+}
+
+.guide-section strong {
+  color: var(--text);
+}
+
+.guide-list,
+.guide-steps {
+  margin: 0.5rem 0;
+  padding-left: 1.25rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.guide-example,
+.guide-note {
+  max-width: 70ch;
+  margin: 0.75rem 0;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  font-size: 0.9375rem;
+  color: var(--text-2);
+}
+
+.guide-note {
+  border-left: 3px solid var(--info);
+}
+
+.kbd {
+  display: inline-block;
+  min-width: 1.5rem;
+  padding: 0 0.375rem;
+  border: 1px solid var(--border-strong);
+  border-bottom-width: 2px;
+  border-radius: 6px;
+  background: var(--surface-2);
+  font-size: 0.8125rem;
+  text-align: center;
+}
+
+@media (max-width: 860px) {
+  .guide-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .guide-toc {
+    position: static;
+  }
+
+  .guide-toc ol {
+    grid-template-columns: 1fr 1fr;
+  }
+}

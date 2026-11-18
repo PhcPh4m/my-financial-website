@@ -1,0 +1,40 @@
+/* Glassmorphism: lớp kính mờ trên nền ambient. Các thành phần dùng chung đã đổi nền ở mục của chúng. */
+.ambient {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.ambient::before,
+.ambient::after {
+  content: "";
+  position: absolute;
+  width: 48rem;
+  height: 48rem;
+  border-radius: 50%;
+  opacity: var(--blob-opacity);
+}
+
+.ambient::before {
+  top: -18rem;
+  left: -14rem;
+  background: radial-gradient(closest-side, var(--blob-1), transparent);
+}
+
+.ambient::after {
+  right: -16rem;
+  bottom: -18rem;
+  background: radial-gradient(closest-side, var(--blob-2), transparent);
+}
+
+.topbar,
+.panel,
+.kpi,
+.modal__content,
+.weather-widget {
+  -webkit-backdrop-filter: var(--blur);
+  backdrop-filter: var(--blur);
+}
+

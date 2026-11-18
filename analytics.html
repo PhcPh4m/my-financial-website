@@ -1,0 +1,214 @@
+<!-- Trang "Biểu đồ & Phân tích": số liệu, ba biểu đồ, danh mục và bảng tổng hợp theo tháng. Dữ liệu dùng chung với trang giao dịch. -->
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Biểu đồ và phân tích thu chi cá nhân theo tháng">
+        <meta name="theme-color" content="#0B1A26">
+    <script>try{var r=document.documentElement,s=JSON.parse(localStorage.getItem("app_settings")||"{}");if(localStorage.getItem("app_theme")==="light")r.dataset.theme="light";if(s.palette)r.dataset.palette=s.palette;var v=typeof s.glass=="number"?s.glass:({soft:25,medium:50,strong:80})[s.glass];if(v==null)v=50;var t=v/100,m=t<=.5?1.84*t:1+2.2*(t-.5),b=t<=.5?44*t:22+36*(t-.5);r.style.setProperty("--glass-mul",m);r.style.setProperty("--glass-blur",b.toFixed(1)+"px");r.style.setProperty("--glass-sat",(100+120*t).toFixed(0)+"%");}catch(e){}</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <title>Biểu đồ &amp; Phân tích - Quản lý Tài chính</title>
+    <link rel="stylesheet" href="css/analytics.css">
+    <link rel="stylesheet" href="css/palettes.css">
+    <link rel="stylesheet" href="css/redesign.css">
+    <script src="js/motion.js"></script>
+</head>
+<body class="page-enter analytics-page">
+    <!-- Nền màu mờ phía sau để lớp kính (glassmorphism) có gì để làm mờ. -->
+    <div class="ambient" aria-hidden="true"></div>
+    <header class="topbar">
+        <div class="topbar__inner">
+            <div class="brand">
+                <h1 class="brand__title"><i data-icon="chart"></i> Biểu đồ &amp; Phân tích</h1>
+                <p class="brand__sub">Xem tổng quan thu chi theo tháng</p>
+            </div>
+            <nav class="nav-tabs" aria-label="Điều hướng chính">
+                <span class="nav-tabs__pill" aria-hidden="true"></span>
+                <a href="index.html" class="nav-link"><i data-icon="wallet"></i> <span class="nav-link__label" data-text="Giao dịch">Giao dịch</span></a>
+                <a href="analytics.html" class="nav-link" aria-current="page"><i data-icon="chart"></i> <span class="nav-link__label" data-text="Biểu đồ &amp; Phân tích">Biểu đồ &amp; Phân tích</span></a>
+                <a href="tools.html" class="nav-link"><i data-icon="ph-wrench"></i> <span class="nav-link__label" data-text="Công cụ">Công cụ</span></a>
+                <a href="guide.html" class="nav-link"><i data-icon="book"></i> <span class="nav-link__label" data-text="Hướng dẫn">Hướng dẫn</span></a>
+                <a href="settings.html" class="nav-link"><i data-icon="ph-gear"></i> <span class="nav-link__label" data-text="Cài đặt">Cài đặt</span></a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page">
+        <!-- Tiêu đề kỳ đang xem bên trái, bộ chọn tháng và nút bên phải. Nút "Tất cả thời gian" xem mọi tháng. -->
+        <section class="period-bar">
+            <div class="period-bar__title">
+                <p class="period-bar__eyebrow">Đang xem</p>
+                <h2 class="period-bar__value" id="periodLabel"></h2>
+            </div>
+            <div class="period-bar__controls">
+                <div class="period-bar__field">
+                    <label class="form-label" for="monthPicker">Chọn tháng</label>
+                    <input type="month" lang="en" id="monthPicker" class="form-input">
+                </div>
+                <button type="button" class="btn" id="clearPeriodBtn">Tất cả thời gian</button>
+            </div>
+        </section>
+
+        <!-- Bốn ô số: thu nhập, chi tiêu, chênh lệch và số giao dịch của kỳ đang chọn. -->
+        <section class="kpis" aria-label="Thống kê kỳ đang xem">
+            <article class="kpi kpi--income">
+                <div class="kpi__head">
+                    <span class="kpi__label">Thu nhập</span>
+                    <span class="kpi__icon"><i data-icon="arrow-up"></i></span>
+                </div>
+                <div class="kpi__value" id="statIncome">0 đ</div>
+                <span class="kpi__badge" id="statIncomeTrend" hidden></span>
+                <p class="kpi__note" id="statIncomeNote">Toàn bộ thời gian</p>
+            </article>
+            <article class="kpi kpi--expense">
+                <div class="kpi__head">
+                    <span class="kpi__label">Chi tiêu</span>
+                    <span class="kpi__icon"><i data-icon="arrow-down"></i></span>
+                </div>
+                <div class="kpi__value" id="statExpense">0 đ</div>
+                <span class="kpi__badge" id="statExpenseTrend" hidden></span>
+                <p class="kpi__note" id="statExpenseNote">Toàn bộ thời gian</p>
+            </article>
+            <article class="kpi">
+                <div class="kpi__head">
+                    <span class="kpi__label">Chênh lệch</span>
+                    <span class="kpi__icon"><i data-icon="wallet"></i></span>
+                </div>
+                <div class="kpi__value" id="statBalance">0 đ</div>
+                <span class="kpi__badge" id="statBalanceTrend" hidden></span>
+                <p class="kpi__note" id="statBalanceNote">Thu − chi toàn thời gian</p>
+            </article>
+            <article class="kpi">
+                <div class="kpi__head">
+                    <span class="kpi__label">Số giao dịch</span>
+                    <span class="kpi__icon"><i data-icon="credit-card"></i></span>
+                </div>
+                <div class="kpi__value" id="statCount">0</div>
+                <p class="kpi__note" id="statCountNote"></p>
+            </article>
+        </section>
+
+        <!-- So sánh chi tiêu với ngân sách. Chỉ hiện khi đã chọn một tháng cụ thể. -->
+        <section class="panel budget-compare" id="budgetCompare" hidden></section>
+
+        <div id="chartsFallback" class="alert alert--warning" hidden>
+            Không tải được thư viện Chart.js (cần kết nối Internet). Các số liệu bên dưới vẫn hiển thị đầy đủ.
+        </div>
+
+        <!-- Ba nhóm nội dung: Tổng quan (biểu đồ thu chi và cơ cấu), Chi tiết (theo ngày, danh mục, tháng), Ngân sách (theo danh mục). -->
+        <nav class="tabs no-print" role="tablist" aria-label="Chọn nội dung hiển thị">
+            <span class="tabs__pill" aria-hidden="true"></span>
+            <button type="button" class="tabs__btn" role="tab" id="tab-overview" data-tab="overview" aria-controls="panel-overview" aria-selected="true">Tổng quan</button>
+            <button type="button" class="tabs__btn" role="tab" id="tab-detail" data-tab="detail" aria-controls="panel-detail" aria-selected="false" tabindex="-1">Chi tiết</button>
+            <button type="button" class="tabs__btn" role="tab" id="tab-budget" data-tab="budget" aria-controls="panel-budget" aria-selected="false" tabindex="-1">Ngân sách</button>
+        </nav>
+
+        <div class="tab-panel" id="panel-overview" role="tabpanel" aria-labelledby="tab-overview">
+            <div class="chart-grid">
+                <article class="panel chart-card chart-card--main">
+                    <h2 class="panel__title"><i data-icon="chart"></i> Thu nhập và chi tiêu (6 tháng gần nhất)</h2>
+                    <div class="chart-card__box">
+                        <canvas id="columnChart" role="img" aria-label="Biểu đồ cột thu nhập và chi tiêu theo tháng"></canvas>
+                        <div class="chart-card__empty" id="columnChartEmpty" hidden>Chưa có dữ liệu.</div>
+                    </div>
+                </article>
+
+                <article class="panel chart-card chart-card--side">
+                    <h2 class="panel__title"><i data-icon="pie"></i> Chi tiêu theo danh mục</h2>
+                    <div class="chart-card__box">
+                        <canvas id="pieChart" role="img" aria-label="Biểu đồ tròn chi tiêu theo danh mục"></canvas>
+                        <div class="chart-card__empty" id="pieChartEmpty" hidden>Chưa có khoản chi trong kỳ này.</div>
+                    </div>
+                </article>
+            </div>
+        </div>
+
+        <div class="tab-panel" id="panel-detail" role="tabpanel" aria-labelledby="tab-detail" hidden>
+            <div class="chart-grid">
+                <article class="panel chart-card chart-card--wide">
+                    <h2 class="panel__title"><i data-icon="calendar"></i> Chi tiêu theo ngày trong tháng</h2>
+                    <div class="chart-card__box">
+                        <canvas id="dailyChart" role="img" aria-label="Biểu đồ cột chi tiêu theo từng ngày trong tháng"></canvas>
+                        <div class="chart-card__empty" id="dailyChartEmpty" hidden>Chọn một tháng để xem chi tiêu theo ngày.</div>
+                    </div>
+                </article>
+            </div>
+
+            <div class="detail-grid">
+                <section class="panel" aria-labelledby="catTitle">
+                    <h2 class="panel__title" id="catTitle"><i data-icon="tag"></i> Chi tiêu chi tiết theo danh mục</h2>
+                    <div class="category-list" id="categoryList"></div>
+                </section>
+
+                <section class="panel" aria-labelledby="monthlyTitle">
+                    <h2 class="panel__title" id="monthlyTitle"><i data-icon="calendar"></i> Tổng hợp theo tháng</h2>
+                    <div class="table-wrap">
+                        <table class="tx-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Tháng</th>
+                                    <th scope="col" class="num">Thu nhập</th>
+                                    <th scope="col" class="num">Chi tiêu</th>
+                                    <th scope="col" class="num">Số dư lũy kế</th>
+                                </tr>
+                            </thead>
+                            <tbody id="monthlyTableBody"></tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <div class="tab-panel" id="panel-budget" role="tabpanel" aria-labelledby="tab-budget" hidden>
+        <!-- Ngân sách theo danh mục: đặt hạn mức cho từng danh mục chi, áp dụng cho mọi tháng. -->
+
+        <section class="panel no-print" aria-labelledby="catBudgetTitle">
+            <h2 class="panel__title" id="catBudgetTitle"><i data-icon="target"></i> Ngân sách theo danh mục</h2>
+            <p class="form-hint">Đặt số tiền tối đa mỗi tháng cho từng danh mục chi. Để trống nghĩa là không đặt. Khi chọn một tháng, bảng chi tiết sẽ so sánh với hạn mức này.</p>
+            <div class="cat-budget-grid" id="categoryBudgetGrid"></div>
+            <div class="form-actions">
+                <button type="button" class="btn btn--primary" id="saveCategoryBudgetsBtn">Lưu ngân sách danh mục</button>
+            </div>
+        </section>
+        </div>
+
+    </main>
+
+    <!-- CONFIRM MODAL -->
+    <!-- Cửa sổ hỏi lại "Bạn có chắc không?" trước khi xóa. -->
+    <div class="modal" id="confirmModal" role="alertdialog" aria-modal="true" aria-labelledby="confirmTitle" aria-describedby="confirmMessage">
+        <div class="modal__content">
+            <div class="modal__header">
+                <h2 class="modal__title" id="confirmTitle">Xác nhận</h2>
+            </div>
+            <div class="modal__body">
+                <p id="confirmMessage"></p>
+            </div>
+            <div class="modal__footer">
+                <button type="button" class="btn" id="confirmCancel">Hủy</button>
+                <button type="button" class="btn btn--danger" id="confirmOk">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chỗ hiện thông báo nhỏ ở góc màn hình (ví dụ "Đã lưu"). -->
+    <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+    <!-- Chân trang. -->
+    <!-- Chart.js v4.5.1 (phiên bản cố định) -->
+    <!-- Thư viện vẽ biểu đồ, tải từ Internet. -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
+    <!-- Các file JavaScript của trang này, tải theo đúng thứ tự. -->
+    <script src="js/icons.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/transition.js"></script>
+    <script src="js/topbar.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/chart.js"></script>
+    <script src="js/analytics.js"></script>
+</body>
+</html>

@@ -1,0 +1,370 @@
+<!-- Trang giao dịch: ghi thu chi, xem tổng quan, ngân sách, thời tiết và danh sách trên cùng một màn hình. -->
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Web Quản lý Tài chính Cá nhân - ghi chép thu chi, đặt ngân sách và theo dõi số dư">
+        <meta name="theme-color" content="#0B1A26">
+    <script>try{var r=document.documentElement,s=JSON.parse(localStorage.getItem("app_settings")||"{}");if(localStorage.getItem("app_theme")==="light")r.dataset.theme="light";if(s.palette)r.dataset.palette=s.palette;var v=typeof s.glass=="number"?s.glass:({soft:25,medium:50,strong:80})[s.glass];if(v==null)v=50;var t=v/100,m=t<=.5?1.84*t:1+2.2*(t-.5),b=t<=.5?44*t:22+36*(t-.5);r.style.setProperty("--glass-mul",m);r.style.setProperty("--glass-blur",b.toFixed(1)+"px");r.style.setProperty("--glass-sat",(100+120*t).toFixed(0)+"%");}catch(e){}</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <title>Quản lý Tài chính Cá nhân</title>
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/tools.css">
+    <link rel="stylesheet" href="css/palettes.css">
+    <link rel="stylesheet" href="css/redesign.css">
+    <script src="js/motion.js"></script>
+</head>
+<body class="page-enter">
+    <!-- Nền màu mờ phía sau để lớp kính (glassmorphism) có gì để làm mờ. -->
+    <div class="ambient" aria-hidden="true"></div>
+    <!-- Thanh trên: tên ứng dụng, hai tab điều hướng và nút đổi giao diện. -->
+    <header class="topbar">
+        <div class="topbar__inner">
+            <div class="brand">
+                <h1 class="brand__title"><i data-icon="wallet"></i> Quản lý Tài chính Cá nhân</h1>
+                <p class="brand__sub">Ghi chép thu chi, theo dõi ngân sách và số dư</p>
+            </div>
+            <nav class="nav-tabs" aria-label="Điều hướng chính">
+                <span class="nav-tabs__pill" aria-hidden="true"></span>
+                <a href="index.html" class="nav-link" aria-current="page"><i data-icon="wallet"></i> <span class="nav-link__label" data-text="Giao dịch">Giao dịch</span></a>
+                <a href="analytics.html" class="nav-link"><i data-icon="chart"></i> <span class="nav-link__label" data-text="Biểu đồ &amp; Phân tích">Biểu đồ &amp; Phân tích</span></a>
+                <a href="tools.html" class="nav-link"><i data-icon="ph-wrench"></i> <span class="nav-link__label" data-text="Công cụ">Công cụ</span></a>
+                <a href="guide.html" class="nav-link"><i data-icon="book"></i> <span class="nav-link__label" data-text="Hướng dẫn">Hướng dẫn</span></a>
+                <a href="settings.html" class="nav-link"><i data-icon="ph-gear"></i> <span class="nav-link__label" data-text="Cài đặt">Cài đặt</span></a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page">
+        <!-- Dải số liệu: tổng thu, tổng chi, số dư và chi tháng này so với ngân sách. -->
+        <section class="kpis kpis--home" aria-label="Tổng quan">
+            <div class="kpis__month">
+                <article class="kpi kpi--hero">
+                    <div class="kpi__head">
+                        <span class="kpi__label">Số dư tháng này</span>
+                        <span class="kpi__icon"><i data-icon="wallet"></i></span>
+                    </div>
+                    <div class="kpi__value" id="monthBalance">0 đ</div>
+                    <span class="kpi__badge" id="monthBalanceTrend" hidden></span>
+                    <p class="kpi__note" id="monthBalanceNote">Thu − chi tháng này: 0 đ</p>
+                </article>
+                <article class="kpi kpi--income">
+                    <div class="kpi__head">
+                        <span class="kpi__label">Thu nhập tháng này</span>
+                        <span class="kpi__icon"><i data-icon="calendar"></i></span>
+                    </div>
+                    <div class="kpi__value" id="monthIncomeKpi">0 đ</div>
+                    <span class="kpi__badge" id="incomeTrend" hidden></span>
+                    <p class="kpi__note" id="incomeNote">Các khoản thu hoàn thành trong tháng</p>
+                </article>
+                <article class="kpi kpi--expense">
+                    <div class="kpi__head">
+                        <span class="kpi__label">Chi tiêu tháng này</span>
+                        <span class="kpi__icon"><i data-icon="target"></i></span>
+                    </div>
+                    <div class="kpi__value" id="monthExpense">0 đ</div>
+                    <span class="kpi__badge" id="budgetTrend" hidden></span>
+                    <p class="kpi__note" id="budgetNote">Chưa đặt ngân sách tháng này</p>
+                </article>
+            </div>
+            <details class="kpis__year" data-animate>
+                <summary class="kpis__year-summary"><span>Tổng năm nay</span><span class="kpis__year-hint">Xem chi tiết</span></summary>
+                <div class="kpis__year-grid">
+                    <article class="kpi kpi--income">
+                        <div class="kpi__head">
+                            <span class="kpi__label">Tổng thu nhập năm</span>
+                            <span class="kpi__icon"><i data-icon="arrow-up"></i></span>
+                        </div>
+                        <div class="kpi__value" id="yearIncome">0 đ</div>
+                        <p class="kpi__note">Các khoản thu hoàn thành trong năm</p>
+                    </article>
+                    <article class="kpi kpi--expense">
+                        <div class="kpi__head">
+                            <span class="kpi__label">Tổng chi tiêu năm</span>
+                            <span class="kpi__icon"><i data-icon="arrow-down"></i></span>
+                        </div>
+                        <div class="kpi__value" id="yearExpense">0 đ</div>
+                        <p class="kpi__note">Các khoản chi hoàn thành trong năm</p>
+                    </article>
+                    <article class="kpi">
+                        <div class="kpi__head">
+                            <span class="kpi__label">Số dư năm</span>
+                            <span class="kpi__icon"><i data-icon="wallet"></i></span>
+                        </div>
+                        <div class="kpi__value" id="yearBalance">0 đ</div>
+                        <span class="kpi__badge" id="yearBalanceTrend" hidden></span>
+                        <p class="kpi__note" id="yearBalanceNote">Thu − chi trong năm</p>
+                    </article>
+                </div>
+            </details>
+            <p class="kpis__note" id="transactionCount">0 hoàn thành · 0 chưa thanh toán. Chỉ giao dịch "Hoàn thành" được tính vào tổng.</p>
+        </section>
+
+        <div class="layout">
+            <!-- Cột trái: ngân sách tháng, thời tiết và công cụ dữ liệu. -->
+            <aside class="layout__side">
+                <!-- Đặt ngân sách nằm ngay trên thẻ tiến độ ngân sách, cùng cột. -->
+                <section class="panel budget-strip" aria-label="Đặt ngân sách tháng">
+                    <div class="form-subsection budget-quick" aria-labelledby="budgetQuickTitle">
+                    <h3 class="form-subsection__title" id="budgetQuickTitle"><i data-icon="target"></i> Ngân sách tháng</h3>
+                    <p class="form-hint">Đặt số tiền chi tối đa cho tháng này. Thanh trạng thái ở trên danh sách sẽ cập nhật theo.</p>
+                    <button class="btn" id="budgetBtn" type="button"><i data-icon="target"></i> Đặt ngân sách tháng</button>
+                    </div>
+                </section>
+
+                <div id="budgetWarning"></div>
+                <section class="secondary-zone" aria-label="Thời tiết và công cụ dữ liệu">
+                <div class="secondary-zone__grid">
+                <section class="weather-panel" aria-labelledby="weatherTitle">
+                <h2 class="visually-hidden" id="weatherTitle">Thời tiết TP.HCM</h2>
+                <div id="weatherBox" aria-live="polite">
+                <p class="form-hint">Đang tải...</p>
+                </div>
+                </section>
+                <section class="panel tools" aria-label="Thao tác phụ: dữ liệu">
+                <button class="btn" id="exportJsonBtn" type="button"><i data-icon="download"></i> Xuất JSON (backup)</button>
+                <button class="btn" id="exportCsvBtn" type="button"><i data-icon="download"></i> Xuất CSV (Excel)</button>
+                <button class="btn" id="importBtn" type="button"><i data-icon="upload"></i> Nhập JSON / CSV</button>
+                <input type="file" id="importFile" accept=".json,.csv,application/json,text/csv" hidden>
+                <button class="btn btn--danger tools__end" id="clearDataBtn" type="button"><i data-icon="trash"></i> Xóa toàn bộ dữ liệu</button>
+                </section>
+                </div>
+                </section>
+            </aside>
+
+            <!-- Cột giữa: bốn nhóm. Thêm giao dịch | Danh sách | Định kỳ | Chia tiền. -->
+            <div class="layout__main">
+
+                <nav class="tabs no-print" role="tablist" aria-label="Chọn nội dung giao dịch">
+                    <span class="tabs__pill" aria-hidden="true"></span>
+                    <button type="button" class="tabs__btn" role="tab" id="tab-add" data-tab="add" aria-controls="panel-add" aria-selected="true">Thêm<span class="tabs__more"> giao dịch</span></button>
+                    <button type="button" class="tabs__btn" role="tab" id="tab-list" data-tab="list" aria-controls="panel-list" aria-selected="false" tabindex="-1">Danh sách</button>
+                    <button type="button" class="tabs__btn" role="tab" id="tab-recurring" data-tab="recurring" aria-controls="panel-recurring" aria-selected="false" tabindex="-1">Định kỳ</button>
+                    <button type="button" class="tabs__btn" role="tab" id="tab-split" data-tab="split" aria-controls="panel-split" aria-selected="false" tabindex="-1">Chia tiền</button>
+                </nav>
+
+                <div class="tab-panel" id="panel-add" role="tabpanel" aria-labelledby="tab-add">
+                    <section class="panel form-section" aria-labelledby="formTitle">
+                    <h2 class="panel__title" id="formTitle"><i data-icon="plus"></i> Thêm giao dịch</h2>
+                    <div class="quick-add">
+                    <label class="form-label" for="quickAddInput">Nhập nhanh</label>
+                    <div class="quick-add__row">
+                    <input type="text" id="quickAddInput" class="form-input" maxlength="120" placeholder="VD: cơm trưa 45k hôm qua" autocomplete="off">
+                    <button type="button" class="btn btn--primary" id="quickAddBtn">Thêm</button>
+                    </div>
+                    <small class="form-error" id="quickAddError" aria-live="polite"></small>
+                    <p class="form-hint">Gõ tên và số tiền (45k, 1.5tr, 45.000). Có thể thêm "hôm nay", "hôm qua" hoặc dd/mm. Danh mục được đoán tự động.</p>
+                    </div>
+                    <form id="transactionForm" novalidate>
+                    <div class="form-grid">
+                    <div class="form-group form-group--wide">
+                    <label class="form-label" for="title">Tên giao dịch *</label>
+                    <input type="text" id="title" class="form-input" maxlength="100" placeholder="VD: Cơm trưa, Lương tháng 10" autocomplete="off">
+                    <small class="form-error" id="err-title" aria-live="polite"></small>
+                    </div>
+                    <div class="form-group">
+                    <label class="form-label" for="amount">Số tiền (VND) *</label>
+                    <input type="number" id="amount" class="form-input" data-money placeholder="VD: 45000" min="1" step="1" inputmode="numeric">
+                    <small class="form-error" id="err-amount" aria-live="polite"></small>
+                    </div>
+                    <div class="form-group">
+                    <label class="form-label" for="monthlyIncome" title="Lưu cho tháng hiện tại. Dùng để tính tỷ lệ chi so với thu.">Thu nhập tháng này</label>
+                    <input type="number" id="monthlyIncome" class="form-input" data-money placeholder="VD: 15000000" min="0" step="1" inputmode="numeric">
+                    </div>
+                    <div class="form-group">
+                    <label class="form-label" for="date">Ngày *</label>
+                    <input type="date" id="date" class="form-input">
+                    <small class="form-error" id="err-date" aria-live="polite"></small>
+                    </div>
+                    <div class="form-group">
+                    <label class="form-label" for="type">Loại *</label>
+                    <select id="type" class="form-select">
+                    <option value="">Chọn loại</option>
+                    <option value="income">Thu nhập</option>
+                    <option value="expense">Chi tiêu</option>
+                    </select>
+                    <small class="form-error" id="err-type" aria-live="polite"></small>
+                    </div>
+                    <div class="form-group form-group--wide">
+                    <label class="form-label" for="category">Danh mục *</label>
+                    <select id="category" class="form-select">
+                    <option value="">Chọn loại trước</option>
+                    </select>
+                    <small class="form-error" id="err-category" aria-live="polite"></small>
+                    </div>
+                    <div class="form-group form-group--wide">
+                    <label class="form-label" for="status">Trạng thái *</label>
+                    <select id="status" class="form-select">
+                    <option value="completed">Hoàn thành</option>
+                    <option value="pending">Chưa thanh toán</option>
+                    </select>
+                    <small class="form-error" id="err-status" aria-live="polite"></small>
+                    </div>
+                    </div>
+                    <div class="form-actions">
+                    <button type="button" class="btn" id="cancelEditBtn" hidden>Hủy sửa</button>
+                    <button type="button" class="btn" id="resetFormBtn">Làm mới</button>
+                    <button type="submit" class="btn btn--primary" id="submitBtn">Thêm giao dịch</button>
+                    </div>
+                    </form>
+                    </section>
+                    </div>
+
+                <div class="tab-panel" id="panel-list" role="tabpanel" aria-labelledby="tab-list" hidden>
+                    <section class="panel" aria-labelledby="filterTitle">
+                    <h2 class="panel__title" id="filterTitle"><i data-icon="search"></i> Tìm kiếm &amp; lọc</h2>
+                    <div class="filters">
+                    <div class="filter-group filter-group--search">
+                    <label class="form-label" for="searchInput">Từ khóa</label>
+                    <input type="search" id="searchInput" class="form-input" placeholder="Tên hoặc danh mục...">
+                    </div>
+                    <div class="filter-group">
+                    <label class="form-label" for="typeFilter">Loại</label>
+                    <select id="typeFilter" class="form-select">
+                    <option value="">Tất cả</option>
+                    <option value="income">Thu nhập</option>
+                    <option value="expense">Chi tiêu</option>
+                    </select>
+                    </div>
+                    <div class="filter-group">
+                    <label class="form-label" for="categoryFilter">Danh mục</label>
+                    <select id="categoryFilter" class="form-select">
+                    <option value="">Tất cả</option>
+                    </select>
+                    </div>
+                    <div class="filter-group">
+                    <label class="form-label" for="statusFilter">Trạng thái</label>
+                    <select id="statusFilter" class="form-select">
+                    <option value="">Tất cả</option>
+                    <option value="completed">Hoàn thành</option>
+                    <option value="pending">Chưa thanh toán</option>
+                    </select>
+                    </div>
+                    <div class="filter-group">
+                    <label class="form-label" for="monthFilter">Tháng</label>
+                    <input type="month" lang="en" id="monthFilter" class="form-input">
+                    </div>
+                    <div class="filter-group">
+                    <label class="form-label" for="sortSelect">Sắp xếp</label>
+                    <select id="sortSelect" class="form-select">
+                    <option value="date-desc">Ngày mới nhất</option>
+                    <option value="date-asc">Ngày cũ nhất</option>
+                    <option value="amount-desc">Số tiền giảm dần</option>
+                    <option value="amount-asc">Số tiền tăng dần</option>
+                    </select>
+                    </div>
+                    </div>
+                    <div class="filters__footer">
+                    <span id="listCount">Hiển thị 0 giao dịch</span>
+                    <button type="button" class="btn btn--small" id="clearFiltersBtn">Xóa bộ lọc</button>
+                    </div>
+                    </section>
+                    <section class="panel transactions-section" aria-labelledby="listTitle">
+                    <h2 class="panel__title" id="listTitle"><i data-icon="credit-card"></i> Danh sách giao dịch</h2>
+                    <div class="transactions-list" id="transactionsList" aria-live="polite">
+                    <div class="empty-state"><i data-icon="inbox"></i> Đang tải...</div>
+                    </div>
+                    <div class="load-more" id="loadMoreWrap" hidden>
+                    <button type="button" class="btn" id="loadMoreBtn">Xem thêm</button>
+                    </div>
+                    </section>
+                </div>
+
+                <div class="tab-panel" id="panel-recurring" role="tabpanel" aria-labelledby="tab-recurring" hidden>
+                    <section class="panel tool-card tool-card--primary tool-card--wide" aria-labelledby="recurringTitle">
+                    <h2 class="panel__title" id="recurringTitle"><i data-icon="calendar"></i> Giao dịch định kỳ</h2>
+                    <p class="form-hint">Tiền nhà, lương hằng tháng... Khi mở trang Giao dịch hoặc Biểu đồ &amp; Phân tích, các khoản đã đến hạn được tự động thêm vào danh sách (mỗi tháng chỉ một lần).</p>
+                    <form id="recurringForm" class="tool-form" novalidate>
+                    <div class="form-group form-group--wide"><label class="form-label" for="recTitle">Tên khoản *</label><input type="text" id="recTitle" class="form-input" maxlength="100" placeholder="VD: Tiền nhà, Lương"><small class="form-error" id="err-recTitle" aria-live="polite"></small></div>
+                    <div class="form-group"><label class="form-label" for="recAmount">Số tiền (VND) *</label><input type="number" id="recAmount" class="form-input" data-money min="1" step="1" inputmode="numeric"><small class="form-error" id="err-recAmount" aria-live="polite"></small></div>
+                    <div class="form-group"><label class="form-label" for="recDay">Ngày mỗi tháng (1-28) *</label><input type="number" id="recDay" class="form-input" min="1" max="28" step="1" inputmode="numeric" value="5"><small class="form-error" id="err-recDay" aria-live="polite"></small></div>
+                    <div class="form-group"><label class="form-label" for="recType">Loại *</label><select id="recType" class="form-select"><option value="expense">Chi tiêu</option><option value="income">Thu nhập</option></select></div>
+                    <div class="form-group"><label class="form-label" for="recCategory">Danh mục *</label><select id="recCategory" class="form-select"></select></div>
+                    <div class="form-group"><label class="form-label" for="recStart">Từ tháng *</label><input type="month" lang="en" id="recStart" class="form-input"><small class="form-error" id="err-recStart" aria-live="polite"></small></div>
+                    <div class="form-group"><label class="form-label" for="recEnd">Đến tháng (tùy chọn)</label><input type="month" lang="en" id="recEnd" class="form-input"><small class="form-error" id="err-recEnd" aria-live="polite"></small></div>
+                    <div class="form-actions form-group--wide">
+                    <button type="submit" class="btn btn--primary" id="recAddBtn">Thêm quy tắc</button>
+                    </div>
+                    </form>
+                    <div class="recurring-list" id="recurringList" aria-live="polite"></div>
+                    </section>
+                </div>
+
+                <div class="tab-panel" id="panel-split" role="tabpanel" aria-labelledby="tab-split" hidden>
+                    <section class="panel tool-card" aria-labelledby="splitTitle">
+                    <h2 class="panel__title" id="splitTitle"><i data-icon="folder"></i> Chia tiền nhóm</h2>
+                    <p class="form-hint">Nhập ai đã trả bao nhiêu. Công cụ tính số tiền mỗi người phải chịu và ai cần chuyển cho ai.</p>
+                    <div class="split-rows" id="splitRows"></div>
+                    <div class="form-actions">
+                    <button type="button" class="btn" id="splitAddBtn"><i data-icon="plus"></i> Thêm người</button>
+                    </div>
+                    <div class="tool-result" id="splitResult" aria-live="polite"></div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- BUDGET MODAL -->
+    <!-- Cửa sổ nổi để đặt số tiền ngân sách cho tháng. -->
+    <div class="modal" id="budgetModal" role="dialog" aria-modal="true" aria-labelledby="budgetTitle">
+        <div class="modal__content">
+            <div class="modal__header">
+                <h2 class="modal__title" id="budgetTitle"><i data-icon="target"></i> Ngân sách tháng này</h2>
+                <button type="button" class="modal__close" id="closeBudgetModal" aria-label="Đóng">&times;</button>
+            </div>
+            <div class="modal__body">
+                <div class="form-group">
+                    <label class="form-label" for="budgetInput">Ngân sách chi tiêu hàng tháng (VND)</label>
+                    <input type="number" id="budgetInput" class="form-input" data-money inputmode="numeric" placeholder="VD: 5000000">
+                    <small class="form-error" id="budgetError" aria-live="polite"></small>
+                </div>
+                <p class="form-hint">Hệ thống sẽ cảnh báo khi chi tiêu hoàn thành của tháng đạt 80% ngân sách.</p>
+            </div>
+            <div class="modal__footer">
+                <button type="button" class="btn btn--danger" id="removeBudgetBtn" hidden>Xóa ngân sách</button>
+                <button type="button" class="btn" id="cancelBudgetBtn">Hủy</button>
+                <button type="button" class="btn btn--primary" id="saveBudgetBtn">Lưu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONFIRM MODAL -->
+    <!-- Cửa sổ hỏi lại "Bạn có chắc không?" trước khi xóa. -->
+    <div class="modal" id="confirmModal" role="alertdialog" aria-modal="true" aria-labelledby="confirmTitle" aria-describedby="confirmMessage">
+        <div class="modal__content">
+            <div class="modal__header">
+                <h2 class="modal__title" id="confirmTitle">Xác nhận</h2>
+            </div>
+            <div class="modal__body">
+                <p id="confirmMessage"></p>
+            </div>
+            <div class="modal__footer">
+                <button type="button" class="btn" id="confirmCancel">Hủy</button>
+                <button type="button" class="btn btn--danger" id="confirmOk">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chỗ hiện thông báo nhỏ ở góc màn hình (ví dụ "Đã lưu"). -->
+    <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+    <!-- Chân trang: thông tin bản quyền. -->
+    <!-- Tải các file JavaScript theo đúng thứ tự. File sau có thể dùng hàm của file trước, nên thứ tự không được đổi. -->
+    <script src="js/icons.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/transition.js"></script>
+    <script src="js/topbar.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/calc.js"></script>
+    <script src="js/quickadd.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/recurring-split.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/details-anim.js"></script>
+</body>
+</html>

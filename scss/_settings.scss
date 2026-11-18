@@ -1,0 +1,29 @@
+// Trang Cài đặt: nút phân đoạn và hiệu ứng khi đổi tùy chọn.
+/* Cài đặt: nút phân đoạn. Khi đổi một mục, màu và độ mờ kính chuyển dần thay vì đổi ngay. */
+.seg { display: inline-flex; flex-wrap: wrap; gap: 0.25rem; padding: 0.25rem; background: var(--input); border: 1px solid var(--border); border-radius: 999px; }
+.seg__btn { appearance: none; border: 0; background: transparent; color: var(--text-2); font: inherit; font-size: 0.875rem; padding: 0.45rem 0.9rem; border-radius: 999px; cursor: pointer; transition: background-color 0.6s cubic-bezier(0.32, 0.72, 0, 1), color 0.6s cubic-bezier(0.32, 0.72, 0, 1); }
+.seg__btn:hover { color: var(--text); }
+.seg__btn[aria-pressed="true"] { background: var(--accent); color: var(--accent-on); }
+.seg__btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+@property --glass-mul { syntax: "<number>"; inherits: true; initial-value: 1; }
+html { transition: --glass-mul 0.6s cubic-bezier(0.32, 0.72, 0, 1); }
+
+html.is-switching,
+html.is-switching *,
+html.is-switching *::before,
+html.is-switching *::after {
+  transition: background-color 0.6s cubic-bezier(0.32, 0.72, 0, 1), color 0.6s cubic-bezier(0.32, 0.72, 0, 1), border-color 0.6s cubic-bezier(0.32, 0.72, 0, 1), box-shadow 0.6s cubic-bezier(0.32, 0.72, 0, 1), fill 0.6s ease, stroke 0.6s ease !important;
+}
+
+/* Viên trượt dưới nút đang chọn, cùng kiểu thanh kính ở thanh chuyển trang. transform và width do settings.js đặt. */
+.seg { position: relative; }
+.seg__pill { position: absolute; top: 0.25rem; bottom: 0.25rem; left: 0; width: 0; border-radius: 999px; background: var(--accent); opacity: 0; pointer-events: none; transition: transform 0.6s cubic-bezier(0.32, 0.72, 0, 1), width 0.6s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.2s ease; }
+.seg .seg__btn { position: relative; z-index: 1; }
+.seg .seg__btn[aria-pressed="true"] { background: transparent; color: var(--accent-on); }
+html.is-switching .seg__pill { transition: transform 0.6s cubic-bezier(0.32, 0.72, 0, 1), width 0.6s cubic-bezier(0.32, 0.72, 0, 1), background-color 0.6s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.2s ease !important; }
+
+/* Thanh trượt độ mờ kính: nhãn hai đầu và thanh kéo lấy màu nhấn. */
+.glass-slider { display: flex; align-items: center; gap: 0.75rem; width: 100%; }
+.glass-slider__label { font-size: 0.8125rem; color: var(--text-2); white-space: nowrap; }
+.glass-slider input[type="range"] { flex: 1; min-width: 0; accent-color: var(--accent); cursor: pointer; }

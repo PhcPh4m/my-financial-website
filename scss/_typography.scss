@@ -1,0 +1,30 @@
+/* Typography tài chính: Be Vietnam Pro, chữ số cột đều nhau để các con số thẳng hàng, tiêu đề chặt hơn một chút. */
+body {
+  font-feature-settings: "kern" 1, "liga" 1;
+  -webkit-font-smoothing: antialiased;
+}
+
+.kpi__value,
+.transaction__amount,
+.money-preview,
+.tool-result__row strong,
+.category-item__amount,
+.budget-card__text,
+.budget-ring__value,
+.kpi__badge,
+.brand__sub,
+.amount-arrow {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.kpi__value {
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.brand__title,
+.panel__title,
+.chart-card__title {
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}

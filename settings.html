@@ -1,0 +1,118 @@
+<!-- Trang "Cài đặt": giao diện, độ mờ kính và chuyển động. Tùy chọn lưu trong trình duyệt. -->
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Cài đặt giao diện: sáng hoặc tối, độ mờ kính và giảm chuyển động">
+        <meta name="theme-color" content="#0B1A26">
+    <script>try{var r=document.documentElement,s=JSON.parse(localStorage.getItem("app_settings")||"{}");if(localStorage.getItem("app_theme")==="light")r.dataset.theme="light";if(s.palette)r.dataset.palette=s.palette;var v=typeof s.glass=="number"?s.glass:({soft:25,medium:50,strong:80})[s.glass];if(v==null)v=50;var t=v/100,m=t<=.5?1.84*t:1+2.2*(t-.5),b=t<=.5?44*t:22+36*(t-.5);r.style.setProperty("--glass-mul",m);r.style.setProperty("--glass-blur",b.toFixed(1)+"px");r.style.setProperty("--glass-sat",(100+120*t).toFixed(0)+"%");}catch(e){}</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <title>Cài đặt - Quản lý Tài chính</title>
+    <link rel="stylesheet" href="css/settings.css">
+    <link rel="stylesheet" href="css/palettes.css">
+    <link rel="stylesheet" href="css/redesign.css">
+    <script src="js/motion.js"></script>
+</head>
+<body class="page-enter">
+    <div class="ambient" aria-hidden="true"></div>
+
+    <header class="topbar">
+        <div class="topbar__inner">
+            <div class="brand">
+                <h1 class="brand__title"><i data-icon="ph-gear"></i> Cài đặt</h1>
+                <p class="brand__sub">Giao diện và hiệu ứng hiển thị trên thiết bị này</p>
+            </div>
+            <nav class="nav-tabs" aria-label="Điều hướng chính">
+                <span class="nav-tabs__pill" aria-hidden="true"></span>
+                <a href="index.html" class="nav-link"><i data-icon="wallet"></i> <span class="nav-link__label" data-text="Giao dịch">Giao dịch</span></a>
+                <a href="analytics.html" class="nav-link"><i data-icon="chart"></i> <span class="nav-link__label" data-text="Biểu đồ &amp; Phân tích">Biểu đồ &amp; Phân tích</span></a>
+                <a href="tools.html" class="nav-link"><i data-icon="ph-wrench"></i> <span class="nav-link__label" data-text="Công cụ">Công cụ</span></a>
+                <a href="guide.html" class="nav-link"><i data-icon="book"></i> <span class="nav-link__label" data-text="Hướng dẫn">Hướng dẫn</span></a>
+                <a href="settings.html" class="nav-link" aria-current="page"><i data-icon="ph-gear"></i> <span class="nav-link__label" data-text="Cài đặt">Cài đặt</span></a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page">
+        <!-- CÀI ĐẶT: tùy chọn lưu trong trình duyệt và áp dụng qua biến CSS trên :root. -->
+        <!-- CÀI ĐẶT: ba nhóm, mỗi nhóm một khung. Tùy chọn lưu trong trình duyệt. -->
+        <div class="settings">
+            <section class="panel settings__group" aria-labelledby="grpAppearance">
+                <h2 class="settings__heading" id="grpAppearance">Giao diện</h2>
+                <div class="settings__row">
+                    <div class="settings__text">
+                        <h3 class="settings__title" id="themeTitle">Chế độ sáng hoặc tối</h3>
+                        <p class="settings__desc">Nút đổi giao diện ở góc trên dùng cùng lựa chọn này.</p>
+                    </div>
+                    <div class="seg seg--icons" role="group" aria-labelledby="themeTitle">
+                        <span class="seg__pill" aria-hidden="true"></span>
+                        <button type="button" class="seg__btn" data-group="theme" data-value="light" aria-pressed="false" aria-label="Sáng" title="Sáng"><i data-icon="sun"></i></button>
+                        <button type="button" class="seg__btn" data-group="theme" data-value="dark" aria-pressed="false" aria-label="Tối" title="Tối"><i data-icon="moon"></i></button>
+                    </div>
+                </div>
+                <div class="settings__block">
+                    <div class="settings__text">
+                        <h3 class="settings__title" id="paletteTitle">Bảng màu nền</h3>
+                        <p class="settings__desc">Đổi nền cho cả chế độ sáng và tối. Màu chữ và màu nhấn giữ nguyên.</p>
+                    </div>
+                    <div class="palette-grid" role="group" aria-labelledby="paletteTitle">
+                        <button type="button" class="palette-card" data-group="palette" data-value="ocean" aria-pressed="false"><span class="palette-card__preview" aria-hidden="true"><span class="swatch swatch--ocean"></span><span class="palette-card__chip"></span></span><span class="palette-card__label">Đại dương</span></button>
+                        <button type="button" class="palette-card" data-group="palette" data-value="forest" aria-pressed="false"><span class="palette-card__preview" aria-hidden="true"><span class="swatch swatch--forest"></span><span class="palette-card__chip"></span></span><span class="palette-card__label">Rừng</span></button>
+                        <button type="button" class="palette-card" data-group="palette" data-value="wine" aria-pressed="false"><span class="palette-card__preview" aria-hidden="true"><span class="swatch swatch--wine"></span><span class="palette-card__chip"></span></span><span class="palette-card__label">Đỏ rượu</span></button>
+                        <button type="button" class="palette-card" data-group="palette" data-value="violet" aria-pressed="false"><span class="palette-card__preview" aria-hidden="true"><span class="swatch swatch--violet"></span><span class="palette-card__chip"></span></span><span class="palette-card__label">Tím đêm</span></button>
+                        <button type="button" class="palette-card" data-group="palette" data-value="sand" aria-pressed="false"><span class="palette-card__preview" aria-hidden="true"><span class="swatch swatch--sand"></span><span class="palette-card__chip"></span></span><span class="palette-card__label">Cát ấm</span></button>
+                        <button type="button" class="palette-card" data-group="palette" data-value="hong" aria-pressed="false"><span class="palette-card__preview" aria-hidden="true"><span class="swatch swatch--hong"></span><span class="palette-card__chip"></span></span><span class="palette-card__label">Hồng đào</span></button>
+                        <button type="button" class="palette-card" data-group="palette" data-value="than" aria-pressed="false"><span class="palette-card__preview" aria-hidden="true"><span class="swatch swatch--than"></span><span class="palette-card__chip"></span></span><span class="palette-card__label">Than chì</span></button>
+                        <button type="button" class="palette-card" data-group="palette" data-value="dat" aria-pressed="false"><span class="palette-card__preview" aria-hidden="true"><span class="swatch swatch--dat"></span><span class="palette-card__chip"></span></span><span class="palette-card__label">Đất nung</span></button>
+                        <button type="button" class="palette-card" data-group="palette" data-value="xanh" aria-pressed="false"><span class="palette-card__preview" aria-hidden="true"><span class="swatch swatch--xanh"></span><span class="palette-card__chip"></span></span><span class="palette-card__label">Sương bạc</span></button>
+                        <button type="button" class="palette-card" data-group="palette" data-value="cham" aria-pressed="false"><span class="palette-card__preview" aria-hidden="true"><span class="swatch swatch--cham"></span><span class="palette-card__chip"></span></span><span class="palette-card__label">Chàm đêm</span></button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel settings__group" aria-labelledby="grpDisplay">
+                <h2 class="settings__heading" id="grpDisplay">Hiển thị</h2>
+                <div class="settings__row">
+                    <div class="settings__text">
+                        <h3 class="settings__title" id="glassTitle">Độ mờ kính</h3>
+                        <p class="settings__desc">Độ trong suốt của khung và thanh điều hướng.</p>
+                    </div>
+                    <div class="glass-control">
+                        <input type="range" id="glassSlider" min="0" max="100" step="1" value="50" aria-labelledby="glassTitle" aria-valuetext="">
+                        <output id="glassValue" class="glass-control__value" for="glassSlider">50</output>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel settings__group" aria-labelledby="grpMotion">
+                <h2 class="settings__heading" id="grpMotion">Chuyển động</h2>
+                <div class="settings__row">
+                    <div class="settings__text">
+                        <h3 class="settings__title" id="motionTitle">Giảm chuyển động</h3>
+                        <p class="settings__desc">Tắt phần lớn animation khi mở, đóng và chuyển trang. Mặc định vẫn bật animation.</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="reduceMotionToggle" role="switch" aria-labelledby="motionTitle">
+                        <span class="switch__track" aria-hidden="true"><span class="switch__thumb"></span></span>
+                        <span class="switch__state" id="motionState">Đang tắt</span>
+                    </label>
+                </div>
+            </section>
+
+            <div class="settings__footer">
+                <p class="form-hint settings__saved" id="settingsSaved" role="status"></p>
+                <button class="btn btn--quiet" id="resetSettingsBtn" type="button"><i data-icon="rotate"></i> Khôi phục mặc định</button>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/icons.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/transition.js"></script>
+    <script src="js/topbar.js"></script>
+</body>
+</html>

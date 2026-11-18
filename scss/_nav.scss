@@ -1,0 +1,187 @@
+/* ----- Điều hướng: có thêm tab Công cụ ----- */
+.nav-tabs .nav-link {
+  white-space: nowrap;
+}
+
+@media (max-width: 1100px) {
+  .tools-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .tool-form,
+  .split-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .quick-add__row {
+    flex-direction: column;
+  }
+}
+
+
+/* ----- v9: thanh điều hướng ổn định ----- */
+
+/* Icon được vẽ bằng JavaScript sau khi trang hiện ra. Dành sẵn đúng chỗ của icon để chữ không dịch chuyển khi icon xuất hiện. */
+[data-icon] {
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 1rem;
+  height: 1rem;
+  vertical-align: -0.125em;
+}
+
+/* Thanh điều hướng không được co lại; các tab giữ kích thước theo nội dung và giữ cùng độ dày chữ. */
+.nav-tabs {
+  flex: 0 0 auto;
+}
+
+.nav-tabs .nav-link {
+  flex: 0 0 auto;
+  justify-content: center;
+  min-width: 8.5rem;
+}
+
+@media (max-width: 1100px) {
+  .topbar__inner {
+    flex-wrap: wrap;
+    row-gap: 0.75rem;
+  }
+
+  .nav-tabs {
+    order: 3;
+    flex: 1 1 100%;
+  }
+
+  .nav-tabs .nav-link {
+    flex: 1 1 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .nav-tabs {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .nav-tabs .nav-link {
+    min-width: 0;
+    overflow: hidden;
+    padding: 0.4rem 0.25rem;
+    font-size: 0.8125rem;
+    line-height: 1.2;
+    text-align: center;
+    white-space: normal;
+  }
+
+  .nav-tabs .nav-link [data-icon] {
+    display: none;
+  }
+}
+
+/* ----- v9: không đậm tab đang chọn, chuyển động kiểu iOS, khung đệm nhãn ----- */
+
+/* Mọi tab cùng độ dày chữ. Tab đang chọn chỉ đổi màu, không đổi độ rộng chữ. */
+.nav-link,
+.nav-link[aria-current="page"] {
+  font-weight: 500;
+}
+
+/* Khung đệm ẩn giữ chỗ cho nhãn, để nhãn không đổi kích thước nếu sau này cần in đậm. */
+.nav-link__label {
+  display: inline-grid;
+}
+
+.nav-link__label::after {
+  content: attr(data-text);
+  grid-area: 1 / 1;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  font-weight: 600;
+}
+
+/* Thanh kính chỉ hiện sau khi transition.js đặt đúng vị trí, tránh lộ vệt viền khi trang vừa vẽ. */
+.nav-tabs__pill {
+  opacity: 0;
+  transition:
+    transform 0.6s cubic-bezier(0.32, 0.72, 0, 1),
+    opacity 0.2s ease;
+}
+
+/* Chữ đổi màu mềm khi chuyển tab. */
+.nav-link {
+  transition: color 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* Thanh trên thu gọn: chỉ hiện icon. Máy tính: rê chuột vào thanh để mở ra tên đầy đủ. Điện thoại: chạm vào vùng thanh để bật tắt. */
+.nav-tabs .nav-link {
+  min-width: 0;
+  gap: 0;
+  padding: 0.45rem 0.7rem;
+  transition: color 0.6s cubic-bezier(0.32, 0.72, 0, 1), padding 0.6s cubic-bezier(0.32, 0.72, 0, 1), gap 0.6s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.nav-tabs .nav-link [data-icon] {
+  display: inline-block;
+}
+
+.nav-link__label {
+  max-width: 0;
+  opacity: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: max-width 0.6s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.3s ease;
+}
+
+.topbar.is-expanded .nav-link,
+.topbar.is-expanded .nav-tabs .nav-link {
+  gap: 0.4rem;
+  padding: 0.45rem 0.85rem;
+}
+
+.topbar.is-expanded .nav-link__label {
+  max-width: 14rem;
+  opacity: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .topbar:hover .nav-link,
+  .topbar:hover .nav-tabs .nav-link {
+    gap: 0.4rem;
+    padding: 0.45rem 0.85rem;
+  }
+
+  .topbar:hover .nav-link__label {
+    max-width: 14rem;
+    opacity: 1;
+  }
+}
+
+@media (max-width: 640px) {
+  .nav-tabs .nav-link {
+    white-space: normal;
+  }
+}
+
+/* Thanh trên trên điện thoại: nhãn mở ra thì cuộn ngang, không cắt chữ. */
+@media (max-width: 640px) {
+  .nav-tabs {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .nav-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-tabs .nav-link {
+    flex: 0 0 auto;
+    overflow: visible;
+  }
+
+  .topbar.is-expanded .nav-link__label {
+    max-width: 9rem;
+  }
+}

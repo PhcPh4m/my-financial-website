@@ -1,0 +1,23 @@
+/* ----- Ngân sách theo danh mục ----- */
+.cat-budget-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.cat-budget-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.category-item__amount--over {
+  color: var(--expense);
+  font-weight: 600;
+}
+
+.category-item__fill--over {
+  background: var(--expense);
+}
+

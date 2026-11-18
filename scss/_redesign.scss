@@ -1,0 +1,593 @@
+// ----------------------------------------------------------------------------
+// Redesign: bo tròn, mềm hơn cho khung nội dung, thẻ KPI, nút và ô nhập.
+// Không đổi phần đầu trang (thanh trên, điều hướng), ID/class mà JS dùng,
+// transition/animation/keyframes, bảng màu.
+// ----------------------------------------------------------------------------
+
+// Thanh trên: khung kính bo tròn nổi trên nền. Không còn đường kẻ ngang dưới thanh.
+.topbar {
+  background: transparent;
+  border-bottom: 0;
+}
+.topbar__inner {
+  max-width: calc(80rem - 3rem);
+  margin: 0.75rem auto 0;
+  padding: 0.625rem 1rem 0.625rem 1.25rem;
+  border-radius: 1.25rem;
+  background: var(--glass-strong);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-lift);
+  -webkit-backdrop-filter: var(--blur);
+  backdrop-filter: var(--blur);
+}
+.brand__title { font-size: 1.0625rem; font-weight: 700; letter-spacing: -0.01em; }
+.brand__sub { font-size: 0.75rem; }
+
+// Nhóm tab: viên thuốc.
+.nav-tabs {
+  border-radius: 999px;
+  padding: 0.3rem;
+  background: var(--input);
+  border: 1px solid var(--border);
+}
+.nav-tabs__pill { border-radius: 999px; }
+.nav-tabs .nav-link { border-radius: 999px; }
+.nav-link[aria-current="page"] { color: var(--accent); }
+
+@media (max-width: 640px) {
+  .topbar__inner { margin-top: 0.5rem; padding: 0.5rem 0.75rem; border-radius: 1rem; }
+}
+
+// Khung nội dung: bo lớn hơn, khoảng thở rộng hơn.
+.page { gap: 1.25rem; padding: 1.75rem 1.5rem 2.5rem; }
+.panel {
+  padding: 1.375rem 1.5rem;
+  border-radius: 1.25rem;
+  border-color: var(--border);
+  box-shadow: var(--shadow-lift);
+}
+.panel__title,
+.chart-card__title { font-size: 0.9375rem; letter-spacing: -0.005em; }
+
+// Thẻ KPI: số lớn, nhãn nhỏ, góc bo lớn như mẫu.
+.kpis { gap: 1rem; }
+.kpi {
+  padding: 1.125rem 1.25rem 1.0625rem;
+  border-radius: 1.25rem;
+  gap: 0.5rem;
+  border-color: var(--border);
+}
+.kpi__label { color: var(--text-2); font-weight: 500; }
+.kpi__value {
+  font-size: clamp(1.375rem, 2.2vw, 1.75rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.kpi__note { color: var(--text-3); }
+
+// Nút: viên thuốc, nhấn màu accent.
+.btn { border-radius: 999px; }
+.btn--primary {
+  background: var(--accent);
+  color: var(--accent-on);
+  border-color: transparent;
+}
+
+// Ô nhập: bo tròn đồng bộ với thẻ.
+.form-input,
+.form-select { border-radius: 0.75rem; }
+
+// Trên điện thoại: thu khoảng cách, giữ bo tròn.
+@media (max-width: 640px) {
+  .page { padding: 1.25rem 1rem 2rem; }
+  .panel { padding: 1.125rem; border-radius: 1rem; }
+  .kpi { border-radius: 1rem; }
+}
+
+/* Thanh trên: xóa hẳn đường kẻ ngang ở đáy (ghi đè mọi nguồn khác). */
+html body .topbar {
+  background: transparent !important;
+  border-bottom: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Nhãn tab: khi mở ra thì hiện đủ chữ, không cắt. */
+.topbar.is-expanded .nav-link__label,
+.topbar:hover .nav-link__label {
+  overflow: visible;
+}
+.nav-tabs .nav-link { flex: 0 0 auto; }
+
+/* Thanh tab điều hướng: bo tròn hoàn toàn (viên thuốc), ghi đè mọi quy tắc cũ. */
+html body .topbar .nav-tabs {
+  border-radius: 999px !important;
+}
+html body .topbar .nav-tabs .nav-link,
+html body .topbar .nav-tabs__pill {
+  border-radius: 999px !important;
+}
+
+/* Đặt ngân sách: nằm trên thẻ tiến độ ở cột trái, nút chiếm đủ chiều ngang. */
+.layout__side > .budget-strip {
+  padding: 1rem 1.125rem;
+}
+.budget-quick {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.budget-quick .form-hint { margin: 0; }
+.budget-quick .btn { width: 100%; justify-content: center; }
+
+/* ---------- Bước 3: liquid glass cho thanh phụ và cài đặt ---------- */
+
+/* Thanh phụ (Thêm giao dịch | Danh sách | Định kỳ | Chia tiền) và nhóm nút chọn: kính lỏng. */
+.tabs,
+.seg {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.02)), var(--glass-strong);
+  border: 1px solid var(--glass-border);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), var(--shadow-lift);
+  -webkit-backdrop-filter: var(--blur);
+  backdrop-filter: var(--blur);
+}
+
+/* Các nút trong thanh phụ: căn đều chiều cao và khoảng cách. */
+.seg__btn {
+  min-height: 2.5rem;
+  padding: 0 1.1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+/* Tab Thêm/Danh sách/Định kỳ/Chia tiền: chữ thuần, không flex, nên chỉ có đúng một khoảng trắng giữa các từ. */
+.tabs__btn {
+  min-height: 2.5rem;
+  padding: 0 1.1rem;
+  display: inline-block;
+  line-height: 2.5rem;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Khối công cụ cột trái: nút cũng kính lỏng, cùng nhịp với thanh phụ. */
+.tools .btn,
+.secondary-zone .btn {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.02)), var(--glass-strong);
+  border: 1px solid var(--glass-border);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  -webkit-backdrop-filter: var(--blur);
+  backdrop-filter: var(--blur);
+}
+
+/* ---------- Bước 4: Cài đặt dạng danh sách ---------- */
+.settings-list {
+  padding: 0.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  max-width: 52rem;
+  margin: 0 auto;
+}
+.set-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.set-row:last-of-type { border-bottom: 0; }
+.set-row__text { flex: 1 1 16rem; min-width: 0; }
+.set-row__title {
+  margin: 0 0 0.25rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+.set-row__desc { margin: 0; color: var(--text-3); font-size: 0.8125rem; line-height: 1.5; }
+.settings-list > .form-hint { margin: 0.75rem 0 0.25rem; }
+.seg--wrap { flex-wrap: wrap; justify-content: flex-end; }
+
+/* Công tắc giảm chuyển động. */
+.switch { position: relative; display: inline-flex; cursor: pointer; }
+.switch input { position: absolute; opacity: 0; width: 0; height: 0; }
+.switch__track {
+  width: 2.75rem;
+  height: 1.5rem;
+  border-radius: 999px;
+  background: var(--input);
+  border: 1px solid var(--border);
+  position: relative;
+  transition: background 0.25s ease, border-color 0.25s ease;
+}
+.switch__thumb {
+  position: absolute;
+  top: 50%;
+  left: 0.2rem;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background: var(--text-2);
+  transform: translateY(-50%);
+  transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1), background 0.25s ease;
+}
+.switch input:checked + .switch__track { background: var(--accent); border-color: transparent; }
+.switch input:checked + .switch__track .switch__thumb { transform: translate(1.25rem, -50%); background: var(--accent-on); }
+.switch input:focus-visible + .switch__track { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Giảm chuyển động: tắt animation và transition khi người dùng bật tùy chọn. */
+html[data-reduce-motion="on"] *,
+html[data-reduce-motion="on"] *::before,
+html[data-reduce-motion="on"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Bước 1 (căn đều): thanh tab phụ chiếm đủ chiều ngang, các nút chia đều khoảng trống. */
+.tabs {
+  display: flex;
+  width: 100%;
+  align-self: stretch;
+}
+.tabs__btn {
+  flex: 1 1 0;
+  min-width: max-content;
+  padding: 0.55rem 0.75rem;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* ---------- Cài đặt v94: ba nhóm, bảng màu có xem trước, thanh trượt rõ ---------- */
+.settings {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 44rem;
+  margin: 0 auto;
+  width: 100%;
+}
+.settings__group {
+  display: flex;
+  flex-direction: column;
+  padding: 0.25rem 1.25rem 0.5rem;
+}
+.settings__heading {
+  margin: 0.875rem 0 0.25rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-3);
+}
+.settings__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.875rem 1.25rem;
+  padding: 0.875rem 0;
+  border-top: 1px solid var(--border);
+}
+.settings__heading + .settings__row { border-top: 0; }
+.settings__row--stack { flex-direction: column; align-items: stretch; }
+.settings__text { flex: 1 1 14rem; min-width: 0; }
+.settings__title {
+  margin: 0 0 0.25rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--text);
+}
+.settings__desc {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--text-3);
+}
+
+/* Bảng màu nền: mỗi bảng là một thẻ có xem trước màu thật. */
+.palette-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+  gap: 0.75rem;
+}
+.palette-card {
+  appearance: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.palette-card:hover { border-color: var(--text-3); }
+.palette-card[aria-pressed="true"] {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+.palette-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.palette-card__preview {
+  position: relative;
+  display: block;
+  height: 3.5rem;
+  border-radius: 9px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.palette-card__preview .swatch {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+}
+.palette-card__chip {
+  position: absolute;
+  left: 0.5rem;
+  bottom: 0.5rem;
+  width: 2.25rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.22);
+}
+.palette-card__label {
+  padding: 0 0.125rem 0.125rem;
+  font-size: 0.8125rem;
+  color: var(--text-2);
+}
+.palette-card[aria-pressed="true"] .palette-card__label { color: var(--text); font-weight: 500; }
+
+/* Thanh trượt độ mờ: phần đã kéo tô màu nhấn, số hiện tại ở bên phải. */
+.glass-control {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 0 1 18rem;
+  min-width: 12rem;
+}
+.glass-control input[type="range"] {
+  --fill: 50%;
+  appearance: none;
+  -webkit-appearance: none;
+  flex: 1;
+  height: 0.25rem;
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--accent) var(--fill), var(--input) var(--fill));
+  cursor: pointer;
+}
+.glass-control input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 1.125rem;
+  height: 1.125rem;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid var(--bg);
+}
+.glass-control input[type="range"]::-moz-range-thumb {
+  width: 1.125rem;
+  height: 1.125rem;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid var(--bg);
+}
+.glass-control input[type="range"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.glass-control__value {
+  min-width: 2.25rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-2);
+  font-size: 0.875rem;
+}
+
+/* Công tắc có nhãn trạng thái. */
+.switch { gap: 0.625rem; align-items: center; }
+.switch__state {
+  min-width: 4.5rem;
+  font-size: 0.8125rem;
+  color: var(--text-2);
+}
+.switch__track { width: 2.75rem; height: 1.5rem; }
+.switch input:not(:checked) + .switch__track { background: var(--surface-2); }
+
+/* Chân trang của Cài đặt: thông báo và nút khôi phục dạng chữ. */
+.settings__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 0 0.25rem;
+}
+.settings__saved { margin: 0; min-height: 1em; }
+.btn--quiet {
+  background: transparent;
+  border: 0;
+  color: var(--text-2);
+  box-shadow: none;
+}
+.btn--quiet:hover { color: var(--text); background: transparent; }
+
+@media (max-width: 640px) {
+  .settings__group { padding: 0.25rem 1rem 0.5rem; }
+  .palette-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .glass-control { flex: 1 1 100%; }
+}
+
+/* ---------- Bước KPI v95: một số nổi bật cho tháng, phần năm thu gọn ---------- */
+.kpis.kpis--home {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.kpis__month {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: 0.75rem;
+}
+.kpi--hero { padding: 1.375rem 1.5rem 1.25rem; }
+.kpi--hero .kpi__value {
+  font-size: clamp(2rem, 3.6vw, 2.75rem);
+  letter-spacing: -0.03em;
+}
+/* Số giữ màu chữ trung tính. Màu xanh và đỏ chỉ nằm ở biểu tượng và phần chênh lệch. */
+.kpi__value { color: var(--text); }
+
+.kpis__year {
+  border: 1px solid var(--glass-border);
+  border-radius: 1.25rem;
+  background: var(--glass);
+  -webkit-backdrop-filter: var(--blur);
+  backdrop-filter: var(--blur);
+}
+.kpis__year-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.875rem 1.25rem;
+  cursor: pointer;
+  list-style: none;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--text-2);
+}
+.kpis__year-summary::-webkit-details-marker { display: none; }
+.kpis__year-summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: 1.25rem; }
+.kpis__year-hint { font-size: 0.8125rem; color: var(--text-3); font-weight: 400; }
+.kpis__year[open] .kpis__year-summary { border-bottom: 1px solid var(--border); }
+.kpis__year-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  padding: 0.75rem;
+}
+.kpis__year-grid .kpi { border: 0; box-shadow: none; background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; padding: 0.5rem 0.75rem; }
+.kpis__note { margin: 0; font-size: 0.8125rem; color: var(--text-3); }
+
+@media (max-width: 760px) {
+  .kpis__month,
+  .kpis__year-grid { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+}
+
+/* Sửa lưới bảng màu (v96): bỏ khoảng trống thừa, thẻ không kéo giãn, 2 hàng x 5. */
+.settings__row--stack .settings__text { flex: none; width: 100%; }
+.palette-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  align-items: start;
+}
+.palette-card { height: auto; }
+@media (max-width: 640px) {
+  .palette-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Khối bảng màu (v97): không dùng hàng ngang, nên không có khoảng trống thừa. */
+.settings__block { display: flex; flex-direction: column; gap: 0.75rem; padding: 0.875rem 0; border-top: 1px solid var(--border); }
+.settings__heading + .settings__block { border-top: 0; }
+
+/* ---------- v99: đồng bộ thẻ cột trái, KPI biểu đồ 4 cột, KPI giao dịch đúng bố cục ---------- */
+
+/* Thẻ cột trái cùng một nền, cùng viền, cùng bo góc. Bỏ viền xanh và nền màu riêng. */
+.layout__side .budget-strip,
+.layout__side .alert.budget-card,
+.layout__side .weather-widget,
+.layout__side .tools {
+  background: var(--glass);
+  -webkit-backdrop-filter: var(--blur);
+  backdrop-filter: var(--blur);
+  border: 1px solid var(--glass-border);
+  border-left: 1px solid var(--glass-border);
+  border-radius: 1.25rem;
+  box-shadow: var(--shadow-lift);
+  padding: 1rem 1.125rem;
+}
+.layout__side .budget-strip { display: block; }
+.layout__side .budget-card .budget-card__text strong { font-weight: 500; }
+
+/* KPI trang Giao dịch: vẫn là khối tháng + khối năm thu gọn. */
+.kpis.kpis--home {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* KPI trang Biểu đồ: 4 thẻ cùng một hàng, gọn, không kéo dài. */
+.kpis:not(.kpis--home) {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+  align-items: stretch;
+}
+.kpis:not(.kpis--home) .kpi { padding: 1rem 1.125rem; gap: 0.375rem; }
+.kpis:not(.kpis--home) .kpi__value { font-size: clamp(1.25rem, 2vw, 1.5rem); }
+@media (max-width: 1000px) {
+  .kpis:not(.kpis--home) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .kpis:not(.kpis--home) { grid-template-columns: 1fr; }
+}
+
+/* ---------- v100: thanh và mục đang chọn đều là liquid glass (như thanh chuyển trang) ---------- */
+
+/* Thanh ngoài: kính mờ, viền sáng mỏng, không còn nền đặc. */
+html body .nav-tabs,
+html body .tabs,
+html body .seg {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.02)), var(--glass-strong);
+  border: 1px solid var(--glass-border);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  -webkit-backdrop-filter: var(--blur);
+  backdrop-filter: var(--blur);
+}
+
+/* Mục đang chọn: một viên kính sáng hơn, chữ màu nhấn (không tô đặc màu nhấn). */
+html body .nav-tabs__pill,
+html body .tabs__pill,
+html body .seg__pill {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.06)), var(--glass-strong) !important;
+  border: 1px solid var(--glass-border);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 1px 6px rgba(0, 0, 0, 0.18);
+  opacity: 1;
+}
+html body .tabs__btn[aria-selected="true"],
+html body .seg__btn[aria-pressed="true"] {
+  background: transparent;
+  color: var(--accent);
+}
+html body .nav-link[aria-current="page"] { color: var(--accent); }
+
+/* Thanh trên: chỉ khung trong (topbar__inner) có kính; dải ngoài trong suốt, không tô màu bão hòa. */
+html body .topbar {
+  background: transparent !important;
+  border-bottom: 0 !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+/* Nút sáng/tối dạng icon: mặt trời và mặt trăng. Icon đang chọn dùng màu nhấn, icon còn lại dùng màu chữ nhạt hơn. */
+.seg--icons { gap: 0.25rem; }
+.seg--icons .seg__btn {
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text);
+  opacity: 0.72;
+}
+.seg--icons .seg__btn svg,
+.seg--icons .seg__btn i { width: 1.125rem; height: 1.125rem; }
+html body .seg--icons .seg__btn[aria-pressed="true"] { color: var(--accent); opacity: 1; }
+html body .seg--icons .seg__btn[aria-pressed="false"]:hover { opacity: 1; }

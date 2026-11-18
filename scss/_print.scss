@@ -1,0 +1,22 @@
+/* ----- In / lưu PDF: chỉ giữ phần báo cáo ----- */
+@media print {
+  .no-print,
+  .period-bar {
+    display: none !important;
+  }
+}
+
+@media print {
+  .topbar,
+  .tools,
+  .toast-container,
+  .modal,
+  .layout__side {
+    display: none !important;
+  }
+
+  .panel {
+    box-shadow: none;
+  }
+}
+

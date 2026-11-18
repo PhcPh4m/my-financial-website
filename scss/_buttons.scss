@@ -1,0 +1,83 @@
+// ----------------------------------------------------------------------------
+// 8. Nút bấm
+// ----------------------------------------------------------------------------
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 2.125rem;
+  padding: 0.45rem 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background: var(--input);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+
+  &:hover {
+    background: var(--surface-2);
+    border-color: var(--border-strong);
+  }
+
+  &--primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-on);
+
+    &:hover {
+      background: var(--accent-dark);
+      border-color: var(--accent-dark);
+    }
+  }
+
+  &--danger {
+    background: transparent;
+    border-color: var(--expense);
+    color: var(--expense);
+
+    &:hover {
+      background: var(--expense-soft);
+    }
+  }
+
+  &--small {
+    min-height: 1.875rem;
+    padding: 0.3rem 0.65rem;
+    font-size: 0.8125rem;
+  }
+
+  &--full {
+    width: 100%;
+  }
+}
+
+.btn-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem 0.55rem;
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+  background: transparent;
+  color: var(--text-2);
+  font: inherit;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+
+  &:hover {
+    color: var(--text);
+    border-color: var(--border-strong);
+  }
+
+  &--delete:hover {
+    color: var(--expense);
+    border-color: var(--expense);
+  }
+}
+
