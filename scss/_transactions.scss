@@ -595,10 +595,6 @@
 
 .tab-panel[hidden] { display: none; }
 
-@media print {
-  .tab-panel[hidden] { display: flex !important; }
-}
-
 /* Viên trượt dưới tab đang chọn, cùng kiểu với thanh chọn ở Cài đặt. transform và width do analytics.js đặt. */
 .tabs { position: relative; }
 .tabs__pill { position: absolute; top: 0.25rem; bottom: 0.25rem; left: 0; width: 0; border-radius: 999px; background: var(--accent); opacity: 0; pointer-events: none; transition: transform 0.6s cubic-bezier(0.32, 0.72, 0, 1), width 0.6s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.2s ease; }

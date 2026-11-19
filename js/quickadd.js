@@ -3,9 +3,10 @@
 
 // Từ khóa để đoán danh mục chi. Khớp đầu tiên thắng, nên các nhóm cụ thể đứng trước.
 const QUICK_EXPENSE_RULES = [
+    [/(chuyển khoản|chuyen khoan|chuyển tiền|chuyen tien|\bck\b|thanh toán cho)/iu, 'Chuyển khoản'],
     [/(xăng|grab|taxi|xe ôm|gửi xe|vé xe|đi lại|be\b|xe buýt)/iu, 'Đi lại'],
     [/(thuê nhà|tiền nhà|nhà trọ|phòng trọ|tiền phòng)/iu, 'Tiền nhà'],
-    [/(điện|nước|internet|wifi|wi-fi|điện thoại|cước|hóa đơn)/iu, 'Hóa đơn'],
+    [/(điện|nước|internet|wifi|wi-fi|điện thoại|cước|hóa đơn|vnpt|viettel|vinaphone|mobifone)/iu, 'Hóa đơn'],
     [/(thuốc|khám|bệnh viện|nha khoa|y tế|bác sĩ)/iu, 'Y tế'],
     [/(học phí|sách|khóa học|giáo dục|lớp học|vở|bút)/iu, 'Giáo dục'],
     [/(phim|game|net|karaoke|giải trí|nhạc)/iu, 'Giải trí'],

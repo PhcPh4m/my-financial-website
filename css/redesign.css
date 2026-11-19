@@ -599,3 +599,56 @@ html body .alert.budget-card {
   backdrop-filter: var(--blur);
 }
 
+
+/* ---------- Danh sách ví trong cửa sổ quản lý ví ---------- */
+.wallet-list { list-style: none; margin: 0 0 1rem; padding: 0; display: grid; gap: 0.5rem; }
+.wallet-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 0.875rem;
+  border: 1px solid var(--glass-border);
+  border-radius: 0.875rem;
+  background: var(--glass);
+}
+.wallet-row__name { font-weight: 500; color: var(--text); }
+.wallet-row__balance { font-variant-numeric: tabular-nums; color: var(--income, var(--text)); }
+.wallet-row__balance.is-negative { color: var(--expense, var(--danger)); }
+.wallet-row__tag { font-size: 0.75rem; color: var(--text-3); }
+
+/* Tổng tài sản: thêm thẻ thứ tư ở hàng tháng. */
+.kpis__month { grid-template-columns: 1.5fr 1.2fr 1fr 1fr; }
+@media (max-width: 760px) {
+  .kpis__month { grid-template-columns: 1fr; }
+}
+/* Số dư từng ví, mở ra từ thẻ Tổng tài sản. */
+.kpi__wallets { margin-top: 0.25rem; font-size: 0.8125rem; }
+.kpi__wallets summary { cursor: pointer; color: var(--text-3); list-style: none; }
+.kpi__wallets summary::-webkit-details-marker { display: none; }
+.kpi__wallets summary::after { content: ' ▾'; }
+.kpi__wallets[open] summary::after { content: ' ▴'; }
+.kpi__wallet-list { list-style: none; margin: 0.5rem 0 0; padding: 0; display: grid; gap: 0.25rem; }
+.kpi__wallet-row { display: flex; justify-content: space-between; gap: 0.5rem; }
+.kpi__wallet-name { color: var(--text-2); }
+.kpi__wallet-amount { font-variant-numeric: tabular-nums; color: var(--text); }
+.kpi__wallet-amount.is-negative { color: var(--expense, #e5484d); }
+
+
+/* ===== Bản kính (v1.10.8-glass): theo ảnh giao diện tham khảo, áp dụng cho mọi bảng màu ===== */
+:root {
+  --glass: color-mix(in srgb, var(--surface) min(100%, calc(30% * var(--glass-mul, 1))), transparent);
+  --glass-strong: color-mix(in srgb, var(--surface) min(100%, calc(52% * var(--glass-mul, 1))), transparent);
+  --glass-border: rgba(200, 225, 240, 0.16);
+  --shadow-lift: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 24px 48px -28px rgba(0, 0, 0, 0.7);
+}
+:root[data-theme="light"] {
+  --glass: color-mix(in srgb, var(--surface) min(100%, calc(70% * var(--glass-mul, 1))), transparent);
+  --glass-border: rgba(255, 255, 255, 0.9);
+  --shadow-lift: inset 0 1px 0 #ffffff, 0 20px 40px -26px rgba(19, 40, 58, 0.3);
+}
+.panel,
+.kpi,
+.modal__content {
+  border-radius: 1.25rem;
+}

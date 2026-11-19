@@ -19,9 +19,7 @@
   flex-direction: column;
   gap: 0.375rem;
   padding: 0.875rem 1rem 0.8125rem;
-  background:
-    radial-gradient(120% 90% at 100% 0%, var(--kpi-tint) 0%, transparent 60%),
-    var(--glass);
+  background: var(--glass);
   border: 1px solid var(--border);
   border-radius: 1rem;
   box-shadow: var(--shadow-lift);
@@ -62,8 +60,8 @@
   width: 1.75rem;
   height: 1.75rem;
   border-radius: 0.5rem;
-  background: var(--kpi-tint);
-  color: var(--kpi-accent);
+  background: var(--surface-2);
+  color: var(--text-2);
 
   svg {
     width: 0.875rem;

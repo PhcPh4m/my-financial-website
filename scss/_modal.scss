@@ -10,6 +10,7 @@
   justify-content: center;
   padding: 1rem;
   background: var(--overlay);
+  backdrop-filter: blur(14px) saturate(120%);
 
   &.active {
     display: flex;

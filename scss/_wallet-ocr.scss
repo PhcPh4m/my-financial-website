@@ -1,0 +1,12 @@
+// Đọc số dư từ ảnh (Ví). Bản sao của khối CSS trong css/index.css.
+[hidden] { display: none !important; }
+.wallet-ocr { margin-top: 0.75rem; display: grid; gap: 0.5rem;
+  &__panel { display: grid; gap: 0.75rem; }
+  &__stage { position: relative; border-radius: 0.75rem; overflow: hidden; background: var(--input);
+    border: 1px solid var(--border); touch-action: none; user-select: none; cursor: crosshair;
+    canvas { display: block; width: 100%; height: auto; } }
+  &__box { position: absolute; border: 2px dashed var(--accent);
+    background: color-mix(in srgb, var(--accent) 18%, transparent); pointer-events: none; }
+  &__actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  &__result { display: grid; gap: 0.5rem; }
+}

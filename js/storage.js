@@ -7,6 +7,10 @@ const INCOME_KEY = 'monthly_income';
 // Ngân sách theo danh mục (đối tượng: tên danh mục -> số tiền) và các quy tắc giao dịch định kỳ.
 const CATEGORY_BUDGET_KEY = 'category_budgets';
 const RECURRING_KEY = 'recurring_rules';
+const WALLETS_KEY = 'wallets';
+const WALLET_TRANSFERS_KEY = 'wallet_transfers';
+const DEBTS_KEY = 'debts';
+const DEFAULT_WALLET_ID = 'W-DEFAULT';
 
 // Các danh mục chi tiêu có thể chọn, ví dụ ăn uống, tiền nhà.
 const EXPENSE_CATEGORIES = [
@@ -18,6 +22,8 @@ const EXPENSE_CATEGORIES = [
     'Giáo dục',
     'Giải trí',
     'Hóa đơn',
+    'Chuyển khoản',
+    'Chưa phân loại',
     'Khác'
 ];
 
@@ -27,6 +33,7 @@ const INCOME_CATEGORIES = [
     'Thưởng',
     'Đầu tư',
     'Làm thêm',
+    'Nhận hàng cho gia đình',
     'Khác'
 ];
 
@@ -65,7 +72,7 @@ function migrateCategoryKeys() {
 }
 
 // Tên các cột trong file CSV, giống hàng tiêu đề của bảng tính Excel.
-const CSV_HEADERS = ['title', 'amount', 'type', 'category', 'status', 'date'];
+const CSV_HEADERS = ['title', 'amount', 'type', 'category', 'status', 'date', 'wallet'];
 
 // TRANSACTIONS – CRUD
 
@@ -78,7 +85,8 @@ function isStoredTransaction(t) {
         Number.isFinite(t.amount) &&
         ['income', 'expense'].includes(t.type) &&
         ['completed', 'pending'].includes(t.status) &&
-        isValidISODate(t.date)
+        isValidISODate(t.date) &&
+        (t.walletId === undefined || typeof t.walletId === 'string')
     );
 }
 
@@ -108,6 +116,7 @@ function migrateStoredData() {
         console.error('Không chuyển được dữ liệu cũ:', error);
     }
     migrateCategoryKeys();
+    ensureDefaultWallet();
 }
 
 // Chuyển dữ liệu cũ sang định dạng mới: mã GD..., và createdDate thay cho createdAt.
@@ -128,6 +137,10 @@ function migrateTransactions(list) {
         }
         if ('createdAt' in item) {
             delete item.createdAt;
+            changed = true;
+        }
+        if (!item.walletId) {
+            item.walletId = DEFAULT_WALLET_ID;
             changed = true;
         }
         const cleanCategory = stripCategoryEmoji(item.category);
@@ -183,7 +196,8 @@ function normalizeTransaction(data) {
         type: data.type,
         category: stripCategoryEmoji(data.category),
         status: data.status,
-        date: data.date
+        date: data.date,
+        walletId: data.walletId || DEFAULT_WALLET_ID
     };
 }
 
@@ -407,8 +421,10 @@ function exportAsJSON() {
     return JSON.stringify(
         {
             app: 'web-quan-ly-tai-chinh-ca-nhan',
-            version: 3,
+            version: 4,
             exportedAt: new Date().toISOString(),
+            wallets: getWallets(),
+            walletTransfers: readWalletTransfers(),
             budget: getBudget(),
             categoryBudgets: getCategoryBudgets(),
             recurringRules: getRecurringRules(),
@@ -437,7 +453,8 @@ function unescapeCsvFormula(value) {
 function exportAsCSV() {
     const rows = [CSV_HEADERS.join(',')];
     getTransactions().forEach((t) => {
-        rows.push(CSV_HEADERS.map((h) => csvEscape(t[h])).join(','));
+        const row = CSV_HEADERS.map((h) => (h === 'wallet' ? walletNameOf(t.walletId) : t[h]));
+        rows.push(row.map((v) => csvEscape(v)).join(','));
     });
     return '\uFEFF' + rows.join('\r\n');
 }
@@ -496,7 +513,8 @@ function rowsToTransactions(rows) {
             type: get('type').trim().toLowerCase(),
             category: unescapeCsvFormula(get('category')),
             status: get('status').trim().toLowerCase(),
-            date: get('date').trim()
+            date: get('date').trim(),
+            wallet: unescapeCsvFormula(get('wallet'))
         };
     });
 }
@@ -520,6 +538,20 @@ function importTransactions(text, format) {
         }
     }
 
+    // Khôi phục ví trước để giao dịch trong file tìm đúng ví (thêm vào, không ghi đè).
+    if (format === 'json' && Array.isArray(JSON.parse(clean).wallets)) {
+        const haveW = new Set(getWallets().map((w) => w.id));
+        const extraW = JSON.parse(clean).wallets.filter((w) => isValidWallet(w) && !haveW.has(w.id));
+        if (extraW.length) saveWallets([...getWallets(), ...extraW]);
+    }
+    if (format === 'json' && Array.isArray(JSON.parse(clean).walletTransfers)) {
+        const haveT = new Set(readWalletTransfers().map((t) => t.id));
+        const known = new Set(getWallets().map((w) => w.id));
+        const extraT = JSON.parse(clean).walletTransfers.filter((t) =>
+            isValidWalletTransfer(t) && !haveT.has(t.id) && known.has(t.from) && known.has(t.to) && t.from !== t.to);
+        if (extraT.length) saveWalletTransfers([...readWalletTransfers(), ...extraT]);
+    }
+
     const existing = getTransactions();
     const all = existing.slice();
     const valid = [];
@@ -531,7 +563,7 @@ function importTransactions(text, format) {
             skipped++;
             return;
         }
-        const normalized = normalizeTransaction(raw || {});
+        const normalized = normalizeTransaction({ ...(raw || {}), walletId: resolveWalletId(raw) });
         if (validateTransaction(normalized).isValid) {
             const tx = { ...normalized, id: nextId(all), createdDate: nowText() };
             all.push(tx);
@@ -717,9 +749,192 @@ function clearAllData() {
         localStorage.removeItem(CATEGORY_BUDGET_KEY);
         localStorage.removeItem(RECURRING_KEY);
         localStorage.removeItem(INCOME_KEY);
+        localStorage.removeItem(WALLETS_KEY);
+        localStorage.removeItem(DEBTS_KEY);
         return true;
     } catch (error) {
         console.error('Không xóa được dữ liệu:', error);
         return false;
     }
+}
+
+// VÍ (TÀI KHOẢN NHẬP TAY)
+
+// Ví mặc định luôn có. Giao dịch cũ không có ví sẽ được gắn vào đây khi mở trang.
+function ensureDefaultWallet() {
+    const list = readWallets();
+    if (list.some((w) => w.id === DEFAULT_WALLET_ID)) return;
+    saveWallets([{ id: DEFAULT_WALLET_ID, name: 'Mặc định', openingBalance: 0 }, ...list]);
+}
+
+function isValidWallet(w) {
+    return Boolean(
+        w && typeof w === 'object' &&
+        typeof w.id === 'string' && w.id.length > 0 &&
+        typeof w.name === 'string' && w.name.trim().length > 0 && w.name.length <= 40 &&
+        Number.isFinite(w.openingBalance)
+    );
+}
+
+function readWallets() {
+    try {
+        const data = JSON.parse(localStorage.getItem(WALLETS_KEY) || '[]');
+        return Array.isArray(data) ? data.filter(isValidWallet) : [];
+    } catch (error) {
+        console.error('Không đọc được danh sách ví:', error);
+        return [];
+    }
+}
+
+function getWallets() {
+    const list = readWallets();
+    if (list.some((w) => w.id === DEFAULT_WALLET_ID)) return list;
+    return [{ id: DEFAULT_WALLET_ID, name: 'Mặc định', openingBalance: 0 }, ...list];
+}
+
+function saveWallets(list) {
+    try {
+        localStorage.setItem(WALLETS_KEY, JSON.stringify(list));
+        return true;
+    } catch (error) {
+        console.error('Không lưu được ví:', error);
+        return false;
+    }
+}
+
+function walletNameOf(id) {
+    const w = getWallets().find((x) => x.id === id);
+    return w ? w.name : 'Mặc định';
+}
+
+// Đổi ví trong file nhập vào thành mã ví thật. Không khớp thì rơi về ví Mặc định.
+function resolveWalletId(raw) {
+    if (!raw) return DEFAULT_WALLET_ID;
+    const wallets = getWallets();
+    if (raw.walletId && wallets.some((w) => w.id === raw.walletId)) return raw.walletId;
+    const name = String(raw.wallet ?? '').trim().toLowerCase();
+    const byName = wallets.find((w) => w.name.trim().toLowerCase() === name);
+    return byName ? byName.id : DEFAULT_WALLET_ID;
+}
+
+// Thêm ví mới với số dư đầu. Tên trùng (không phân biệt hoa thường) thì không thêm.
+function addWallet(name, openingBalance = 0) {
+    const clean = String(name ?? '').trim();
+    if (!clean || clean.length > 40) return null;
+    const list = getWallets();
+    if (list.some((w) => w.name.trim().toLowerCase() === clean.toLowerCase())) return null;
+    const wallet = { id: 'W' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7), name: clean, openingBalance: Math.round(Number(openingBalance) || 0) };
+    return saveWallets([...readWallets(), wallet]) ? wallet : null;
+}
+
+// Xóa ví. Giao dịch của ví đó được chuyển về ví Mặc định, không bị mất. Không xóa được ví Mặc định.
+function removeWallet(id) {
+    if (id === DEFAULT_WALLET_ID) return false;
+    const txs = getTransactions();
+    const moved = txs.map((t) => (t.walletId === id ? { ...t, walletId: DEFAULT_WALLET_ID } : t));
+    if (!saveTransactions(moved)) return false;
+    const remapped = readWalletTransfers()
+        .map((t) => ({ ...t, from: t.from === id ? DEFAULT_WALLET_ID : t.from, to: t.to === id ? DEFAULT_WALLET_ID : t.to }))
+        .filter((t) => t.from !== t.to);
+    saveWalletTransfers(remapped);
+    return saveWallets(readWallets().filter((w) => w.id !== id));
+}
+
+// Số dư từng ví: số dư đầu + thu - chi của giao dịch đã hoàn thành (cùng quy tắc với phần số dư chung).
+function getWalletBalances() {
+    const txs = getTransactions();
+    const transfers = readWalletTransfers();
+    return getWallets().map((w) => {
+        let balance = w.openingBalance;
+        txs.forEach((t) => {
+            if (t.walletId !== w.id || t.status !== 'completed') return;
+            balance += t.type === 'income' ? t.amount : -t.amount;
+        });
+        // Chuyển tiền giữa ví: không tính là thu hay chi, chỉ đổi số dư giữa hai ví.
+        transfers.forEach((tr) => {
+            if (tr.from === w.id) balance -= tr.amount;
+            if (tr.to === w.id) balance += tr.amount;
+        });
+        return { ...w, balance };
+    });
+}
+
+// Tổng tài sản: cộng số dư của mọi ví. Chuyển tiền giữa ví không làm tổng đổi.
+function getTotalAssets() {
+    return getWalletBalances().reduce((sum, w) => sum + w.balance, 0);
+}
+
+// KHOẢN VAY VÀ NỢ: số tiền còn nợ, lưu riêng để không lẫn vào giao dịch thu chi.
+function isValidDebt(d) {
+    return Boolean(
+        d && typeof d === 'object' &&
+        typeof d.id === 'string' && d.id.length > 0 &&
+        typeof d.name === 'string' && d.name.trim().length > 0 && d.name.length <= 40 &&
+        Number.isFinite(d.balance) && d.balance >= 0
+    );
+}
+
+function readDebts() {
+    try {
+        const data = JSON.parse(localStorage.getItem(DEBTS_KEY) || '[]');
+        return Array.isArray(data) ? data.filter(isValidDebt) : [];
+    } catch (error) {
+        console.error('Không đọc được khoản nợ:', error);
+        return [];
+    }
+}
+
+function saveDebts(list) {
+    try {
+        localStorage.setItem(DEBTS_KEY, JSON.stringify(list));
+        return true;
+    } catch (error) {
+        console.error('Không lưu được khoản nợ:', error);
+        return false;
+    }
+}
+
+function addDebt(name, balance) {
+    const item = { id: 'debt_' + Date.now().toString(36), name: name.trim(), balance };
+    saveDebts([...readDebts(), item]);
+    return item;
+}
+
+function removeDebt(id) {
+    saveDebts(readDebts().filter((d) => d.id !== id));
+}
+
+function getTotalDebts() {
+    return readDebts().reduce((sum, d) => sum + d.balance, 0);
+}
+
+// Tài sản ròng = tổng số dư các ví − tổng nợ còn lại.
+function getNetWorth() {
+    return getTotalAssets() - getTotalDebts();
+}
+
+// Danh sách chuyển tiền giữa ví đã lưu. Bỏ bản ghi hỏng.
+function readWalletTransfers() {
+    try {
+        const data = JSON.parse(localStorage.getItem(WALLET_TRANSFERS_KEY) || '[]');
+        return Array.isArray(data) ? data.filter(isValidWalletTransfer) : [];
+    } catch (error) {
+        console.error('Không đọc được chuyển tiền giữa ví:', error);
+        return [];
+    }
+}
+
+function saveWalletTransfers(list) {
+    try {
+        localStorage.setItem(WALLET_TRANSFERS_KEY, JSON.stringify(list));
+        return true;
+    } catch (error) {
+        console.error('Không lưu được chuyển tiền:', error);
+        return false;
+    }
+}
+
+function isValidWalletTransfer(t) {
+    return Boolean(t) && typeof t.id === 'string' && typeof t.from === 'string' && typeof t.to === 'string'
+        && Number.isInteger(t.amount) && t.amount > 0 && isValidISODate(t.date);
 }

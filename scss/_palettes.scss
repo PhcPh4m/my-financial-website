@@ -7,30 +7,28 @@
 /* Đại dương (mặc định): xanh biển */
 
 html[data-palette="wine"]:not([data-theme="light"]) {
-  --bg: #2A1218; --surface: #3B1A24; --surface-2: #4C2230; --input: #1F0C12;
-  --blob-1: #8E3A4E; --blob-2: #B0556D;
+  --bg: #241018; --surface: #351A26; --surface-2: #47243A; --input: #1C0C14;
+  --blob-1: #8A3A6A; --blob-2: #C2608F;
 }
 html[data-palette="wine"][data-theme="light"] {
   --bg: #FBEEF1; --surface: #FFFFFF; --surface-2: #F3DBE1; --input: #FFFFFF;
-  --blob-1: #E8AFBD; --blob-2: #D98BA0;
+  --blob-1: #E9B5D0; --blob-2: #E8A2B9;
 }
 
 html[data-palette="violet"]:not([data-theme="light"]) {
-  --bg: #1E1435; --surface: #2C1E4D; --surface-2: #3A2A62; --input: #170F2B;
-  --blob-1: #6B4FD0; --blob-2: #8B6FE0;
-}
+  --bg: #1E1224; --surface: #2B1A33; --surface-2: #3A2344; --input: #160C1B;
+  --blob-1: #8C73A9; --blob-2: #E898AE; --accent: #E9A3C9; --accent-dark: #D88AB5; --accent-soft: rgba(233, 163, 201, 0.14); --accent-on: #2A1424;}
 html[data-palette="violet"][data-theme="light"] {
-  --bg: #F2EFFA; --surface: #FFFFFF; --surface-2: #E6E0F5; --input: #FFFFFF;
-  --blob-1: #C4B6EE; --blob-2: #A895E0;
-}
+  --bg: #F7EEF6; --surface: #FFFFFF; --surface-2: #EBDDF0; --input: #FFFFFF;
+  --blob-1: #C793B4; --blob-2: #ECA99F; --accent: #8E3F7E; --accent-dark: #6E2D62; --accent-soft: rgba(142, 63, 126, 0.12); --accent-on: #FFFFFF;}
 
 html[data-palette="sand"]:not([data-theme="light"]) {
-  --bg: #2A2016; --surface: #3A2E20; --surface-2: #4A3B2A; --input: #1F180F;
-  --blob-1: #A67C3D; --blob-2: #C49A56;
+  --bg: #261F13; --surface: #3A2E20; --surface-2: #4A3B2A; --input: #1F180F;
+  --blob-1: #B88A4A; --blob-2: #E0B06E;
 }
 html[data-palette="sand"][data-theme="light"] {
   --bg: #F6F1E7; --surface: #FFFCF5; --surface-2: #EFE7D6; --input: #FFFCF5;
-  --blob-1: #D9C8A6; --blob-2: #C9B48C;
+  --blob-1: #EAD8B2; --blob-2: #E2C594;
 }
 
 // Ô màu nhỏ trên nút chọn bảng màu.
@@ -61,13 +59,13 @@ html[data-theme="light"] { --chart-daily: #237A55; }
 
 /* Bảng màu Rừng: nền xanh rừng và nhấn xanh lá. */
 html[data-palette="forest"]:not([data-theme="light"]) {
-  --bg: #0E1F17; --surface: #15301F; --surface-2: #1C3D29; --input: #0B1914;
-  --blob-1: #2E7D57; --blob-2: #3E9A6C;
+  --bg: #0B1812; --surface: #122A1E; --surface-2: #1A3B2B; --input: #08130D;
+  --blob-1: #2E7D57; --blob-2: #4FA878;
   --accent: #7FD3A5; --accent-dark: #4FAF82; --accent-soft: rgba(127, 211, 165, 0.14); --accent-on: #0B1A14;
 }
 html[data-palette="forest"][data-theme="light"] {
-  --bg: #EEF6F1; --surface: #FFFFFF; --surface-2: #DFEDE5; --input: #FFFFFF;
-  --blob-1: #9CD2B4; --blob-2: #7FC19B;
+  --bg: #EDF6F0; --surface: #FFFFFF; --surface-2: #DCEDE3; --input: #FFFFFF;
+  --blob-1: #B5DCC6; --blob-2: #93C9A7;
   --accent: #1F7A55; --accent-dark: #185F43; --accent-soft: rgba(31, 122, 85, 0.12); --accent-on: #FFFFFF;
 }
 .swatch--forest { background: #15301F; }
@@ -75,50 +73,48 @@ html[data-palette="forest"][data-theme="light"] {
 /* Bảng màu bổ sung (v96): hồng đào, than chì, đất nung, sương bạc, chàm đêm. */
 
 html[data-palette="hong"]:not([data-theme="light"]) {
-  --bg: #2A1A24; --surface: #3A2332; --surface-2: #4D2D42; --input: #1F1119;
-  --blob-1: #B4577E; --blob-2: #D2779B;
-  --accent: #F4A7C8; --accent-dark: #E07FAA; --accent-soft: rgba(244, 167, 200, 0.14); --accent-on: #2A1119;
+  --bg: #26121D; --surface: #36192A; --surface-2: #4A2339; --input: #1C0D16;
+  --blob-1: #965970; --blob-2: #E898AE;
+  --accent: #F7B2D0; --accent-dark: #E38DB2; --accent-soft: rgba(244, 167, 200, 0.14); --accent-on: #2A1119;
 }
 html[data-palette="hong"][data-theme="light"] {
   --bg: #FDF0F5; --surface: #FFFFFF; --surface-2: #F5DCE7; --input: #FFFFFF;
-  --blob-1: #F0B9CF; --blob-2: #E597B6;
-  --accent: #B0457A; --accent-dark: #8E3462; --accent-soft: rgba(176, 69, 122, 0.12); --accent-on: #FFFFFF;
+  --blob-1: #E898AE; --blob-2: #ECA99F;
+  --accent: #A24071; --accent-dark: #843358; --accent-soft: rgba(176, 69, 122, 0.12); --accent-on: #FFFFFF;
 }
 
 html[data-palette="than"]:not([data-theme="light"]) {
-  --bg: #16191E; --surface: #1F242B; --surface-2: #2A3038; --input: #101317;
-  --blob-1: #3B4656; --blob-2: #4E5C70;
+  --bg: #121519; --surface: #1F242B; --surface-2: #2A3038; --input: #101317;
+  --blob-1: #3C4C63; --blob-2: #56698A;
 }
 html[data-palette="than"][data-theme="light"] {
   --bg: #F1F3F6; --surface: #FFFFFF; --surface-2: #E3E7ED; --input: #FFFFFF;
-  --blob-1: #C7CFDB; --blob-2: #AEB9C9;
+  --blob-1: #C5CFDF; --blob-2: #A8B8CF;
 }
 
 html[data-palette="dat"]:not([data-theme="light"]) {
-  --bg: #2B1A12; --surface: #3D2519; --surface-2: #533424; --input: #1E120C;
-  --blob-1: #9C4F2E; --blob-2: #C0683F;
+  --bg: #26160F; --surface: #3D2519; --surface-2: #533424; --input: #1E120C;
+  --blob-1: #B5672F; --blob-2: #E0915A;
 }
 html[data-palette="dat"][data-theme="light"] {
   --bg: #FBF1EB; --surface: #FFFFFF; --surface-2: #F2E0D3; --input: #FFFFFF;
-  --blob-1: #E7B49A; --blob-2: #D9906F;
+  --blob-1: #F5C9A4; --blob-2: #F0B088;
 }
 
 html[data-palette="xanh"]:not([data-theme="light"]) {
-  --bg: #0F2427; --surface: #163236; --surface-2: #1F434A; --input: #0B1A1C;
-  --blob-1: #2F7C80; --blob-2: #3E9CA0;
-}
+  --bg: #0B2226; --surface: #123238; --surface-2: #1A4149; --input: #09191C;
+  --blob-1: #2F7A7E; --blob-2: #54A8A6; --accent: #7FD1C7; --accent-dark: #5DB5AB; --accent-soft: rgba(156, 201, 230, 0.14); --accent-on: #0C1A24;}
 html[data-palette="xanh"][data-theme="light"] {
-  --bg: #EFF7F7; --surface: #FFFFFF; --surface-2: #DCEDED; --input: #FFFFFF;
-  --blob-1: #A8D6D7; --blob-2: #86C2C4;
-}
+  --bg: #EAF2F7; --surface: #FFFFFF; --surface-2: #D9E7F0; --input: #FFFFFF;
+  --blob-1: #A6D9D6; --blob-2: #84C4C0; --accent: #1B7A74; --accent-dark: #135E59; --accent-soft: rgba(36, 98, 138, 0.12); --accent-on: #FFFFFF;}
 
 html[data-palette="cham"]:not([data-theme="light"]) {
-  --bg: #141A33; --surface: #1C2445; --surface-2: #293562; --input: #0E1328;
-  --blob-1: #3F56B0; --blob-2: #5A72CC;
+  --bg: #14122E; --surface: #1E1A44; --surface-2: #2B2560; --input: #0F0D22;
+  --blob-1: #5A4FB0; --blob-2: #8C7AD6;
 }
 html[data-palette="cham"][data-theme="light"] {
   --bg: #EEF1FB; --surface: #FFFFFF; --surface-2: #DFE5F7; --input: #FFFFFF;
-  --blob-1: #B3C0EE; --blob-2: #97A8E3;
+  --blob-1: #C6BDF0; --blob-2: #AFA3E6;
 }
 
 .swatch--hong { background: #2A1A24; }

@@ -7,13 +7,13 @@
 @use '../transactions';
 @use '../buttons';
 @use '../modal';
-@use '../footer';
 @use '../responsive';
 @use '../glass';
 @use '../transition';
 @use '../quickadd';
 @use '../nav';
 @use '../arrange';
+@use '../networth';
 
 // Trang Giao dịch có 5 thẻ KPI: trên màn hình rộng thì xếp thành một hàng.
 @media (min-width: 1101px) {

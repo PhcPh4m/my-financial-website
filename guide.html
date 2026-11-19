@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
     <title>Hướng dẫn - Quản lý Tài chính Cá nhân</title>
+    <script>document.documentElement.classList.add('js');</script>
     <link rel="stylesheet" href="css/guide.css">
     <link rel="stylesheet" href="css/palettes.css">
     <link rel="stylesheet" href="css/redesign.css">
@@ -38,159 +39,260 @@
     <main class="page">
         <div class="guide-layout">
             <!-- Mục lục: bấm để nhảy tới phần cần xem. Trên màn hình nhỏ mục lục nằm trên đầu trang. -->
-            <nav class="guide-toc panel panel--secondary" aria-label="Mục lục">
+            <nav class="guide-toc" aria-label="Mục lục">
                 <p class="guide-toc__title">Nội dung</p>
-                <ol>
-                    <li><a href="#start">Bắt đầu trong 3 bước</a></li>
-                    <li><a href="#pages">Các trang và thao tác</a></li>
-                    <li><a href="#add">Thêm giao dịch</a></li>
-                    <li><a href="#list">Tìm, sửa và xóa</a></li>
-                    <li><a href="#budget">Ngân sách tháng</a></li>
-                    <li><a href="#analytics">Biểu đồ &amp; Phân tích</a></li>
-                    <li><a href="#tools">Định kỳ, chia tiền và công cụ</a></li>
-                    <li><a href="#settings">Cài đặt và giao diện</a></li>
-                    <li><a href="#backup">Sao lưu dữ liệu</a></li>
-                    <li><a href="#shortcuts">Phím tắt</a></li>
-                    <li><a href="#about">Thông tin ứng dụng</a></li>
-                    <li><a href="#faq">FAQ</a></li>
-                </ol>
+                <span class="guide-toc__pill" aria-hidden="true"></span>
+                <div class="guide-toc__group">
+                    <p class="guide-toc__label">Bắt đầu</p>
+                    <ul>
+                        <li><a href="#start">Bắt đầu trong 3 bước</a></li>
+                        <li><a href="#pages">Các trang</a></li>
+                    </ul>
+                </div>
+                <div class="guide-toc__group">
+                    <p class="guide-toc__label">Ghi chép</p>
+                    <ul>
+                        <li><a href="#add">Thêm giao dịch</a></li>
+                        <li><a href="#list">Tìm và sửa</a></li>
+                        <li><a href="#budget">Ngân sách</a></li>
+                        <li><a href="#wallets">Ví</a></li>
+                        <li><a href="#networth">Tiền thực có</a></li>
+                    </ul>
+                </div>
+                <div class="guide-toc__group">
+                    <p class="guide-toc__label">Xem và cài đặt</p>
+                    <ul>
+                        <li><a href="#analytics">Biểu đồ</a></li>
+                        <li><a href="#tools">Định kỳ và công cụ</a></li>
+                        <li><a href="#settings">Cài đặt</a></li>
+                    </ul>
+                </div>
+                <div class="guide-toc__group">
+                    <p class="guide-toc__label">Khác</p>
+                    <ul>
+                        <li><a href="#backup">Sao lưu</a></li>
+                        <li><a href="#shortcuts">Phím tắt</a></li>
+                        <li><a href="#about">Thông tin ứng dụng</a></li>
+                        <li><a href="#faq">Hỏi đáp</a></li>
+                    </ul>
+                </div>
             </nav>
 
             <div class="guide-content">
                 <section class="guide-section" id="start">
                     <h2>Bắt đầu trong 3 bước</h2>
+                    <p>Nếu bạn chưa từng ghi chép chi tiêu, đừng lo. Chỉ cần làm theo ba bước dưới đây là đủ để app bắt đầu có ích. Mỗi bước mất khoảng một phút.</p>
                     <ol class="guide-steps">
-                        <li><strong>Thêm khoản đầu tiên.</strong> Ở trang Giao dịch, gõ một dòng vào ô Nhập nhanh, chẳng hạn "cơm trưa 45k hôm qua", rồi bấm Thêm.</li>
-                        <li><strong>Đặt ngân sách tháng.</strong> Bấm Ngân sách tháng trong phần thao tác phụ ở trang Giao dịch. Ứng dụng sẽ báo khi bạn chi được 80% và khi vượt 100%.</li>
-                        <li><strong>Xem lại ở trang Biểu đồ &amp; Phân tích.</strong> Chọn một tháng để biết tiền đi đâu và so với tháng trước thế nào.</li>
+                    <li>Ghi một khoản chi đầu tiên. Ở trang Giao dịch, gõ một dòng vào ô Nhập nhanh, ví dụ "cơm trưa 45k hôm qua", rồi bấm Thêm hoặc nhấn Enter.</li>
+                    <li>Đặt ngân sách cho tháng. Bấm Đặt ngân sách tháng và nhập số tiền tối đa bạn muốn chi trong tháng. App sẽ báo khi bạn đã chi 80% và khi vượt 100%.</li>
+                    <li>Xem lại tháng đó. Vào trang Biểu đồ &amp; Phân tích, chọn tháng hiện tại để biết tiền đi vào đâu và so với tháng trước thế nào.</li>
                     </ol>
-                    <p class="guide-note">Dữ liệu chỉ lưu trong trình duyệt này, không gửi lên máy chủ. Muốn giữ an toàn, xem phần <a href="#backup">Sao lưu dữ liệu</a>.</p>
+                    <p>Sau một tuần ghi đều đặn, bạn sẽ thấy rõ hơn những khoản nhỏ thường bị quên, như cà phê, gửi xe hay đồ ăn giao tận nơi.</p>
+                    <p class="guide-note">Dữ liệu chỉ nằm trong trình duyệt này, không được gửi lên máy chủ. Xem thêm mục <a href="#backup">Sao lưu dữ liệu</a> để biết cách giữ an toàn.</p>
                 </section>
 
                 <section class="guide-section" id="pages">
                     <h2>Các trang và thao tác</h2>
-                    <p>Mỗi trang có thao tác chính và thao tác phụ. Thao tác chính là việc bạn làm thường xuyên và nằm ở vị trí dễ thấy. Thao tác phụ chỉ cần khi có nhu cầu, thường nằm bên phải hoặc phía dưới.</p>
+                    <p>App có bốn trang chính, hiện trên thanh trên cùng. Mỗi trang có một việc riêng, nên bạn chỉ cần nhớ việc nào nằm ở trang nào.</p>
                     <ul class="guide-list">
-                        <li><strong>Giao dịch.</strong> Chính: thêm giao dịch, danh sách, giao dịch định kỳ và chia tiền nhóm. Phụ: thời tiết, xuất và nhập dữ liệu, ngân sách.</li>
-                        <li><strong>Biểu đồ &amp; Phân tích.</strong> Chính: chọn tháng, xem số liệu và biểu đồ. Phụ: ngân sách theo danh mục.</li>
-                        <li><strong>Công cụ.</strong> Mục tiêu tiết kiệm, lãi kép, trả góp và thuế thu nhập cá nhân.</li>
-                        <li><strong>Cài đặt.</strong> Giao diện sáng hoặc tối, bảng màu nền, độ mờ kính và chuyển động.</li>
+                    <li>Giao dịch. Đây là nơi bạn ghi chi tiêu, thu nhập và xem danh sách. Phần ngân sách, ví và tổng tài sản cũng nằm ở đây.</li>
+                    <li>Biểu đồ &amp; Phân tích. Xem số liệu theo tháng, theo danh mục và theo ngày. Trang này trả lời câu hỏi "tiền của tôi đã đi đâu".</li>
+                    <li>Công cụ. Chứa giao dịch định kỳ, chia tiền nhóm và các máy tính như lãi kép, trả góp và thuế thu nhập cá nhân.</li>
+                    <li>Cài đặt. Đổi giao diện sáng hoặc tối, bảng màu, độ mờ của khung và chuyển động.</li>
                     </ul>
+                    <p>Mỗi trang đều có thao tác chính và thao tác phụ. Thao tác chính là việc bạn làm thường xuyên, luôn nằm ở vị trí dễ thấy. Thao tác phụ chỉ cần khi có nhu cầu, thường nằm bên phải hoặc phía dưới.</p>
+                    <p>Để đổi mục trong hướng dẫn này, bấm vào tên mục ở cột bên trái. Bạn không cần kéo xuống để tìm.</p>
                 </section>
 
                 <section class="guide-section" id="add">
                     <h2>Thêm giao dịch</h2>
+                    <p>Có hai cách ghi một khoản: nhập nhanh bằng một dòng chữ, hoặc điền đầy đủ form. Phần lớn người dùng chỉ cần cách nhập nhanh.</p>
                     <h3>Cách nhanh: nhập một dòng</h3>
-                    <p>Gõ tên và số tiền vào ô Nhập nhanh. Số tiền có thể viết là 45k, 1.5tr hoặc 45.000. Bạn cũng có thể thêm "hôm nay", "hôm qua" hoặc một ngày dạng dd/mm. Ứng dụng tự đoán danh mục. Bấm Thêm hoặc nhấn Enter là xong.</p>
-                    <div class="guide-example"><code>cơm trưa 45k hôm qua</code> sẽ tạo khoản chi 45.000 đ tên "cơm trưa", ghi vào ngày hôm qua.</div>
+                    <p>Gõ tên khoản và số tiền vào ô Nhập nhanh. Số tiền có thể viết là 45k, 1.5tr hoặc 45.000. App tự đoán danh mục từ tên, ví dụ "grab" sẽ vào Đi lại và "tiền điện" sẽ vào Hóa đơn.</p>
+                    <p>Bạn cũng có thể thêm một từ chỉ ngày vào cuối dòng: "hôm nay", "hôm qua", hoặc ngày dạng dd/mm như "15/11". Nếu không ghi, app mặc định là hôm nay.</p>
+                    <figure class="guide-demo">
+                        <p class="guide-demo__caption">Bạn gõ</p>
+                        <p class="guide-demo__input"><code>cơm trưa 45k hôm qua</code></p>
+                        <p class="guide-demo__caption">App ghi lại</p>
+                        <div class="guide-demo__row">
+                            <span class="guide-demo__name">Cơm trưa</span>
+                            <span class="guide-demo__meta">Ăn uống · Hôm qua · Mặc định</span>
+                            <span class="guide-demo__amount">−45.000 đ</span>
+                        </div>
+                    </figure>
                     <h3>Cách đầy đủ: điền form</h3>
-                    <p>Điền các ô có dấu *: tên, số tiền, ngày, loại thu hoặc chi, danh mục và trạng thái. Danh mục thay đổi theo loại bạn chọn. Nếu khoản đó chưa trả, chọn "Chưa thanh toán" để nó không được tính vào tổng.</p>
+                    <p>Form có các ô đánh dấu sao là bắt buộc: tên, số tiền, ngày, loại (thu hoặc chi), danh mục và trạng thái. Khi bạn đổi loại, danh sách danh mục cũng đổi theo, nên khoản thu sẽ không có danh mục chi.</p>
+                    <p>Trạng thái có hai lựa chọn. Hoàn thành nghĩa là khoản đã xảy ra và được tính vào tổng. Chưa thanh toán nghĩa là bạn đã biết khoản này nhưng chưa trả, nên nó chưa được tính vào số dư.</p>
+                    <p>Ô Ví cho bạn chọn khoản này thuộc ví nào. Nếu bạn chưa thêm ví nào, mọi khoản sẽ vào ví Mặc định.</p>
                     <h3>Thu nhập tháng này</h3>
-                    <p>Ô Thu nhập tháng này nằm cạnh ô Số tiền. Nhập thu nhập của tháng hiện tại một lần, ứng dụng sẽ dựa vào số này để cho bạn biết đã chi bao nhiêu phần trăm. Số này không tạo giao dịch mới.</p>
-                    <div class="guide-example">Ví dụ: thu nhập tháng là 12.000.000 đ, đã chi 5.565.000 đ thì ô Số dư hiện "đã chi 46%".</div>
+                    <p>Ô Thu nhập tháng này nằm cạnh ô Số tiền. Nhập tổng thu nhập của tháng một lần, app sẽ dùng số này để cho bạn biết đã chi bao nhiêu phần trăm thu nhập. Số này không tạo khoản thu mới, nên đừng nhập lại vào danh sách.</p>
+                    <div class="guide-example">Ví dụ: thu nhập tháng là 12.000.000 đ và bạn đã chi 5.565.000 đ. Ô Số dư sẽ hiện "đã chi 46%".</div>
                 </section>
 
                 <section class="guide-section" id="list">
                     <h2>Tìm, sửa và xóa</h2>
+                    <p>Danh sách là nơi bạn xem lại mọi khoản đã ghi. Mỗi dòng hiện tên, danh mục, ngày, số tiền và trạng thái.</p>
                     <ul class="guide-list">
-                        <li><strong>Tìm kiếm:</strong> gõ một phần tên hoặc danh mục vào ô Từ khóa. Khi cần, thêm bộ lọc theo loại, danh mục, trạng thái hoặc tháng.</li>
-                        <li><strong>Đổi trạng thái:</strong> bấm Hoàn thành hoặc Chưa trả ngay trên dòng giao dịch.</li>
-                        <li><strong>Sửa:</strong> bấm Sửa. Thông tin sẽ được đưa lên form, sửa xong bấm Cập nhật.</li>
-                        <li><strong>Xóa:</strong> bấm biểu tượng thùng rác rồi xác nhận. Nếu xóa nhầm, bấm Hoàn tác trong thông báo ở góc màn hình.</li>
+                    <li>Tìm kiếm. Gõ một phần tên hoặc danh mục vào ô Từ khóa. Khi cần, thêm bộ lọc theo loại, danh mục, trạng thái hoặc tháng.</li>
+                    <li>Đổi trạng thái. Bấm Hoàn thành hoặc Chưa trả ngay trên dòng giao dịch. Đây là cách nhanh nhất khi bạn đã trả một khoản đang nợ.</li>
+                    <li>Sửa. Bấm Sửa. Thông tin sẽ được đưa lên form. Sửa xong bấm Cập nhật.</li>
+                    <li>Xóa. Bấm biểu tượng thùng rác rồi xác nhận. Nếu xóa nhầm, bấm Hoàn tác trong thông báo ở góc màn hình trước khi thông báo tự tắt.</li>
                     </ul>
-                    <p>Danh sách hiện 10 giao dịch mỗi lần. Bấm Xem thêm để xem tiếp.</p>
+                    <p>Danh sách hiện 10 giao dịch mỗi lần. Khi muốn xem tiếp, bấm Xem thêm ở cuối danh sách.</p>
+                    <p>Mẹo nhỏ: nếu bạn quên ghi một khoản vài ngày, cứ thêm nó với đúng ngày đã xảy ra. Biểu đồ và số dư sẽ tự tính lại.</p>
                 </section>
 
                 <section class="guide-section" id="budget">
                     <h2>Ngân sách tháng</h2>
-                    <p>Bấm Ngân sách tháng, nhập số tiền tối đa bạn muốn chi trong tháng rồi bấm Lưu. Thanh tiến độ sẽ hiện ở đầu danh sách:</p>
+                    <p>Ngân sách là số tiền tối đa bạn muốn chi trong một tháng. Đặt ngân sách giúp bạn biết mình đang tiêu nhanh hay chậm, trước khi quá muộn.</p>
+                    <p>Bấm Đặt ngân sách tháng, nhập số tiền rồi bấm Lưu. Thanh tiến độ sẽ hiện ở đầu danh sách, cho biết bạn đã dùng bao nhiêu phần trăm.</p>
                     <ul class="guide-list">
-                        <li>Dưới 80%: chi tiêu vẫn trong ngân sách.</li>
-                        <li>Từ 80% đến 100%: cảnh báo, bạn sắp dùng hết ngân sách.</li>
-                        <li>Trên 100%: báo đỏ, bạn đã vượt ngân sách.</li>
+                    <li>Dưới 80%: chi tiêu vẫn nằm trong ngân sách.</li>
+                    <li>Từ 80% đến 100%: app báo cảnh báo, bạn sắp dùng hết ngân sách.</li>
+                    <li>Trên 100%: thanh chuyển sang màu đỏ, bạn đã vượt ngân sách.</li>
                     </ul>
-                    <p>Muốn đặt hạn mức cho từng danh mục, chẳng hạn ăn uống hay đi lại, vào trang Biểu đồ &amp; Phân tích và mở phần Ngân sách theo danh mục.</p>
+                    <figure class="guide-meter" role="img" aria-label="Ví dụ: đã dùng 82 phần trăm ngân sách">
+                        <div class="guide-meter__track">
+                            <span class="guide-meter__fill" style="width: 82%;"></span>
+                            <span class="guide-meter__tick" style="left: 80%;"></span>
+                            <span class="guide-meter__tick guide-meter__tick--end" style="left: 100%;"></span>
+                        </div>
+                        <figcaption class="guide-meter__caption">Ngân sách 5.000.000 đ, đã chi 4.100.000 đ: 82%. Vạch thứ nhất là 80%, vạch thứ hai là 100%.</figcaption>
+                    </figure>
+                    <p>Muốn kiểm soát từng nhóm chi, chẳng hạn ăn uống hay đi lại, bạn đặt thêm hạn mức theo danh mục ở trang Biểu đồ &amp; Phân tích, trong phần Ngân sách theo danh mục.</p>
+                    <p>Ngân sách áp dụng cho tháng đang chọn. Sang tháng mới, bạn đặt lại nếu muốn giữ mức cũ.</p>
+                </section>
+
+                <section class="guide-section" id="wallets">
+                    <h2>Ví</h2>
+                    <p>Ví là nơi tiền của bạn đang nằm, ví dụ tài khoản ngân hàng, ví điện tử hoặc tiền mặt trong túi. Nếu bạn có nhiều nơi giữ tiền, thêm ví giúp bạn biết mỗi nơi còn bao nhiêu.</p>
+                    <p>App có sẵn một ví tên Mặc định. Các khoản bạn đã ghi trước đó sẽ tự chuyển vào ví này, nên bạn không cần làm gì thêm.</p>
+                    <h3>Thêm và xóa ví</h3>
+                    <p>Bấm Quản lý ví ở trang Giao dịch. Nhập tên ví, ví dụ "Vietcombank", và số dư đầu là số tiền đang có trong ví đó. Bấm Thêm ví là xong. Mỗi ví sẽ có số dư riêng.</p>
+                    <p>Muốn xóa một ví, bấm Xóa bên cạnh tên ví. Các giao dịch thuộc ví đó sẽ chuyển về ví Mặc định, nên bạn không mất dữ liệu.</p>
+                    <h3>Đọc số dư từ ảnh</h3>
+                    <p>Nếu ngân hàng hoặc ví điện tử của bạn có ảnh màn hình hiện số dư, bạn không cần gõ tay. Trong cửa sổ Quản lý ví, copy ảnh màn hình rồi nhấn Ctrl+V vào vùng dán, hoặc kéo ảnh vào đây, hoặc bấm Chọn file ảnh.</p>
+                    <p>App đọc ảnh và hiện từng số đọc được. Bạn bỏ tick những khoản không cần, đặt tên cho từng ví, rồi bấm Dùng tổng này. Ảnh chỉ được xử lý trên máy bạn và không được lưu lại. Lần đầu dùng, trình duyệt cần tải bộ đọc chữ, nên cần có mạng.</p>
+                    <h3>Chọn ví cho từng giao dịch</h3>
+                    <p>Ô Ví nằm trong form thêm và sửa giao dịch. Chọn ví nào thì khoản đó được tính vào ví ấy.</p>
+                    <div class="guide-example">Ví dụ: tạo ví Vietcombank với số dư đầu 5.000.000 đ, rồi chọn ví này khi ghi tiền lương.</div>
+                </section>
+
+                <section class="guide-section" id="networth">
+                    <h2>Tiền thực có</h2>
+                    <p>Mục này trả lời một câu hỏi đơn giản: sau khi trừ đi những khoản đang nợ, bạn thật sự có bao nhiêu tiền.</p>
+                    <p>Con số được tính như sau. Lấy tổng tiền trong tất cả các ví, rồi trừ đi tổng số tiền bạn còn nợ. Kết quả là phần tiền thuộc về bạn.</p>
+                    <div class="guide-example">Ví dụ: bạn có 5.000.000 đ trong các ví và đang nợ 2.000.000 đ tiền vay mua xe. Tiền thực có là 3.000.000 đ.</div>
+                    <h3>Ghi khoản đang nợ</h3>
+                    <p>Mở mục Tiền thực có trên trang Giao dịch. Ở phần Khoản đang nợ, nhập tên khoản, ví dụ "Vay mua xe", và số tiền còn nợ. Bấm Thêm. Khi bạn trả một phần, sửa lại số còn nợ bằng cách xóa khoản cũ rồi thêm lại với số mới.</p>
+                    <p>Muốn bỏ một khoản đã trả hết, bấm Xóa bên cạnh tên khoản và xác nhận.</p>
+                    <p>Lưu ý: khoản nợ chỉ dùng để tính tiền thực có. Nó không tạo giao dịch chi tiêu và không làm thay đổi biểu đồ. Nếu bạn trả nợ bằng tiền trong ví, hãy ghi thêm một khoản chi tương ứng để số dư ví và biểu đồ đều đúng.</p>
                 </section>
 
                 <section class="guide-section" id="analytics">
                     <h2>Biểu đồ &amp; Phân tích</h2>
-                    <p>Chọn một tháng ở đầu trang, hoặc bấm Tất cả thời gian để xem toàn bộ. Bốn ô số cho biết thu nhập, chi tiêu, chênh lệch và số giao dịch. Biểu đồ tròn cho biết tiền đi vào đâu, biểu đồ cột so sánh thu và chi trong sáu tháng gần nhất, còn biểu đồ theo ngày cho biết ngày nào chi nhiều nhất.</p>
+                    <p>Trang này giúp bạn nhìn lại tiền đã đi đâu. Bạn có thể xem một tháng cụ thể hoặc bấm Tất cả thời gian để xem toàn bộ dữ liệu.</p>
+                    <p>Ở đầu trang có bốn ô số: thu nhập, chi tiêu, chênh lệch và số giao dịch. Chênh lệch là thu trừ chi. Nếu chênh lệch dương, bạn đã tiết kiệm được trong tháng.</p>
+                    <ul class="guide-list">
+                    <li>Biểu đồ tròn. Cho biết mỗi danh mục chiếm bao nhiêu phần trăm chi tiêu.</li>
+                    <li>Biểu đồ cột. So sánh thu và chi trong sáu tháng gần nhất, để thấy xu hướng.</li>
+                    <li>Biểu đồ theo ngày. Cho biết ngày nào bạn chi nhiều nhất trong tháng, hữu ích khi tìm nguyên nhân cuối tháng hết tiền.</li>
+                    </ul>
+                    <p>Phần Ngân sách theo danh mục nằm trong trang này. Đặt hạn mức cho từng nhóm chi giúp bạn thấy nhóm nào đang vượt trước khi cả tháng bị ảnh hưởng.</p>
                 </section>
 
                 <section class="guide-section" id="tools">
                     <h2>Định kỳ, chia tiền và công cụ</h2>
-                    <p>Những khoản đều đặn như tiền nhà, lương hay tiền điện nước nên đặt thành giao dịch định kỳ ở tab Định kỳ, trong trang Giao dịch. Đến hạn, ứng dụng sẽ tự thêm khoản đó vào danh sách, mỗi tháng một lần. Bạn chỉ cần khai báo một lần.</p>
-                    <p>Khi đi ăn hoặc đi chơi chung, mở tab Chia tiền để nhập tên và số tiền từng người đã trả. Ứng dụng sẽ tính mỗi người cần trả hoặc nhận lại bao nhiêu.</p>
-                    <p>Các máy tính ở trang Công cụ không lưu dữ liệu. Chúng giúp bạn tính lãi kép, số tiền trả góp mỗi tháng và thuế thu nhập cá nhân.</p>
+                    <p>Trang Giao dịch có hai tab giúp việc ghi chép bớt phiền: Định kỳ và Chia tiền. Trang Công cụ chứa các máy tính tài chính.</p>
+                    <h3>Giao dịch định kỳ</h3>
+                    <p>Những khoản đều đặn như tiền nhà, lương hay tiền điện nước nên đặt thành giao dịch định kỳ ở tab Định kỳ. Bạn chỉ cần khai báo một lần, gồm tên, số tiền và ngày trong tháng. Đến hạn, app tự thêm khoản đó vào danh sách, mỗi tháng một lần.</p>
+                    <h3>Chia tiền nhóm</h3>
+                    <p>Khi đi ăn hoặc đi chơi chung, mở tab Chia tiền. Nhập tên và số tiền từng người đã trả. App tính mỗi người cần trả thêm hay được nhận lại bao nhiêu, để không phải ngồi cộng trừ.</p>
+                    <h3>Máy tính ở trang Công cụ</h3>
+                    <p>Trang Công cụ có ba máy tính: lãi kép để xem tiền tiết kiệm lớn lên thế nào theo thời gian, trả góp để biết số tiền phải trả mỗi tháng, và thuế thu nhập cá nhân. Các máy tính này không lưu dữ liệu, bạn nhập số nào thì nó tính số đó.</p>
                 </section>
 
                 <section class="guide-section" id="settings">
                     <h2>Cài đặt và giao diện</h2>
-                    <p>Mở trang Cài đặt để chỉnh giao diện. Mọi tùy chọn được lưu trong trình duyệt này và áp dụng cho tất cả các trang. Khi bạn đổi một tùy chọn, màu và độ mờ kính sẽ chuyển dần.</p>
+                    <p>Mở trang Cài đặt để chỉnh giao diện theo ý bạn. Mọi tùy chọn được lưu trong trình duyệt này và áp dụng cho tất cả các trang. Khi đổi một tùy chọn, màu và độ mờ sẽ chuyển dần.</p>
                     <h3>Sáng hoặc tối</h3>
-                    <p>Chọn Sáng hoặc Tối ngay trong trang Cài đặt. Đây là nơi duy nhất để đổi giao diện.</p>
-                    <h3>Bộ phối màu</h3>
-                    <p>Nền tối là xanh đen với chữ sáng và màu nhấn xanh dương nhạt. Nền sáng là xanh nhạt với chữ đậm và màu nhấn xanh dương đậm. Thu nhập dùng màu xanh lá, chi tiêu dùng màu đỏ san hô, cả hai đều đổi theo giao diện để dễ đọc. Mỗi bảng màu có màu nhấn riêng, và các nút, thanh tab, mục đang chọn sẽ theo bảng màu đó.</p>
-                    <h3>Liquid glass</h3>
-                    <p>Khung nội dung và thanh điều hướng dùng kính mờ với viền sáng mỏng. Kéo thanh Độ mờ kính trong Cài đặt để kính trong suốt hơn hoặc đục hơn. Ở mức 0%, kính trong suốt hoàn toàn: thanh tab, thanh chọn và nút chọn không còn nền đặc, chỉ còn viền mỏng.</p>
+                    <p>Chọn Sáng hoặc Tối trong trang Cài đặt. Ban ngày, giao diện sáng dễ nhìn hơn. Buổi tối, giao diện tối đỡ chói mắt.</p>
+                    <h3>Bảng màu</h3>
+                    <p>Mỗi bảng màu có một tông nền và một màu nhấn riêng. Nút, thanh tab và mục đang chọn sẽ theo màu nhấn. Dù chọn bảng nào, màu thu nhập luôn là xanh lá và màu chi tiêu luôn là đỏ, để bạn không nhầm.</p>
+                    <h3>Độ mờ của khung</h3>
+                    <p>Khung nội dung và thanh điều hướng dùng kính mờ. Kéo thanh Độ mờ kính để khung trong suốt hơn hoặc đục hơn. Ở mức thấp nhất, khung gần như trong suốt, chỉ còn viền mảnh.</p>
                     <h3>Biểu tượng</h3>
-                    <p>Các danh mục dùng biểu tượng nét thay cho emoji. Nếu trước đây bạn đã có giao dịch với emoji trong tên danh mục, ứng dụng sẽ tự bỏ emoji khi mở. Số liệu không thay đổi.</p>
+                    <p>Các danh mục dùng biểu tượng nét thay cho emoji. Nếu trước đây bạn đã có giao dịch với emoji trong tên danh mục, app sẽ tự bỏ emoji khi mở. Số liệu không thay đổi.</p>
                 </section>
 
                 <section class="guide-section" id="backup">
                     <h2>Sao lưu dữ liệu</h2>
-                    <p>Dữ liệu chỉ nằm trong trình duyệt của bạn. Nếu xóa dữ liệu trình duyệt, đổi máy hoặc mở bằng địa chỉ khác, các giao dịch cũ sẽ mất. Vì vậy nên xuất file định kỳ, chẳng hạn mỗi tuần một lần.</p>
-                    <ul class="guide-list">
-                        <li><strong>Xuất JSON (sao lưu):</strong> lưu giao dịch, ngân sách tháng, ngân sách theo danh mục và giao dịch định kỳ. Thu nhập tháng không được lưu vào file.</li>
-                        <li><strong>Xuất CSV (Excel):</strong> file để mở bằng Excel hoặc Google Sheets, dùng để tự phân tích.</li>
-                        <li><strong>Nhập JSON / CSV:</strong> chỉ thêm giao dịch từ file, không khôi phục ngân sách hay giao dịch định kỳ. Dòng nào sai định dạng sẽ bị bỏ qua. Dữ liệu hiện có không bị ghi đè.</li>
-                    </ul>
+                    <p>Dữ liệu chỉ nằm trong trình duyệt của bạn. Nếu xóa dữ liệu trình duyệt, đổi máy hoặc mở app bằng một địa chỉ khác, các giao dịch cũ sẽ mất. Vì vậy hãy xuất file định kỳ, chẳng hạn mỗi tuần một lần.</p>
+                    <table class="guide-table">
+                        <thead>
+                            <tr><th scope="col">Việc</th><th scope="col">File</th><th scope="col">Điều cần biết</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><th scope="row">Sao lưu</th><td>JSON</td><td>Giữ giao dịch, ngân sách, ngân sách theo danh mục và giao dịch định kỳ. Thu nhập tháng không có trong file.</td></tr>
+                            <tr><th scope="row">Mở bằng Excel</th><td>CSV</td><td>Dùng để tự phân tích trong Excel hoặc Google Sheets.</td></tr>
+                            <tr><th scope="row">Nhập lại</th><td>JSON hoặc CSV</td><td>Chỉ thêm giao dịch. Dòng sai định dạng bị bỏ qua. Dữ liệu hiện có không bị ghi đè.</td></tr>
+                        </tbody>
+                    </table>
+                    <p>Lưu ý: nhập file JSON không khôi phục ngân sách và giao dịch định kỳ. Sau khi nhập trên máy mới, bạn cần đặt lại hai mục đó.</p>
                 </section>
 
                 <section class="guide-section" id="shortcuts">
                     <h2>Phím tắt</h2>
+                    <p>Phím tắt giúp bạn ghi chi tiêu nhanh hơn khi không muốn dùng chuột. Hiện app có hai phím tắt.</p>
                     <ul class="guide-list">
-                        <li><span class="kbd">N</span> chuyển con trỏ tới ô Nhập nhanh.</li>
-                        <li><span class="kbd">/</span> chuyển con trỏ tới ô tìm kiếm.</li>
+                        <li><span class="kbd">N</span> đưa con trỏ tới ô Nhập nhanh, để bạn gõ khoản chi ngay.</li>
+                        <li><span class="kbd">/</span> đưa con trỏ tới ô tìm kiếm trong danh sách giao dịch.</li>
                     </ul>
-                    <p>Phím tắt không hoạt động khi bạn đang gõ trong một ô nhập liệu.</p>
+                    <p>Một cách dùng thường gặp: bấm N, gõ "cà phê 35k", nhấn Enter, rồi bấm N lần nữa cho khoản tiếp theo. Cả quá trình không cần rời bàn phím.</p>
+                    <p>Phím tắt không hoạt động khi bạn đang gõ trong một ô nhập liệu, để tránh chèn nhầm chữ vào giữa câu.</p>
                 </section>
 
                 <section class="guide-section" id="about">
                     <h2>Thông tin ứng dụng</h2>
+                    <p>Đây là ứng dụng ghi chép thu chi và theo dõi ngân sách cho cá nhân. App chạy ngay trên trình duyệt, không cần cài đặt thêm.</p>
                     <ul class="guide-list">
-                        <li><strong>Tên:</strong> Quản lý Tài chính Cá nhân.</li>
-                        <li><strong>Phiên bản:</strong> 108.</li>
-                        <li><strong>Bản quyền:</strong> © 2026.</li>
-                        <li><strong>Nơi lưu dữ liệu:</strong> chỉ trong trình duyệt bạn đang dùng, không gửi lên máy chủ.</li>
+                        <li>Tên: Quản lý Tài chính Cá nhân.</li>
+                        <li>Phiên bản: 1.10.17.</li>
+                        <li>Bản quyền: © 2026.</li>
+                        <li>Nơi lưu dữ liệu: chỉ trong trình duyệt bạn đang dùng, không gửi lên máy chủ.</li>
                     </ul>
+                    <p>Giao dịch, ngân sách và số dư của bạn không được gửi lên máy chủ nào. Nếu bạn xóa dữ liệu trình duyệt, các khoản đã ghi sẽ mất, nên hãy xuất file sao lưu định kỳ.</p>
+                    <p>Khi có bản mới, số phiên bản ở trên sẽ thay đổi. Dữ liệu của bạn vẫn được giữ nguyên khi cập nhật, miễn là bạn dùng cùng trình duyệt và cùng địa chỉ.</p>
                 </section>
 
                 <section class="guide-section" id="faq">
-                    <h2>FAQ</h2>
+                    <h2>Câu hỏi thường gặp</h2>
                     <h3>Làm sao ghi một khoản chi thật nhanh?</h3>
-                    <p>Gõ cả tên lẫn số tiền vào ô Nhập nhanh, ví dụ "xăng 80k", rồi nhấn Enter. Ứng dụng tự chọn danh mục. Nếu cần ghi cho ngày khác, thêm "hôm qua" hoặc ngày dạng dd/mm vào cuối dòng.</p>
+                    <p>Gõ cả tên lẫn số tiền vào ô Nhập nhanh, ví dụ "xăng 80k", rồi nhấn Enter. App tự chọn danh mục. Nếu khoản xảy ra hôm khác, thêm "hôm qua" hoặc ngày dạng dd/mm vào cuối dòng.</p>
                     <h3>Làm sao biết mình sắp vượt ngân sách?</h3>
-                    <p>Đặt ngân sách tháng ở trang Giao dịch. Thanh tiến độ sẽ đổi sang cảnh báo khi bạn chi đến 80% và báo đỏ khi vượt 100%. Muốn theo dõi từng nhóm chi, đặt thêm hạn mức theo danh mục ở trang Biểu đồ &amp; Phân tích.</p>
+                    <p>Đặt ngân sách tháng ở trang Giao dịch. Thanh tiến độ sẽ báo cảnh báo khi bạn chi đến 80% và báo đỏ khi vượt 100%. Muốn theo dõi từng nhóm chi, đặt thêm hạn mức theo danh mục ở trang Biểu đồ &amp; Phân tích.</p>
                     <h3>Tiền của tôi đang đi vào đâu trong tháng?</h3>
-                    <p>Mở trang Biểu đồ &amp; Phân tích và chọn tháng cần xem. Biểu đồ tròn cho biết từng danh mục chiếm bao nhiêu, còn biểu đồ theo ngày cho biết ngày nào chi nhiều nhất.</p>
+                    <p>Mở trang Biểu đồ &amp; Phân tích và chọn tháng cần xem. Biểu đồ tròn cho biết từng danh mục chiếm bao nhiêu. Biểu đồ theo ngày cho biết ngày nào chi nhiều nhất.</p>
                     <h3>Tiền nhà, lương, tiền điện có cần nhập mỗi tháng không?</h3>
-                    <p>Không. Tạo một giao dịch định kỳ ở trang Công cụ, ứng dụng sẽ tự thêm khoản đó vào danh sách mỗi tháng khi đến hạn.</p>
+                    <p>Không. Tạo một giao dịch định kỳ ở tab Định kỳ, app sẽ tự thêm khoản đó vào danh sách mỗi tháng khi đến hạn.</p>
                     <h3>Tôi vừa xóa nhầm một giao dịch thì làm sao?</h3>
-                    <p>Ngay sau khi xóa, bấm nút khôi phục trong thông báo ở góc màn hình. Thông báo tự tắt sau vài giây, nên hãy bấm sớm.</p>
+                    <p>Ngay sau khi xóa, bấm Hoàn tác trong thông báo ở góc màn hình. Thông báo tự tắt sau vài giây, nên hãy bấm sớm.</p>
                     <h3>Khoản chưa trả có làm giảm số dư không?</h3>
                     <p>Không. Khoản "Chưa thanh toán" không được tính vào số dư. Khi đã trả, bấm Hoàn thành trên dòng giao dịch để nó được tính.</p>
                     <h3>Muốn chia tiền đi ăn nhóm thì dùng công cụ nào?</h3>
-                    <p>Mở tab Chia tiền trong trang Giao dịch. Nhập tên và số tiền từng người đã trả, ứng dụng sẽ tính mỗi người cần trả hoặc nhận lại bao nhiêu.</p>
+                    <p>Mở tab Chia tiền trong trang Giao dịch. Nhập tên và số tiền từng người đã trả, app sẽ tính mỗi người cần trả hoặc nhận lại bao nhiêu.</p>
                     <h3>Làm sao chuyển dữ liệu sang máy khác?</h3>
-                    <p>Xuất file JSON ở trang Giao dịch, rồi mở ứng dụng trên máy kia và nhập file đó. Nhập JSON chỉ thêm giao dịch, không khôi phục ngân sách hay giao dịch định kỳ, nên hãy đặt lại hai mục đó trên máy mới.</p>
+                    <p>Xuất file JSON ở trang Giao dịch, rồi mở app trên máy kia và nhập file đó. Sau đó đặt lại ngân sách và giao dịch định kỳ, vì file JSON không mang hai mục này.</p>
                     <h3>Tôi có cần tài khoản không?</h3>
                     <p>Hiện chưa cần. Dữ liệu chỉ nằm trên trình duyệt này. Đăng nhập và đồng bộ giữa các thiết bị sẽ có sau, chưa có thời điểm cụ thể.</p>
                     <h3>Dùng trên điện thoại được không?</h3>
                     <p>Được. Bố cục tự thu gọn theo màn hình. Điện thoại và máy tính có dữ liệu riêng, vì mỗi trình duyệt lưu một bộ.</p>
-                    <h3>Muốn xem tổng thu chi cả năm thì ở đâu?</h3>
-                    <p>Mục "Tổng năm nay" nằm dưới các thẻ tổng quan ở trang Giao dịch. Bấm vào tiêu đề để mở và xem số liệu cả năm.</p>
+                    <h3>Tôi có nhiều tài khoản ngân hàng thì ghi thế nào?</h3>
+                    <p>Tạo một ví cho mỗi tài khoản trong Quản lý ví, rồi chọn đúng ví ở từng giao dịch. App không kết nối ngân hàng, nên bạn tự nhập các khoản để số dư của từng ví đúng.</p>
+                    <h3>Tiền thực có khác gì số dư?</h3>
+                    <p>Số dư tháng chỉ tính thu và chi trong tháng đó. Tiền thực có lấy tổng tiền trong các ví rồi trừ đi khoản còn nợ, cho biết phần tiền thật sự thuộc về bạn.</p>
                 </section>
+
             </div>
         </div>
     </main>
@@ -203,5 +305,6 @@
     <script src="js/settings.js"></script>
     <script src="js/transition.js"></script>
     <script src="js/topbar.js"></script>
+    <script src="js/guide.js"></script>
 </body>
 </html>

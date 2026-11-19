@@ -1,32 +1,10 @@
-/* Glassmorphism: lớp kính mờ trên nền ambient. Các thành phần dùng chung đã đổi nền ở mục của chúng. */
+/* Glassmorphism: nền ambient một tông từ màu nhấn của bảng màu. Không còn quầng sáng. */
 .ambient {
   position: fixed;
   inset: 0;
   z-index: -1;
-  overflow: hidden;
   pointer-events: none;
-}
-
-.ambient::before,
-.ambient::after {
-  content: "";
-  position: absolute;
-  width: 48rem;
-  height: 48rem;
-  border-radius: 50%;
-  opacity: var(--blob-opacity);
-}
-
-.ambient::before {
-  top: -18rem;
-  left: -14rem;
-  background: radial-gradient(closest-side, var(--blob-1), transparent);
-}
-
-.ambient::after {
-  right: -16rem;
-  bottom: -18rem;
-  background: radial-gradient(closest-side, var(--blob-2), transparent);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--blob-1) 16%, var(--bg)) 0%, var(--bg) 65%);
 }
 
 .topbar,

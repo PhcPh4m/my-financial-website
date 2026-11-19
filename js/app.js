@@ -19,11 +19,14 @@ onAppReady(() => {
     bindModalDismissal();
     setDefaultDate();
     populateCategories();
+    populateWallets();
     bindForm();
     bindFilters();
     bindList();
     bindToolbar();
     bindBudget();
+    bindWallet();
+    bindDebt();
     populateFilterCategories();
     populateMonthlyIncome();
     bindWeather();
@@ -154,7 +157,8 @@ function readForm() {
         type: $('type').value,
         category: $('category').value,
         status: $('status').value,
-        date: $('date').value
+        date: $('date').value,
+        walletId: $('wallet').value || DEFAULT_WALLET_ID
     };
 }
 
@@ -184,6 +188,7 @@ function enterEditMode(tx) {
     populateCategories(tx.category);
     $('status').value = tx.status;
     $('date').value = tx.date;
+    populateWallets(tx.walletId);
 
     $('formTitle').innerHTML = '<i data-icon="pencil"></i> Sửa giao dịch';
     $('submitBtn').textContent = 'Cập nhật';
@@ -199,6 +204,7 @@ function exitEditMode() {
     $('transactionForm').reset();
     setDefaultDate();
     populateCategories();
+    populateWallets();
     $('formTitle').innerHTML = '<i data-icon="plus"></i> Thêm giao dịch';
     $('submitBtn').textContent = 'Thêm giao dịch';
     $('cancelEditBtn').hidden = true;
@@ -436,7 +442,7 @@ function renderSummary() {
     countTo($('yearExpense'), yearStats.expense);
     countTo($('yearBalance'), yearStats.balance);
     setBadge($('yearBalanceTrend'), savingsInfo(yearStats));
-    $('yearBalanceNote').textContent = `Thu − chi trong năm ${year}`;
+    $('yearBalanceNote').textContent = `Thu − chi trong năm ${year} · tính từ tất cả ví`;
 
     // Hàng 2: số liệu của tháng hiện tại.
     countTo($('monthIncomeKpi'), current.income);
@@ -446,6 +452,19 @@ function renderSummary() {
     countTo($('monthExpense'), current.expense);
 
     countTo($('monthBalance'), current.balance);
+    // Tổng tài sản luôn hiện trên trang chính, không phụ thuộc tháng đang xem.
+    const walletCount = getWallets().length;
+    countTo($('totalAssets'), getTotalAssets());
+    $('totalAssetsNote').textContent = walletCount > 1
+        ? `Cộng số dư của ${walletCount} ví`
+        : 'Cộng số dư của ví Mặc định';
+    // Số dư từng ví theo thứ tự ví 1, ví 2, ... (ví Mặc định luôn đứng đầu).
+    $('walletBalances').innerHTML = getWalletBalances().map((w) => `
+        <li class="kpi__wallet-row">
+            <span class="kpi__wallet-name">${escapeHtml(w.name)}</span>
+            <span class="kpi__wallet-amount ${w.balance < 0 ? 'is-negative' : ''}">${formatCurrency(w.balance)}</span>
+        </li>`).join('');
+    renderNetWorth();
     setBadge($('monthBalanceTrend'), savingsInfo(current));
     const monthIncome = getMonthlyIncome(month);
     $('monthBalanceNote').textContent = monthIncome
@@ -688,3 +707,121 @@ function initTxTabs() {
 }
 
 document.addEventListener('DOMContentLoaded', initTxTabs);
+
+// VÍ: danh sách chọn trong form và cửa sổ quản lý ví
+
+// Đổ danh sách ví vào ô chọn. Nếu có ví được chọn sẵn (khi sửa) thì giữ lại.
+function populateWallets(selectedId = DEFAULT_WALLET_ID) {
+    const select = $('wallet');
+    const wallets = getWallets();
+    select.innerHTML = wallets.map((w) => `<option value="${escapeHtml(w.id)}">${escapeHtml(w.name)}</option>`).join('');
+    select.value = wallets.some((w) => w.id === selectedId) ? selectedId : DEFAULT_WALLET_ID;
+}
+
+// Vẽ lại danh sách ví trong cửa sổ, kèm số dư hiện tại của từng ví.
+function renderWalletList() {
+    const list = $('walletList');
+    const items = getWalletBalances();
+    list.innerHTML = items.map((w) => `
+        <li class="wallet-row">
+            <span class="wallet-row__name">${escapeHtml(w.name)}</span>
+            <span class="wallet-row__balance ${w.balance < 0 ? 'is-negative' : ''}">${formatCurrency(w.balance)}</span>
+            ${w.id === DEFAULT_WALLET_ID
+                ? '<span class="wallet-row__tag">mặc định</span>'
+                : `<button type="button" class="btn btn--small btn--danger" data-remove-wallet="${escapeHtml(w.id)}">Xóa</button>`}
+        </li>`).join('');
+}
+
+function bindWallet() {
+    $('walletBtn').addEventListener('click', () => {
+        $('walletName').value = '';
+        setMoneyValue($('walletOpening'), '');
+        $('walletNameError').textContent = '';
+        renderWalletList();
+        openModal('walletModal');
+    });
+    $('closeWalletModal').addEventListener('click', () => closeModal('walletModal'));
+    $('closeWalletModalFooter').addEventListener('click', () => closeModal('walletModal'));
+
+    $('addWalletBtn').addEventListener('click', () => {
+        const name = $('walletName').value.trim();
+        const opening = parseMoney($('walletOpening').value) ?? 0;
+        if (!name) {
+            $('walletNameError').textContent = 'Nhập tên ví.';
+            return;
+        }
+        if (!addWallet(name, opening)) {
+            $('walletNameError').textContent = 'Tên đã tồn tại hoặc không hợp lệ.';
+            return;
+        }
+        $('walletName').value = '';
+        setMoneyValue($('walletOpening'), '');
+        $('walletNameError').textContent = '';
+        populateWallets();
+        renderWalletList();
+        refresh();
+        showToast(`Đã thêm ví ${name}.`);
+    });
+
+    $('walletList').addEventListener('click', (e) => {
+        const id = e.target.dataset.removeWallet;
+        if (!id) return;
+        if (!removeWallet(id)) {
+            showToast('Không xóa được ví.', 'danger', 4000);
+            return;
+        }
+        populateWallets();
+        renderWalletList();
+        refresh();
+        showToast('Đã xóa ví. Giao dịch đã chuyển về Mặc định.');
+    });
+}
+
+// Tài sản ròng và danh sách khoản vay, nợ.
+function renderNetWorth() {
+    const assets = getTotalAssets();
+    const debts = getTotalDebts();
+    const cash = assets - debts;
+    countTo($('netWorth'), cash);
+    $('netWorthInline').textContent = formatCurrency(cash);
+    $('netAssets').textContent = formatCurrency(assets);
+    $('netDebts').textContent = formatCurrency(debts);
+    $('netWorthNote').textContent = debts > 0
+        ? 'Tiền trong các ví, sau khi trừ số đang nợ'
+        : 'Chưa có khoản nợ, bằng toàn bộ tiền trong các ví';
+    const items = readDebts();
+    $('debtList').innerHTML = items.length
+        ? items.map((d) => `
+            <li class="debt-row">
+                <span class="debt-row__name">${escapeHtml(d.name)}</span>
+                <span class="debt-row__amount">${formatCurrency(d.balance)}</span>
+                <button type="button" class="btn btn--small btn--danger" data-remove-debt="${escapeHtml(d.id)}">Xóa</button>
+            </li>`).join('')
+        : '<li class="debt-row debt-row--empty">Chưa có khoản nợ.</li>';
+}
+
+function bindDebt() {
+    $('addDebtBtn').addEventListener('click', () => {
+        const name = $('debtName').value.trim();
+        const balance = parseMoney($('debtBalance').value);
+        if (!name) {
+            $('debtError').textContent = 'Nhập tên khoản nợ.';
+            return;
+        }
+        if (balance === null || balance < 0) {
+            $('debtError').textContent = 'Nhập số tiền còn nợ.';
+            return;
+        }
+        addDebt(name, balance);
+        $('debtName').value = '';
+        setMoneyValue($('debtBalance'), '');
+        $('debtError').textContent = '';
+        renderNetWorth();
+    });
+    $('debtList').addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-remove-debt]');
+        if (!btn || !confirm('Xóa khoản nợ này?')) return;
+        removeDebt(btn.dataset.removeDebt);
+        renderNetWorth();
+    });
+}

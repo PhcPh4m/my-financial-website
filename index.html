@@ -51,6 +51,18 @@
                     <span class="kpi__badge" id="monthBalanceTrend" hidden></span>
                     <p class="kpi__note" id="monthBalanceNote">Thu − chi tháng này: 0 đ</p>
                 </article>
+                <article class="kpi kpi--assets">
+                    <div class="kpi__head">
+                        <span class="kpi__label">Tổng tài sản</span>
+                        <span class="kpi__icon"><i data-icon="wallet"></i></span>
+                    </div>
+                    <div class="kpi__value" id="totalAssets">0 đ</div>
+                    <p class="kpi__note" id="totalAssetsNote">Cộng số dư của mọi ví</p>
+                    <details class="kpi__wallets" data-animate>
+                        <summary>Xem theo ví</summary>
+                        <ul class="kpi__wallet-list" id="walletBalances"></ul>
+                    </details>
+                </article>
                 <article class="kpi kpi--income">
                     <div class="kpi__head">
                         <span class="kpi__label">Thu nhập tháng này</span>
@@ -103,6 +115,34 @@
             <p class="kpis__note" id="transactionCount">0 hoàn thành · 0 chưa thanh toán. Chỉ giao dịch "Hoàn thành" được tính vào tổng.</p>
         </section>
 
+        <details class="kpis__year networth-box" data-animate>
+            <summary class="kpis__year-summary">
+                <span>Tiền thực có của bạn</span>
+                <span class="networth-box__value" id="netWorthInline">0 đ</span>
+            </summary>
+            <div class="networth">
+                <div class="networth__main">
+                    <p class="networth__label">Tiền thực có</p>
+                    <div class="networth__value" id="netWorth">0 đ</div>
+                    <p class="networth__note" id="netWorthNote">Tiền trong các ví, sau khi trừ số đang nợ</p>
+                    <dl class="networth__split">
+                        <div><dt>Tiền trong ví</dt><dd id="netAssets">0 đ</dd></div>
+                        <div><dt>Đang nợ</dt><dd id="netDebts">0 đ</dd></div>
+                    </dl>
+                </div>
+                <div class="networth__debts">
+                    <h2 class="networth__subtitle">Khoản đang nợ</h2>
+                    <ul class="debt-list" id="debtList"></ul>
+                    <div class="debt-form">
+                        <input type="text" id="debtName" class="form-input" maxlength="40" placeholder="VD: Vay mua xe">
+                        <input type="number" id="debtBalance" class="form-input" data-money inputmode="numeric" placeholder="Số còn nợ (VND)">
+                        <button type="button" id="addDebtBtn" class="btn btn--primary">Thêm</button>
+                    </div>
+                    <p class="form-error" id="debtError" aria-live="polite"></p>
+                </div>
+            </div>
+        </details>
+
         <div class="layout">
             <!-- Cột trái: ngân sách tháng, thời tiết và công cụ dữ liệu. -->
             <aside class="layout__side">
@@ -112,6 +152,7 @@
                     <h3 class="form-subsection__title" id="budgetQuickTitle"><i data-icon="target"></i> Ngân sách tháng</h3>
                     <p class="form-hint">Đặt số tiền chi tối đa cho tháng này. Thanh trạng thái ở trên danh sách sẽ cập nhật theo.</p>
                     <button class="btn" id="budgetBtn" type="button"><i data-icon="target"></i> Đặt ngân sách tháng</button>
+                <button class="btn" id="walletBtn" type="button">Quản lý ví</button>
                     </div>
                 </section>
 
@@ -157,6 +198,30 @@
                     </div>
                     <small class="form-error" id="quickAddError" aria-live="polite"></small>
                     <p class="form-hint">Gõ tên và số tiền (45k, 1.5tr, 45.000). Có thể thêm "hôm nay", "hôm qua" hoặc dd/mm. Danh mục được đoán tự động.</p>
+                    <div class="history-import">
+                        <p class="form-label">Nhập từ ảnh lịch sử giao dịch</p>
+                        <div class="wallet-ocr__drop" id="historyDrop" tabindex="0">
+                            <span class="wallet-ocr__drop-text">Copy ảnh lịch sử rồi nhấn Ctrl+V, hoặc kéo ảnh vào đây</span>
+                            <button type="button" class="btn btn--small" id="historyPickBtn">Chọn file ảnh</button>
+                        </div>
+                        <input type="file" id="historyFile" accept="image/*" hidden>
+                        <div class="history-import__panel" id="historyPanel" hidden>
+                            <canvas id="historyPreview" class="ocr-preview" role="img" aria-label="Ảnh lịch sử đã nhận" hidden></canvas>
+                            <p class="form-hint" id="historyStatus" aria-live="polite"></p>
+                            <div class="wallet-ocr__actions">
+                                <button type="button" class="btn btn--small btn--primary" id="historyReadBtn">Đọc lịch sử</button>
+                                <button type="button" class="btn btn--small" id="historyCancelBtn">Hủy</button>
+                            </div>
+                            <div class="history-import__result" id="historyResult" hidden>
+                                <p class="form-hint">Kiểm tra từng giao dịch trước khi thêm. Bỏ tick khoản không cần.</p>
+                                <ul class="history-import__list" id="historyList"></ul>
+                                <div class="wallet-ocr__actions">
+                                    <button type="button" class="btn btn--primary" id="historyConfirmBtn">Thêm giao dịch</button>
+                                </div>
+                            </div>
+                            <small class="form-error" id="historyError" aria-live="polite"></small>
+                        </div>
+                    </div>
                     </div>
                     <form id="transactionForm" novalidate>
                     <div class="form-grid">
@@ -194,6 +259,10 @@
                     <option value="">Chọn loại trước</option>
                     </select>
                     <small class="form-error" id="err-category" aria-live="polite"></small>
+                    </div>
+                    <div class="form-group form-group--wide">
+                    <label class="form-label" for="wallet">Ví *</label>
+                    <select id="wallet" class="form-select"></select>
                     </div>
                     <div class="form-group form-group--wide">
                     <label class="form-label" for="status">Trạng thái *</label>
@@ -308,6 +377,65 @@
         </div>
     </main>
 
+    <!-- WALLET MODAL -->
+    <!-- Quản lý ví: xem số dư, thêm ví mới, xóa ví (trừ ví Mặc định). -->
+    <div class="modal" id="walletModal" role="dialog" aria-modal="true" aria-labelledby="walletTitle">
+        <div class="modal__content">
+            <div class="modal__header">
+                <h2 class="modal__title" id="walletTitle">Ví của tôi</h2>
+                <button type="button" class="modal__close" id="closeWalletModal" aria-label="Đóng">&times;</button>
+            </div>
+            <div class="modal__body">
+                <ul class="wallet-list" id="walletList"></ul>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="walletName">Tên ví mới</label>
+                        <input type="text" id="walletName" class="form-input" maxlength="40" placeholder="VD: Vietcombank, Tiền mặt">
+                        <small class="form-error" id="walletNameError" aria-live="polite"></small>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="walletOpening">Số dư đầu (VND)</label>
+                        <input type="number" id="walletOpening" class="form-input" data-money inputmode="numeric" placeholder="VD: 5000000">
+                    </div>
+                </div>
+                <p class="form-hint">Chọn ví cho từng giao dịch ở form thêm. Xóa một ví sẽ chuyển giao dịch của ví đó về ví Mặc định.</p>
+                <div class="wallet-ocr">
+                    <div class="wallet-ocr__drop" id="walletOcrDrop" tabindex="0">
+                        <span class="wallet-ocr__drop-text">Nhấn Ctrl+V để dán ảnh đã copy, hoặc kéo ảnh vào đây</span>
+                        <button type="button" class="btn btn--small" id="walletOcrBtn">Chọn file ảnh</button>
+                    </div>
+                    <input type="file" id="walletOcrFile" accept="image/*" hidden>
+                    <div class="wallet-ocr__panel" id="walletOcrPanel" hidden>
+                        <p class="form-hint">Ảnh nên chỉ có phần số dư, hoặc cắt sẵn trước khi dán. Ảnh chỉ xử lý trên máy bạn và không được lưu.</p>
+                        <canvas id="walletOcrPreview" class="ocr-preview" role="img" aria-label="Ảnh đã nhận để đọc số dư" hidden></canvas>
+                        <p class="form-hint" id="walletOcrStatus" aria-live="polite"></p>
+                                                <div class="wallet-ocr__actions">
+                            <button type="button" class="btn btn--small btn--primary" id="walletOcrRead">Đọc số</button>
+                            <button type="button" class="btn btn--small" id="walletOcrCancel">Hủy</button>
+                        </div>
+                        <div class="wallet-ocr__result" id="walletOcrResult" hidden>
+                            <p class="form-label">Các số đọc được. Bỏ tick khoản không tính, sửa tên và số nếu cần.</p>
+                            <ul class="wallet-ocr__list" id="walletOcrList"></ul>
+                            <div class="wallet-ocr__total"><span>Tổng</span><strong id="walletOcrTotal">0 đ</strong></div>
+                            <div class="form-group">
+                                <label class="form-label" for="walletOcrApp">Tên app (để ghi chú nguồn)</label>
+                                <input type="text" id="walletOcrApp" class="form-input" maxlength="40" placeholder="VD: MoMo">
+                            </div>
+                            <p class="wallet-ocr__note" id="walletOcrNote"></p>
+                            <div class="wallet-ocr__actions">
+                                <button type="button" class="btn btn--small btn--primary" id="walletOcrUse">Dùng tổng này</button>
+                            </div>
+                        </div>
+                        <small class="form-error" id="walletOcrError" aria-live="polite"></small>
+                    </div>
+                </div>            </div>
+            <div class="modal__footer">
+                <button type="button" class="btn" id="closeWalletModalFooter">Đóng</button>
+                <button type="button" class="btn btn--primary" id="addWalletBtn">Thêm ví</button>
+            </div>
+        </div>
+    </div>
+
     <!-- BUDGET MODAL -->
     <!-- Cửa sổ nổi để đặt số tiền ngân sách cho tháng. -->
     <div class="modal" id="budgetModal" role="dialog" aria-modal="true" aria-labelledby="budgetTitle">
@@ -352,7 +480,6 @@
     <!-- Chỗ hiện thông báo nhỏ ở góc màn hình (ví dụ "Đã lưu"). -->
     <div class="toast-container" id="toastContainer" aria-live="polite"></div>
 
-    <!-- Chân trang: thông tin bản quyền. -->
     <!-- Tải các file JavaScript theo đúng thứ tự. File sau có thể dùng hàm của file trước, nên thứ tự không được đổi. -->
     <script src="js/icons.js"></script>
     <script src="js/utils.js"></script>
@@ -364,6 +491,11 @@
     <script src="js/quickadd.js"></script>
     <script src="js/api.js"></script>
     <script src="js/recurring-split.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js"></script>
+    <script src="js/ocr-engine.js"></script>
+    <script src="js/wallet-ocr.js"></script>
+    <script src="js/bank-history-parser.js"></script>
+    <script src="js/history-import.js"></script>
     <script src="js/app.js"></script>
     <script src="js/details-anim.js"></script>
 </body>
