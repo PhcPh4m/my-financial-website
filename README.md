@@ -1,5 +1,7 @@
 # Quản lý Tài chính Cá nhân
 
+Đề tài: Website quản lý tài chính cá nhân, môn Lập trình web, Khoa Công nghệ Thông tin, Trường Đại học Gia Định.
+
 Ứng dụng web ghi chép thu chi, theo dõi ngân sách và xem biểu đồ theo tháng. Hiện là **web tĩnh**: chạy hoàn toàn trên trình duyệt, dữ liệu lưu trong localStorage. Trang **Hướng dẫn** trong ứng dụng mô tả cách dùng.
 
 ## Cấu trúc thư mục

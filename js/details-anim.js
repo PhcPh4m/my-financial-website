@@ -112,7 +112,7 @@
             anim = body.animate([
                 { height: fromVisH + 'px', paddingTop: opening && fromH < 1 ? '0px' : fromPt, paddingBottom: opening && fromH < 1 ? '0px' : fromPb, opacity: opening ? 0 : 1, transform: `translateY(${opening ? -6 : 0}px)` },
                 { height: toH + 'px', paddingTop: toPt, paddingBottom: toPb, opacity: opening ? 1 : 0, transform: `translateY(${opening ? 0 : -6}px)` }
-            ], { duration: 320, easing: 'cubic-bezier(0.2, 0.7, 0.2, 1)', fill: 'forwards' });
+            ], { duration: 450, easing: 'cubic-bezier(0.32, 0.72, 0, 1)', fill: 'forwards' });
 
             if (opening) countUp(body, 900);
             const current = anim;

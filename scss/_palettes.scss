@@ -54,8 +54,8 @@ html.is-switching { transition: --bg 0.6s cubic-bezier(0.32, 0.72, 0, 1), --surf
 }
 
 /* Màu biểu đồ cột theo ngày: xanh rừng ở chế độ tối, đậm hơn ở chế độ sáng. */
-:root { --chart-daily: #3DA374; }
-html[data-theme="light"] { --chart-daily: #237A55; }
+:root { --chart-daily: #8FBEDD; }
+html[data-theme="light"] { --chart-daily: #2A6A90; }
 
 /* Bảng màu Rừng: nền xanh rừng và nhấn xanh lá. */
 html[data-palette="forest"]:not([data-theme="light"]) {
@@ -188,3 +188,25 @@ html[data-theme="light"] .palette-card[data-value="forest"] .palette-card__chip 
 html[data-theme="light"] .palette-card[data-value="hong"] .palette-card__chip { background: #A24071; }
 html[data-theme="light"] .palette-card[data-value="dat"] .palette-card__chip { background: #9E4D29; }
 html[data-theme="light"] .palette-card[data-value="xanh"] .palette-card__chip { background: #19736D; }
+
+/* ===== Màu biểu đồ theo bảng màu (v1.10.19): 8 màu cho biểu đồ tròn và một màu cho cột theo ngày ===== */
+:root { --chart-1: #8FBEDD; --chart-2: #5FCB9E; --chart-3: #E8B04A; --chart-4: #7B9EC9; --chart-5: #C98FB8; --chart-6: #6FB7B0; --chart-7: #D4C48A; --chart-8: #9AA6E0; --chart-daily: #8FBEDD; }
+:root[data-theme="light"] { --chart-1: #2A6A90; --chart-2: #2F8F6A; --chart-3: #B7842A; --chart-4: #4F79AD; --chart-5: #A35F8E; --chart-6: #3F8C86; --chart-7: #9C8A4E; --chart-8: #6F78C2; --chart-daily: #2A6A90; }
+html[data-palette="wine"]:not([data-theme="light"]) { --chart-1: #E8919F; --chart-2: #E8B04A; --chart-3: #C98FB8; --chart-4: #8FBEDD; --chart-5: #5FCB9E; --chart-6: #D4C48A; --chart-7: #B8876A; --chart-8: #9AA6E0; --chart-daily: #D4707F; }
+html[data-palette="wine"][data-theme="light"] { --chart-1: #9E2F4B; --chart-2: #B7842A; --chart-3: #7E4E8F; --chart-4: #2A6A90; --chart-5: #2F8F6A; --chart-6: #8A7A4A; --chart-7: #8C5A44; --chart-8: #4F5DA8; --chart-daily: #9E2F4B; }
+html[data-palette="violet"]:not([data-theme="light"]) { --chart-1: #B9A6FF; --chart-2: #E8B04A; --chart-3: #5FCB9E; --chart-4: #8FBEDD; --chart-5: #E898AE; --chart-6: #D4C48A; --chart-7: #6FB7B0; --chart-8: #C98FB8; --chart-daily: #9A85F0; }
+html[data-palette="violet"][data-theme="light"] { --chart-1: #5A3FC0; --chart-2: #B7842A; --chart-3: #2F8F6A; --chart-4: #2A6A90; --chart-5: #A35F8E; --chart-6: #8A7A4A; --chart-7: #3F8C86; --chart-8: #7E4E8F; --chart-daily: #5A3FC0; }
+html[data-palette="sand"]:not([data-theme="light"]) { --chart-1: #E2B872; --chart-2: #8FBEDD; --chart-3: #5FCB9E; --chart-4: #E8919F; --chart-5: #B8876A; --chart-6: #9AA6E0; --chart-7: #C98FB8; --chart-8: #D4C48A; --chart-daily: #C99A55; }
+html[data-palette="sand"][data-theme="light"] { --chart-1: #8A5E1E; --chart-2: #2A6A90; --chart-3: #2F8F6A; --chart-4: #9E2F4B; --chart-5: #7A5A3A; --chart-6: #4F5DA8; --chart-7: #A35F8E; --chart-8: #8A7A4A; --chart-daily: #8A5E1E; }
+html[data-palette="forest"]:not([data-theme="light"]) { --chart-1: #7FD3A5; --chart-2: #E8B04A; --chart-3: #8FBEDD; --chart-4: #E8919F; --chart-5: #D4C48A; --chart-6: #6FB7B0; --chart-7: #C98FB8; --chart-8: #9AA6E0; --chart-daily: #3DA374; }
+html[data-palette="forest"][data-theme="light"] { --chart-1: #1F7A55; --chart-2: #B7842A; --chart-3: #2A6A90; --chart-4: #9E2F4B; --chart-5: #8A7A4A; --chart-6: #3F8C86; --chart-7: #A35F8E; --chart-8: #4F5DA8; --chart-daily: #1F7A55; }
+html[data-palette="hong"]:not([data-theme="light"]) { --chart-1: #F4A7C8; --chart-2: #E8B04A; --chart-3: #8FBEDD; --chart-4: #5FCB9E; --chart-5: #D4C48A; --chart-6: #9AA6E0; --chart-7: #B8876A; --chart-8: #6FB7B0; --chart-daily: #E07FAA; }
+html[data-palette="hong"][data-theme="light"] { --chart-1: #A24071; --chart-2: #B7842A; --chart-3: #2A6A90; --chart-4: #2F8F6A; --chart-5: #8A7A4A; --chart-6: #4F5DA8; --chart-7: #7A5A3A; --chart-8: #3F8C86; --chart-daily: #A24071; }
+html[data-palette="than"]:not([data-theme="light"]) { --chart-1: #B8C4D6; --chart-2: #E8B04A; --chart-3: #5FCB9E; --chart-4: #E8919F; --chart-5: #8FBEDD; --chart-6: #D4C48A; --chart-7: #B8876A; --chart-8: #C98FB8; --chart-daily: #95A3B8; }
+html[data-palette="than"][data-theme="light"] { --chart-1: #3E4C60; --chart-2: #B7842A; --chart-3: #2F8F6A; --chart-4: #9E2F4B; --chart-5: #2A6A90; --chart-6: #8A7A4A; --chart-7: #7A5A3A; --chart-8: #A35F8E; --chart-daily: #3E4C60; }
+html[data-palette="dat"]:not([data-theme="light"]) { --chart-1: #E8A87C; --chart-2: #8FBEDD; --chart-3: #5FCB9E; --chart-4: #E8B04A; --chart-5: #C98FB8; --chart-6: #6FB7B0; --chart-7: #D4C48A; --chart-8: #9AA6E0; --chart-daily: #D08A60; }
+html[data-palette="dat"][data-theme="light"] { --chart-1: #A4502B; --chart-2: #2A6A90; --chart-3: #2F8F6A; --chart-4: #B7842A; --chart-5: #A35F8E; --chart-6: #3F8C86; --chart-7: #8A7A4A; --chart-8: #4F5DA8; --chart-daily: #9E4D29; }
+html[data-palette="xanh"]:not([data-theme="light"]) { --chart-1: #7FD1C7; --chart-2: #E8B04A; --chart-3: #8FBEDD; --chart-4: #E8919F; --chart-5: #D4C48A; --chart-6: #9AA6E0; --chart-7: #C98FB8; --chart-8: #B8876A; --chart-daily: #5DB5AB; }
+html[data-palette="xanh"][data-theme="light"] { --chart-1: #1B7A74; --chart-2: #B7842A; --chart-3: #2A6A90; --chart-4: #9E2F4B; --chart-5: #8A7A4A; --chart-6: #4F5DA8; --chart-7: #A35F8E; --chart-8: #7A5A3A; --chart-daily: #19736D; }
+html[data-palette="cham"]:not([data-theme="light"]) { --chart-1: #A9B8FF; --chart-2: #E8B04A; --chart-3: #5FCB9E; --chart-4: #E8919F; --chart-5: #D4C48A; --chart-6: #8FBEDD; --chart-7: #C98FB8; --chart-8: #6FB7B0; --chart-daily: #8A9BEE; }
+html[data-palette="cham"][data-theme="light"] { --chart-1: #3D52B5; --chart-2: #B7842A; --chart-3: #2F8F6A; --chart-4: #9E2F4B; --chart-5: #8A7A4A; --chart-6: #2A6A90; --chart-7: #A35F8E; --chart-8: #3F8C86; --chart-daily: #3D52B5; }

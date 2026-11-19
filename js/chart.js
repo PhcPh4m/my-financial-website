@@ -11,12 +11,50 @@ function isChartJsReady() {
     return typeof window.Chart !== 'undefined';
 }
 
+// Bộ 8 màu của bảng màu đang chọn, đọc từ --chart-1 đến --chart-8 (css/palettes.css).
+function chartPalette() {
+    const colors = [];
+    for (let i = 1; i <= 8; i++) colors.push(cssVar(`--chart-${i}`, '#8FBEDD'));
+    return colors;
+}
 
 // Đặt màu chữ, màu lưới và font mặc định cho mọi biểu đồ theo chế độ sáng hoặc tối.
 function setupChartDefaults() {
     Chart.defaults.color = cssVar('--text-2', '#cbd5e1');
     Chart.defaults.borderColor = cssVar('--border', '#334155');
     Chart.defaults.font.family = getComputedStyle(document.body).fontFamily;
+}
+
+// Kiểu chung cho chú thích và chú giải: chấm tròn nhỏ, chữ phụ, không khung.
+function legendStyle(position) {
+    return {
+        position,
+        align: position === 'top' ? 'end' : 'center',
+        labels: {
+            usePointStyle: true,
+            pointStyle: 'circle',
+            boxWidth: 6,
+            boxHeight: 6,
+            padding: 14,
+            color: cssVar('--text-2', '#A9C0CF'),
+            font: { size: 12 }
+        }
+    };
+}
+
+// Kiểu chung cho khung gợi ý khi rê chuột, đồng bộ với thanh kính của giao diện.
+function tooltipStyle(extra = {}) {
+    return {
+        backgroundColor: cssVar('--surface-2', '#1A3448'),
+        titleColor: cssVar('--text', '#E8F1F7'),
+        bodyColor: cssVar('--text-2', '#A9C0CF'),
+        borderColor: cssVar('--border-strong', 'rgba(170, 200, 220, 0.22)'),
+        borderWidth: 1,
+        cornerRadius: 10,
+        padding: 10,
+        boxPadding: 4,
+        ...extra
+    };
 }
 
 // Xóa biểu đồ cũ trên khung trước khi vẽ cái mới, để không đè lên nhau.
@@ -27,71 +65,87 @@ function destroyChart(canvasId) {
     }
 }
 
-// Bảng màu cho các miếng của biểu đồ tròn.
-const PALETTE = ['#8FBEDD', '#5FCB9E', '#E8B04A', '#7B9EC9', '#C98FB8', '#6FB7B0', '#D4C48A', '#9AA6E0', '#B8876A', '#7C8C99'];
-
-
 // Vẽ biểu đồ tròn: mỗi miếng là một danh mục chi tiêu. Rê chuột vào để xem số tiền và phần trăm.
+// Thiết kế: một vòng liền, các miếng ngăn bằng viền màu nền, rê chuột thì miếng nổi ra.
 function drawPieChart(canvasId, labels, values) {
     destroyChart(canvasId);
     const total = values.reduce((a, b) => a + b, 0);
+    const surface = cssVar('--surface', '#1E1D1A');
 
-    // Tạo biểu đồ mới trên canvas tương ứng.
     chartRegistry[canvasId] = new Chart($(canvasId), {
         type: 'doughnut',
         data: {
             labels,
-            datasets: [{ data: values, backgroundColor: PALETTE, borderColor: cssVar('--surface', '#1E1D1A'), borderWidth: 2 }]
+            datasets: [{
+                data: values,
+                backgroundColor: chartPalette(),
+                borderColor: surface,
+                borderWidth: 2,
+                hoverOffset: 6
+            }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            cutout: '58%',
+            animation: { duration: 700, easing: 'easeOutCubic' },
             plugins: {
-                legend: { position: 'bottom' },
-                tooltip: {
+                legend: { ...legendStyle('right'), labels: { ...legendStyle('right').labels, padding: 12, boxWidth: 8, boxHeight: 8, font: { size: 12 } } },
+                tooltip: tooltipStyle({
                     callbacks: {
                         label: (ctx) => {
                             const pct = total ? ((ctx.parsed / total) * 100).toFixed(1) : 0;
                             return ` ${ctx.label}: ${formatCurrency(ctx.parsed)} (${pct}%)`;
                         }
                     }
-                }
+                })
             }
         }
     });
 }
 
-
 // Vẽ biểu đồ cột: mỗi tháng có một cột thu và một cột chi để so sánh.
+// Thiết kế: cột bo đỉnh, lưới mờ nét đứt, chú thích gọn ở góc trên bên phải.
+// Thu nhập dùng --chart-1 và chi tiêu dùng --chart-3 của bảng màu đang chọn.
 function drawColumnChart(canvasId, labels, incomes, expenses) {
     destroyChart(canvasId);
+    const text = cssVar('--text-3', '#8AA3B4');
+    const grid = cssVar('--border', 'rgba(170, 200, 220, 0.12)');
 
-    // Tạo biểu đồ mới trên canvas tương ứng.
     chartRegistry[canvasId] = new Chart($(canvasId), {
         type: 'bar',
         data: {
             labels,
             datasets: [
-                { label: 'Thu nhập', data: incomes, backgroundColor: cssVar('--income', '#10b981'), borderRadius: 4 },
-                { label: 'Chi tiêu', data: expenses, backgroundColor: cssVar('--expense', '#ef4444'), borderRadius: 4 }
+                { label: 'Thu nhập', data: incomes, backgroundColor: cssVar('--chart-1', '#8FBEDD'), borderRadius: { topLeft: 6, topRight: 6 }, borderSkipped: 'bottom', maxBarThickness: 22 },
+                { label: 'Chi tiêu', data: expenses, backgroundColor: cssVar('--chart-3', '#E8B04A'), borderRadius: { topLeft: 6, topRight: 6 }, borderSkipped: 'bottom', maxBarThickness: 22 }
             ]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
             interaction: { mode: 'index', intersect: false },
+            animation: { duration: 700, easing: 'easeOutCubic' },
             plugins: {
-                legend: { position: 'top' },
-                tooltip: { callbacks: { label: (ctx) => ` ${ctx.dataset.label}: ${formatCurrency(ctx.parsed.y)}` } }
+                legend: legendStyle('top'),
+                tooltip: tooltipStyle({
+                    displayColors: true,
+                    callbacks: { label: (ctx) => ` ${ctx.dataset.label}: ${formatCurrency(ctx.parsed.y)}` }
+                })
             },
             scales: {
-                y: { beginAtZero: true, ticks: { callback: (v) => formatCompactVND(v, false) } }
+                x: { grid: { display: false }, border: { display: false }, ticks: { color: text } },
+                y: {
+                    beginAtZero: true,
+                    border: { display: false },
+                    grid: { color: grid, borderDash: [4, 4], drawTicks: false },
+                    ticks: { color: text, callback: (v) => formatCompactVND(v, false) }
+                }
             }
         }
     });
 }
 
-// Vẽ biểu đồ cột: chi tiêu từng ngày trong tháng.
 // Đổi màu hex sang rgba với độ trong suốt a. Màu không phải hex thì giữ nguyên.
 function withAlpha(color, a) {
     const m = /^#([0-9a-f]{6})$/i.exec(String(color).trim());
@@ -100,13 +154,14 @@ function withAlpha(color, a) {
     return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${a})`;
 }
 
+// Vẽ biểu đồ cột: chi tiêu từng ngày trong tháng.
+// Cột cao nhất đậm màu; các cột còn lại nhạt đi để điểm chi nhiều nổi bật.
 function drawDailyBarChart(canvasId, labels, values) {
     destroyChart(canvasId);
 
-    // Cột cao nhất đậm màu; các cột còn lại nhạt đi để điểm chi nhiều nổi bật.
     const base = cssVar('--chart-daily', '#3DA374');
     const peak = values.indexOf(Math.max(...values));
-    const colors = values.map((v, i) => (i === peak && v > 0 ? base : withAlpha(base, 0.45)));
+    const colors = values.map((v, i) => (i === peak && v > 0 ? base : withAlpha(base, 0.4)));
     const text = cssVar('--text-3', '#8AA3B4');
     const grid = cssVar('--border', 'rgba(170, 200, 220, 0.12)');
 
@@ -118,7 +173,7 @@ function drawDailyBarChart(canvasId, labels, values) {
                 label: 'Chi tiêu',
                 data: values,
                 backgroundColor: colors,
-                borderRadius: { topLeft: 6, topRight: 6, bottomLeft: 0, bottomRight: 0 },
+                borderRadius: { topLeft: 6, topRight: 6 },
                 borderSkipped: 'bottom',
                 maxBarThickness: 18,
                 barPercentage: 0.6,
@@ -135,20 +190,13 @@ function drawDailyBarChart(canvasId, labels, values) {
             },
             plugins: {
                 legend: { display: false },
-                tooltip: {
-                    backgroundColor: cssVar('--surface-2', '#1A3448'),
-                    titleColor: cssVar('--text', '#E8F1F7'),
-                    bodyColor: cssVar('--text-2', '#A9C0CF'),
-                    borderColor: cssVar('--border-strong', 'rgba(170, 200, 220, 0.22)'),
-                    borderWidth: 1,
-                    cornerRadius: 10,
-                    padding: 10,
+                tooltip: tooltipStyle({
                     displayColors: false,
                     callbacks: {
                         title: (items) => `Ngày ${items[0].label}`,
                         label: (ctx) => ` ${formatCompactVND(ctx.parsed.y, true)}`
                     }
-                }
+                })
             },
             scales: {
                 x: {

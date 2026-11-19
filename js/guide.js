@@ -7,7 +7,7 @@
     const pill = document.querySelector('.guide-toc__pill');
     const links = Array.from(document.querySelectorAll('.guide-toc a'));
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const LEAVE_MS = 180;
+    const LEAVE_MS = 300;
     let current = -1;
     let leaveTimer = null;
     let seq = 0;

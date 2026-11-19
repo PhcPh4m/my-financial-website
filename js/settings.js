@@ -57,6 +57,8 @@ function applySettings(settings) {
     applyGlass(glassValue(settings.glass));
     const palette = PALETTES.includes(settings.palette) ? settings.palette : 'ocean';
     document.documentElement.dataset.palette = palette;
+    // Báo cho biểu đồ vẽ lại theo bảng màu mới (dùng cùng sự kiện với đổi sáng/tối).
+    document.dispatchEvent(new CustomEvent('themechange', { detail: palette }));
     if (settings.reduceMotion) document.documentElement.dataset.reduceMotion = 'on';
     else delete document.documentElement.dataset.reduceMotion;
 }

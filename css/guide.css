@@ -6,8 +6,8 @@
   --surface: #112637;
   --surface-2: #1A3346;
   --input: #081823;
-  --border: rgba(170, 200, 220, 0.12);
-  --border-strong: rgba(170, 200, 220, 0.22);
+  --border: color-mix(in srgb, var(--accent) 14%, transparent);
+  --border-strong: color-mix(in srgb, var(--accent) 24%, transparent);
   --text: #E8F1F7;
   --text-2: #A9C0CF;
   --text-3: #8AA3B4;
@@ -28,7 +28,7 @@
   --overlay: rgba(4, 12, 20, 0.6);
   --glass: color-mix(in srgb, var(--surface) min(100%, calc(38% * var(--glass-mul, 1))), transparent);
   --glass-strong: color-mix(in srgb, var(--surface) min(100%, calc(62% * var(--glass-mul, 1))), transparent);
-  --glass-border: rgba(200, 225, 240, 0.18);
+  --glass-border: color-mix(in srgb, var(--accent) 18%, transparent);
   --blur: blur(var(--glass-blur, 22px)) saturate(var(--glass-sat, 160%));
   --blob-1: #324E64;
   --blob-2: #44657E;
@@ -43,8 +43,8 @@ html[data-theme=light] {
   --surface: #FFFFFF;
   --surface-2: #D6E3EC;
   --input: #FFFFFF;
-  --border: rgba(19, 40, 58, 0.12);
-  --border-strong: rgba(19, 40, 58, 0.22);
+  --border: color-mix(in srgb, var(--accent) 16%, transparent);
+  --border-strong: color-mix(in srgb, var(--accent) 26%, transparent);
   --text: #13283A;
   --text-2: #3D5769;
   --text-3: #5C7384;
@@ -65,7 +65,7 @@ html[data-theme=light] {
   --overlay: rgba(19, 40, 58, 0.35);
   --glass: color-mix(in srgb, var(--surface) min(100%, calc(60% * var(--glass-mul, 1))), transparent);
   --glass-strong: color-mix(in srgb, var(--surface) min(100%, calc(82% * var(--glass-mul, 1))), transparent);
-  --glass-border: rgba(255, 255, 255, 0.85);
+  --glass-border: color-mix(in srgb, var(--accent) 22%, #fff);
   --blur: blur(var(--glass-blur, 22px)) saturate(var(--glass-sat, 160%));
   --blob-1: #83A1B4;
   --blob-2: #5D85A1;
@@ -439,7 +439,7 @@ body.page-leave .page {
 }
 /* Chuyển động thành phần: modal trượt lên nhẹ, thông báo hiện dần, nút co nhẹ khi nhấn, thanh tiến độ co giãn bằng transform. */
 .modal.active .modal__content {
-  animation: sheet-in 0.32s cubic-bezier(0.32, 0.72, 0, 1) both;
+  animation: sheet-in var(--motion-base) var(--motion-ease) both;
 }
 
 @keyframes sheet-in {
@@ -706,7 +706,7 @@ body.page-leave .topbar {
 
 .guide-section p,
 .guide-section li {
-  max-width: 70ch;
+  max-width: none;
   font-size: 0.9375rem;
   line-height: 1.7;
   color: var(--text-2);
@@ -730,7 +730,7 @@ body.page-leave .topbar {
 
 .guide-example,
 .guide-note {
-  max-width: 70ch;
+  max-width: none;
   margin: 0.75rem 0;
   padding: 0.75rem 1rem;
   border-radius: 10px;
@@ -771,7 +771,6 @@ body.page-leave .topbar {
 .seg { display: inline-flex; flex-wrap: wrap; gap: 0.25rem; padding: 0.25rem; background: var(--input); border: 1px solid var(--border); border-radius: 999px; }
 .seg__btn { appearance: none; border: 0; background: transparent; color: var(--text-2); font: inherit; font-size: 0.875rem; padding: 0.45rem 0.9rem; border-radius: 999px; cursor: pointer; transition: background-color 0.6s cubic-bezier(0.32, 0.72, 0, 1), color 0.6s cubic-bezier(0.32, 0.72, 0, 1); }
 .seg__btn:hover { color: var(--text); }
-.seg__btn[aria-pressed="true"] { background: var(--accent); color: var(--accent-on); }
 .seg__btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 @property --glass-mul { syntax: "<number>"; inherits: true; initial-value: 1; }
@@ -1013,7 +1012,7 @@ html.js .guide-section {
 
 html.js .guide-section.is-active {
   display: block;
-  animation: guide-in-forward 0.42s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation: guide-in-forward var(--motion-base) var(--motion-ease) both;
 }
 
 html.js .guide-section.is-active.is-back {
@@ -1022,7 +1021,7 @@ html.js .guide-section.is-active.is-back {
 
 html.js .guide-section.is-leaving {
   display: block;
-  animation: guide-out 0.18s ease-in both;
+  animation: guide-out 0.3s ease-in both;
   pointer-events: none;
 }
 
@@ -1083,7 +1082,7 @@ html.js .guide-section.is-leaving {
 
 .guide-section p,
 .guide-section li {
-  max-width: 68ch;
+  max-width: none;
   font-size: 0.9375rem;
   line-height: 1.75;
   color: var(--text-2);
@@ -1108,7 +1107,7 @@ html.js .guide-section.is-leaving {
 
 .guide-example,
 .guide-note {
-  max-width: 68ch;
+  max-width: none;
   margin: 1rem 0 1.25rem;
   padding: 0.875rem 1rem;
   border: 1px solid var(--border);
@@ -1190,7 +1189,7 @@ html.js .guide-section.is-leaving {
 .guide-demo {
   margin: 1rem 0 1.25rem;
   padding: 0.875rem 1rem 1rem;
-  max-width: 68ch;
+  max-width: none;
   border: 1px solid var(--border);
   border-radius: 12px;
   background: var(--surface-2);
@@ -1253,7 +1252,7 @@ html.js .guide-section.is-leaving {
 
 .guide-meter {
   margin: 1rem 0 1.25rem;
-  max-width: 68ch;
+  max-width: none;
 }
 
 .guide-meter__track {

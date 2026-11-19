@@ -8,7 +8,7 @@
 }
 
 // Mỗi ô: tiêu đề và icon nhỏ, số chính, badge % (tùy chọn) rồi chú thích ở đáy.
-// Nền có một vệt màu nhạt ở góc phải; màu vệt đặt bằng --kpi-tint.
+// Nền trung tính như trang Tổng quan; màu chỉ xuất hiện ở badge.
 .kpi {
   --kpi-accent: var(--text);
   --kpi-tint: var(--surface-2);

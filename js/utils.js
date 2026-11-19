@@ -259,15 +259,31 @@ function showToast(message, type = 'success', duration = 3000, action = null) {
 function openModal(id) {
     const modal = $(id);
     if (!modal) return;
+    modal.classList.remove('is-closing');
     modal.classList.add('active');
     const focusTarget = modal.querySelector('input, button');
     if (focusTarget) focusTarget.focus();
 }
 
 // Đóng hộp thoại.
+// Chạy hiệu ứng đóng trước, rồi mới ẩn. Giảm chuyển động thì ẩn ngay.
+function hideModal(modal) {
+    if (!modal.classList.contains('active')) return;
+    const reduced = document.documentElement.dataset.reduceMotion === 'on'
+        || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    modal.classList.remove('active');
+    if (reduced) {
+        modal.classList.remove('is-closing');
+        return;
+    }
+    modal.classList.add('is-closing');
+    clearTimeout(modal._closeTimer);
+    modal._closeTimer = setTimeout(() => modal.classList.remove('is-closing'), 460);
+}
+
 function closeModal(id) {
     const modal = $(id);
-    if (modal) modal.classList.remove('active');
+    if (modal) hideModal(modal);
 }
 
 // Đóng hộp thoại và đưa con trỏ về chỗ cũ.
@@ -275,7 +291,7 @@ function dismissModal(modal) {
     if (modal.id === 'confirmModal') {
         $('confirmCancel').click();
     } else {
-        modal.classList.remove('active');
+        hideModal(modal);
     }
 }
 

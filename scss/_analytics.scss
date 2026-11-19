@@ -241,13 +241,19 @@
   width: auto;
 }
 
-.analytics-page .kpis {
-  gap: 0.75rem;
+/* Bước 3 (v1.10.19): ô chọn tháng và nút cùng chiều cao, cùng cỡ chữ và bo góc như form-input chuẩn. */
+.analytics-page .period-bar__controls .btn {
+  min-height: 2.25rem;
+  font-size: 0.9rem;
+  border-radius: 0.5rem;
+}
+.analytics-page .period-bar__field .form-input {
+  min-height: 2.25rem;
+  font-size: 0.9rem;
 }
 
-.analytics-page .kpi__icon {
-  background: none;
-  color: var(--text-3);
+.analytics-page .kpis {
+  gap: 0.75rem;
 }
 
 .analytics-page .kpi__value {
@@ -337,7 +343,6 @@
 }
 
 .tabs__btn:hover { color: var(--text); }
-.tabs__btn[aria-selected="true"] { background: var(--accent); color: var(--accent-on); }
 .tabs__btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 .tab-panel {
@@ -352,7 +357,6 @@
 .tabs { position: relative; }
 .tabs__pill { position: absolute; top: 0.25rem; bottom: 0.25rem; left: 0; width: 0; border-radius: 999px; background: var(--accent); opacity: 0; pointer-events: none; transition: transform 0.6s cubic-bezier(0.32, 0.72, 0, 1), width 0.6s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.2s ease; }
 .tabs__btn { position: relative; z-index: 1; transition: color 0.6s cubic-bezier(0.32, 0.72, 0, 1); }
-.tabs__btn[aria-selected="true"] { background: transparent; color: var(--accent-on); }
 html.is-switching .tabs__pill { transition: transform 0.6s cubic-bezier(0.32, 0.72, 0, 1), width 0.6s cubic-bezier(0.32, 0.72, 0, 1), background-color 0.6s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.2s ease !important; }
 
 /* Nội dung mỗi tab hiện dần và trượt nhẹ lên khi được chọn. Animation chạy lại mỗi lần nhóm được hiện. */
@@ -366,4 +370,10 @@ html.is-switching .tabs__pill { transition: transform 0.6s cubic-bezier(0.32, 0.
 .tab-panel:not([hidden]) > .panel { animation: tab-in 0.45s cubic-bezier(0.32, 0.72, 0, 1) 0.05s both; }
 @media (prefers-reduced-motion: reduce) {
   .tab-panel:not([hidden]), .tab-panel:not([hidden]) > * { animation: none; }
+}
+
+/* Biểu đồ tròn: khung cao hơn để vòng đủ lớn, chú thích nằm bên phải cho dễ đọc. Cùng chiều cao với biểu đồ cột. */
+.analytics-page .chart-card--side .chart-card__box,
+.analytics-page .chart-card--main .chart-card__box {
+  height: 16rem;
 }

@@ -6,8 +6,8 @@
   --surface: #112637;
   --surface-2: #1A3346;
   --input: #081823;
-  --border: rgba(170, 200, 220, 0.12);
-  --border-strong: rgba(170, 200, 220, 0.22);
+  --border: color-mix(in srgb, var(--accent) 14%, transparent);
+  --border-strong: color-mix(in srgb, var(--accent) 24%, transparent);
   --text: #E8F1F7;
   --text-2: #A9C0CF;
   --text-3: #8AA3B4;
@@ -28,7 +28,7 @@
   --overlay: rgba(4, 12, 20, 0.6);
   --glass: color-mix(in srgb, var(--surface) min(100%, calc(38% * var(--glass-mul, 1))), transparent);
   --glass-strong: color-mix(in srgb, var(--surface) min(100%, calc(62% * var(--glass-mul, 1))), transparent);
-  --glass-border: rgba(200, 225, 240, 0.18);
+  --glass-border: color-mix(in srgb, var(--accent) 18%, transparent);
   --blur: blur(var(--glass-blur, 22px)) saturate(var(--glass-sat, 160%));
   --blob-1: #324E64;
   --blob-2: #44657E;
@@ -43,8 +43,8 @@ html[data-theme=light] {
   --surface: #FFFFFF;
   --surface-2: #D6E3EC;
   --input: #FFFFFF;
-  --border: rgba(19, 40, 58, 0.12);
-  --border-strong: rgba(19, 40, 58, 0.22);
+  --border: color-mix(in srgb, var(--accent) 16%, transparent);
+  --border-strong: color-mix(in srgb, var(--accent) 26%, transparent);
   --text: #13283A;
   --text-2: #3D5769;
   --text-3: #5C7384;
@@ -65,7 +65,7 @@ html[data-theme=light] {
   --overlay: rgba(19, 40, 58, 0.35);
   --glass: color-mix(in srgb, var(--surface) min(100%, calc(60% * var(--glass-mul, 1))), transparent);
   --glass-strong: color-mix(in srgb, var(--surface) min(100%, calc(82% * var(--glass-mul, 1))), transparent);
-  --glass-border: rgba(255, 255, 255, 0.85);
+  --glass-border: color-mix(in srgb, var(--accent) 22%, #fff);
   --blur: blur(var(--glass-blur, 22px)) saturate(var(--glass-sat, 160%));
   --blob-1: #83A1B4;
   --blob-2: #5D85A1;
@@ -992,7 +992,7 @@ body.page-leave .page {
 }
 /* Chuyển động thành phần: modal trượt lên nhẹ, thông báo hiện dần, nút co nhẹ khi nhấn, thanh tiến độ co giãn bằng transform. */
 .modal.active .modal__content {
-  animation: sheet-in 0.32s cubic-bezier(0.32, 0.72, 0, 1) both;
+  animation: sheet-in var(--motion-base) var(--motion-ease) both;
 }
 
 @keyframes sheet-in {
@@ -1455,7 +1455,6 @@ input[data-money]::-webkit-outer-spin-button { -webkit-appearance: none; margin:
 .seg { display: inline-flex; flex-wrap: wrap; gap: 0.25rem; padding: 0.25rem; background: var(--input); border: 1px solid var(--border); border-radius: 999px; }
 .seg__btn { appearance: none; border: 0; background: transparent; color: var(--text-2); font: inherit; font-size: 0.875rem; padding: 0.45rem 0.9rem; border-radius: 999px; cursor: pointer; transition: background-color 0.6s cubic-bezier(0.32, 0.72, 0, 1), color 0.6s cubic-bezier(0.32, 0.72, 0, 1); }
 .seg__btn:hover { color: var(--text); }
-.seg__btn[aria-pressed="true"] { background: var(--accent); color: var(--accent-on); }
 .seg__btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
 @property --glass-mul { syntax: "<number>"; inherits: true; initial-value: 1; }
@@ -1603,7 +1602,6 @@ body {
 .seg { position: relative; }
 .seg__pill { position: absolute; top: 0.25rem; bottom: 0.25rem; left: 0; width: 0; border-radius: 999px; background: var(--accent); opacity: 0; pointer-events: none; transition: transform 0.6s cubic-bezier(0.32, 0.72, 0, 1), width 0.6s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.2s ease; }
 .seg .seg__btn { position: relative; z-index: 1; }
-.seg .seg__btn[aria-pressed="true"] { background: transparent; color: var(--accent-on); }
 html.is-switching .seg__pill { transition: transform 0.6s cubic-bezier(0.32, 0.72, 0, 1), width 0.6s cubic-bezier(0.32, 0.72, 0, 1), background-color 0.6s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.2s ease !important; }
 
 /* Thanh trượt độ mờ kính: nhãn hai đầu và thanh kéo lấy màu nhấn. */

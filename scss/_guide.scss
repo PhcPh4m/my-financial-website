@@ -69,7 +69,7 @@
 
 .guide-section p,
 .guide-section li {
-  max-width: 70ch;
+  max-width: none;
   font-size: 0.9375rem;
   line-height: 1.7;
   color: var(--text-2);
@@ -93,7 +93,7 @@
 
 .guide-example,
 .guide-note {
-  max-width: 70ch;
+  max-width: none;
   margin: 0.75rem 0;
   padding: 0.75rem 1rem;
   border-radius: 10px;
@@ -231,7 +231,7 @@ html.js .guide-section {
 
 html.js .guide-section.is-active {
   display: block;
-  animation: guide-in-forward 0.42s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation: guide-in-forward var(--motion-base) var(--motion-ease) both;
 }
 
 html.js .guide-section.is-active.is-back {
@@ -240,7 +240,7 @@ html.js .guide-section.is-active.is-back {
 
 html.js .guide-section.is-leaving {
   display: block;
-  animation: guide-out 0.18s ease-in both;
+  animation: guide-out 0.3s ease-in both;
   pointer-events: none;
 }
 
@@ -301,7 +301,7 @@ html.js .guide-section.is-leaving {
 
 .guide-section p,
 .guide-section li {
-  max-width: 68ch;
+  max-width: none;
   font-size: 0.9375rem;
   line-height: 1.75;
   color: var(--text-2);
@@ -326,7 +326,7 @@ html.js .guide-section.is-leaving {
 
 .guide-example,
 .guide-note {
-  max-width: 68ch;
+  max-width: none;
   margin: 1rem 0 1.25rem;
   padding: 0.875rem 1rem;
   border: 1px solid var(--border);
@@ -408,7 +408,7 @@ html.js .guide-section.is-leaving {
 .guide-demo {
   margin: 1rem 0 1.25rem;
   padding: 0.875rem 1rem 1rem;
-  max-width: 68ch;
+  max-width: none;
   border: 1px solid var(--border);
   border-radius: 12px;
   background: var(--surface-2);
@@ -471,7 +471,7 @@ html.js .guide-section.is-leaving {
 
 .guide-meter {
   margin: 1rem 0 1.25rem;
-  max-width: 68ch;
+  max-width: none;
 }
 
 .guide-meter__track {

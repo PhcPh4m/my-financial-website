@@ -33,7 +33,7 @@ body.page-leave .page {
 
 /* Chuyển động thành phần: modal trượt lên nhẹ, thông báo hiện dần, nút co nhẹ khi nhấn, thanh tiến độ co giãn bằng transform. */
 .modal.active .modal__content {
-  animation: sheet-in 0.32s cubic-bezier(0.32, 0.72, 0, 1) both;
+  animation: sheet-in var(--motion-base) var(--motion-ease) both;
 }
 
 @keyframes sheet-in {

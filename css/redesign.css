@@ -538,10 +538,12 @@ html[data-reduce-motion="on"] *::after {
 
 /* ---------- v100: thanh và mục đang chọn đều là liquid glass (như thanh chuyển trang) ---------- */
 
-/* Thanh ngoài: kính mờ, viền sáng mỏng, không còn nền đặc. */
+/* ===== Thanh chuyển mục thống nhất (v1.10.19): theo thanh điều hướng trên cùng ===== */
+/* Khung: kính mờ, viền sáng mỏng, bo tròn. Áp cho .nav-tabs, .tabs, .seg. */
 html body .nav-tabs,
 html body .tabs,
 html body .seg {
+  border-radius: 999px;
   background: linear-gradient(135deg, color-mix(in srgb, #fff calc(10% * var(--glass-mul, 1)), transparent), color-mix(in srgb, #fff calc(2% * var(--glass-mul, 1)), transparent)), var(--glass-strong);
   border: 1px solid var(--glass-border);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
@@ -549,17 +551,25 @@ html body .seg {
   backdrop-filter: var(--blur);
 }
 
-/* Mục đang chọn: một viên kính sáng hơn, chữ màu nhấn (không tô đặc màu nhấn). */
+/* Viên chọn: kính sáng hơn, không tô màu nhấn. Áp cho mọi thanh. */
 html body .nav-tabs__pill,
 html body .tabs__pill,
-html body .seg__pill {
-  background: linear-gradient(135deg, color-mix(in srgb, #fff calc(22% * var(--glass-mul, 1)), transparent), color-mix(in srgb, #fff calc(6% * var(--glass-mul, 1)), transparent)), var(--glass-strong) !important;
+html body .seg__pill,
+html body .guide-toc__pill {
+  border-radius: 999px;
+  background: var(--glass-strong);
   border: 1px solid var(--glass-border);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 1px 6px rgba(0, 0, 0, 0.18);
+  box-shadow: var(--shadow-lift);
+  -webkit-backdrop-filter: var(--blur);
+  backdrop-filter: var(--blur);
   opacity: 1;
 }
+html body .guide-toc__pill { border-radius: 0.625rem; }
+
+/* Mục đang chọn: không có nền riêng, chỉ đổi chữ sang màu nhấn. */
 html body .tabs__btn[aria-selected="true"],
-html body .seg__btn[aria-pressed="true"] {
+html body .seg__btn[aria-pressed="true"],
+html body .guide-toc a.is-current {
   background: transparent;
   color: var(--accent);
 }
@@ -637,18 +647,42 @@ html body .alert.budget-card {
 
 /* ===== Bản kính (v1.10.8-glass): theo ảnh giao diện tham khảo, áp dụng cho mọi bảng màu ===== */
 :root {
+  /* Thời lượng chuyển động dùng chung: mở/đóng hộp thoại, khối chi tiết, mục hướng dẫn. */
+  --motion-fast: 0.15s;
+  --motion-base: 0.45s;
+  --motion-ease: cubic-bezier(0.32, 0.72, 0, 1);
   --glass: color-mix(in srgb, var(--surface) min(100%, calc(30% * var(--glass-mul, 1))), transparent);
   --glass-strong: color-mix(in srgb, var(--surface) min(100%, calc(52% * var(--glass-mul, 1))), transparent);
-  --glass-border: rgba(200, 225, 240, 0.16);
+  --glass-border: color-mix(in srgb, var(--accent) 18%, transparent);
   --shadow-lift: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 24px 48px -28px rgba(0, 0, 0, 0.7);
 }
 :root[data-theme="light"] {
   --glass: color-mix(in srgb, var(--surface) min(100%, calc(70% * var(--glass-mul, 1))), transparent);
-  --glass-border: rgba(255, 255, 255, 0.9);
+  --glass-border: color-mix(in srgb, var(--accent) 22%, #fff);
   --shadow-lift: inset 0 1px 0 #ffffff, 0 20px 40px -26px rgba(19, 40, 58, 0.3);
 }
 .panel,
 .kpi,
 .modal__content {
   border-radius: 1.25rem;
+}
+
+/* ===== Hiệu ứng đóng hộp thoại (v1.10.18): chạy ngược lại lúc mở, rồi mới ẩn ===== */
+.modal.is-closing {
+  display: flex;
+  pointer-events: none;
+  animation: modal-fade-out var(--motion-base) var(--motion-ease) both;
+}
+.modal.is-closing .modal__content {
+  animation: sheet-out var(--motion-base) var(--motion-ease) both;
+}
+@keyframes modal-fade-out {
+  to { opacity: 0; }
+}
+@keyframes sheet-out {
+  to { opacity: 0; transform: translateY(12px) scale(0.98); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .modal.is-closing,
+  .modal.is-closing .modal__content { animation: none; }
 }
