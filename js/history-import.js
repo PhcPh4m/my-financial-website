@@ -105,9 +105,12 @@ const HISTORY_MEMORY_KEY = 'history_category_memory';
             .join('');
         $('historyList').innerHTML = items.map((it, i) => {
             const cats = getCategoriesFor(it.type);
+            // Khoản đã có trong dữ liệu: hiện nhãn và bỏ tick sẵn, để không thêm lại.
+            const saved = Boolean(it.amount > 0 && it.date && isAlreadySaved(it));
+            const checked = it.checked && !saved;
             return `
-            <li class="history-import__item">
-                <input type="checkbox" class="history-import__check" data-i="${i}" data-field="checked" ${it.checked ? 'checked' : ''} aria-label="Thêm giao dịch này">
+            <li class="history-import__item${saved ? ' is-saved' : ''}">
+                <input type="checkbox" class="history-import__check" data-i="${i}" data-field="checked" ${checked ? 'checked' : ''} aria-label="Thêm giao dịch này">${saved ? '<span class="history-import__tag">Đã có</span>' : ''}
                 <input type="date" class="form-input" data-i="${i}" data-field="date" value="${it.date || ''}" aria-label="Ngày">
                 <input type="text" class="form-input history-import__desc" data-i="${i}" data-field="description" maxlength="100" value="${escapeHtml(it.description)}" aria-label="Nội dung">
                 <input type="text" inputmode="numeric" class="form-input history-import__amount" data-i="${i}" data-field="amount" value="${it.amount}" aria-label="Số tiền">
@@ -182,26 +185,23 @@ const HISTORY_MEMORY_KEY = 'history_category_memory';
     function confirmImport() {
         const picked = items.filter((it) => it.checked && it.amount > 0 && it.date);
         if (picked.length === 0) return;
-        let saved = 0;
-        picked.forEach((it) => {
-            const tx = addTransaction({
-                title: it.description || 'Giao dịch',
-                amount: it.amount,
-                type: it.type,
-                category: it.category,
-                date: it.date,
-                status: 'completed',
-                walletId: it.walletId,
-            });
-            if (tx) saved += 1;
-        });
+        // Dùng chung bộ chống trùng với nhập CSV và JSON (quy tắc: cùng ngày, số tiền, loại).
+        const result = commitTransactions(picked.map((it) => ({
+            title: it.description || 'Giao dịch',
+            amount: it.amount,
+            type: it.type,
+            category: it.category,
+            date: it.date,
+            status: 'completed',
+            walletId: it.walletId,
+        })));
         resetPanel();
         refresh();
-        if (saved === picked.length) {
-            showToast(`Đã thêm ${saved} giao dịch từ ảnh lịch sử`, 'success', 5000);
-        } else {
-            showToast(`Chỉ thêm được ${saved}/${picked.length} giao dịch. Bộ nhớ có thể đã đầy.`, 'danger', 6000);
-        }
+        const notes = [];
+        if (result.duplicates) notes.push(`bỏ qua ${result.duplicates} khoản đã có`);
+        if (result.skipped) notes.push(`${result.skipped} khoản không hợp lệ`);
+        const text = `Đã thêm ${result.added} giao dịch từ ảnh lịch sử${notes.length ? ` (${notes.join(', ')})` : ''}.`;
+        showToast(text, result.added ? 'success' : 'danger', 6000);
     }
 
     document.addEventListener('DOMContentLoaded', () => {

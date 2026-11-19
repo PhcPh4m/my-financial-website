@@ -106,13 +106,13 @@
 .nav-tabs__pill {
   opacity: 0;
   transition:
-    transform 0.6s cubic-bezier(0.32, 0.72, 0, 1),
-    opacity 0.2s ease;
+    transform var(--motion-slow) var(--motion-ease),
+    opacity var(--motion-quick) ease;
 }
 
 /* Chữ đổi màu mềm khi chuyển tab. */
 .nav-link {
-  transition: color 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+  transition: color var(--motion-mid) var(--motion-ease);
 }
 
 /* Thanh trên thu gọn: chỉ hiện icon. Máy tính: rê chuột vào thanh để mở ra tên đầy đủ. Điện thoại: chạm vào vùng thanh để bật tắt. */
@@ -120,7 +120,7 @@
   min-width: 0;
   gap: 0;
   padding: 0.45rem 0.7rem;
-  transition: color 0.6s cubic-bezier(0.32, 0.72, 0, 1), padding 0.6s cubic-bezier(0.32, 0.72, 0, 1), gap 0.6s cubic-bezier(0.32, 0.72, 0, 1);
+  transition: color var(--motion-slow) var(--motion-ease), padding var(--motion-slow) var(--motion-ease), gap var(--motion-slow) var(--motion-ease);
 }
 
 .nav-tabs .nav-link [data-icon] {
@@ -132,7 +132,7 @@
   opacity: 0;
   overflow: hidden;
   white-space: nowrap;
-  transition: max-width 0.6s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.3s ease;
+  transition: max-width var(--motion-slow) var(--motion-ease), opacity var(--motion-mid) ease;
 }
 
 .topbar.is-expanded .nav-link,

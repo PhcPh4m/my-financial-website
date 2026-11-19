@@ -17,7 +17,7 @@
   font-weight: 500;
   white-space: nowrap;
   cursor: pointer;
-  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+  transition: color var(--motion-fast) ease, background-color var(--motion-fast) ease, border-color var(--motion-fast) ease;
 
   &:hover {
     background: var(--surface-2);
@@ -68,7 +68,7 @@
   font: inherit;
   font-size: 0.8125rem;
   cursor: pointer;
-  transition: color 0.15s ease, border-color 0.15s ease;
+  transition: color var(--motion-fast) ease, border-color var(--motion-fast) ease;
 
   &:hover {
     color: var(--text);

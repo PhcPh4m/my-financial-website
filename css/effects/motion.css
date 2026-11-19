@@ -1,0 +1,150 @@
+/* Hiệu ứng chuyển động: chuyển trang, modal, thông báo, nút. Chỉnh tại scss/effects/_motion.scss. */
+body.page-enter .page {
+  animation: page-in 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+body.page-leave .page {
+  animation: page-out 0.26s ease-in both;
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes page-out {
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.page-enter .page,
+  body.page-leave .page {
+    animation: none;
+  }
+}
+
+.modal.active .modal__content {
+  animation: sheet-in var(--motion-base) var(--motion-ease) both;
+}
+
+@keyframes sheet-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.toast {
+  animation: toast-in var(--motion-mid) var(--motion-ease) both;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.btn {
+  transition: transform var(--motion-fast) var(--motion-ease), color var(--motion-fast) ease, background-color var(--motion-fast) ease, border-color var(--motion-fast) ease;
+}
+
+.btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal.active .modal__content,
+  .toast {
+    animation: none;
+  }
+  .btn:active:not(:disabled) {
+    transform: none;
+  }
+}
+
+body.page-enter .brand {
+  animation: brand-in 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) 0.06s both;
+}
+
+body.page-leave .topbar {
+  animation: topbar-out 0.26s ease-in both;
+}
+
+@keyframes topbar-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes brand-in {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes topbar-out {
+  to {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.page-enter .topbar,
+  body.page-enter .brand,
+  body.page-leave .topbar {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .weather-widget__refresh {
+    transition: none;
+  }
+  .nav-tabs__pill {
+    transition: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progress__bar,
+  .category-item__fill {
+    transition: none;
+  }
+}
+
+body.page-enter .topbar {
+  animation: topbar-in 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .budget-ring__bar { transition: none; }
+}

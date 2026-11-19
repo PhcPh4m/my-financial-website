@@ -1,0 +1,26 @@
+// Hiệu ứng kính: nền ambient, lớp kính mờ và hoạt ảnh độ mờ.
+@property --glass-mul { syntax: "<number>"; inherits: true; initial-value: 1; }
+html { transition: --glass-mul var(--motion-slow) var(--motion-ease); }
+
+/* Glassmorphism: nền ambient một tông từ màu nhấn của bảng màu. Không còn quầng sáng. */
+.ambient {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  /* Mảng màu nhẹ, không quầng sáng: độ đậm lấy từ --blob-opacity của bảng màu. */
+  background:
+    radial-gradient(60% 50% at 18% 12%, color-mix(in srgb, var(--blob-1) calc(var(--blob-opacity) * 60%), transparent) 0%, transparent 70%),
+    radial-gradient(50% 45% at 86% 90%, color-mix(in srgb, var(--blob-2) calc(var(--blob-opacity) * 60%), transparent) 0%, transparent 70%),
+    var(--bg);
+}
+
+.topbar,
+.panel,
+.kpi,
+.modal__content,
+.weather-widget {
+  -webkit-backdrop-filter: var(--blur);
+  backdrop-filter: var(--blur);
+}
+

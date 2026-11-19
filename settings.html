@@ -6,12 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Cài đặt giao diện: sáng hoặc tối, độ mờ kính và giảm chuyển động">
         <meta name="theme-color" content="#0B1A26">
-    <script>try{var r=document.documentElement,s=JSON.parse(localStorage.getItem("app_settings")||"{}");if(localStorage.getItem("app_theme")==="light")r.dataset.theme="light";if(s.palette)r.dataset.palette=s.palette;var v=typeof s.glass=="number"?s.glass:({soft:25,medium:50,strong:80})[s.glass];if(v==null)v=50;var t=v/100,m=t<=.5?1.84*t:1+2.2*(t-.5),b=t<=.5?44*t:22+36*(t-.5);r.style.setProperty("--glass-mul",m);r.style.setProperty("--glass-blur",b.toFixed(1)+"px");r.style.setProperty("--glass-sat",(100+120*t).toFixed(0)+"%");}catch(e){}</script>
+    <script>try{var r=document.documentElement,s=JSON.parse(localStorage.getItem("app_settings")||"{}");if(localStorage.getItem("app_theme")==="light")r.dataset.theme="light";if(s.palette)r.dataset.palette=s.palette;var v=typeof s.glass=="number"?s.glass:({soft:25,medium:50,strong:80})[s.glass];if(v==null)v=50;var t=v/100,m=t<=.5?1.84*t:1+2.2*(t-.5),b=4+12*t;r.style.setProperty("--glass-mul",m);r.style.setProperty("--glass-blur",b.toFixed(1)+"px");r.style.setProperty("--glass-sat",(100+120*t).toFixed(0)+"%");}catch(e){}</script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
     <title>Cài đặt - Quản lý Tài chính</title>
     <link rel="stylesheet" href="css/settings.css">
+    <link rel="stylesheet" href="css/shared.css">
+    <link rel="stylesheet" href="css/effects/glass.css">
+    <link rel="stylesheet" href="css/effects/motion.css">
     <link rel="stylesheet" href="css/palettes.css">
     <link rel="stylesheet" href="css/redesign.css">
     <script src="js/motion.js"></script>
@@ -77,8 +80,8 @@
                 <h2 class="settings__heading" id="grpDisplay">Hiển thị</h2>
                 <div class="settings__row">
                     <div class="settings__text">
-                        <h3 class="settings__title" id="glassTitle">Độ mờ kính</h3>
-                        <p class="settings__desc">Độ trong suốt của khung và thanh điều hướng.</p>
+                        <h3 class="settings__title" id="glassTitle">Độ đục kính</h3>
+                        <p class="settings__desc">0 là trong suốt hoàn toàn. Kéo sang phải để khung và thanh điều hướng đục dần.</p>
                     </div>
                     <div class="glass-control">
                         <input type="range" id="glassSlider" min="0" max="100" step="1" value="50" aria-labelledby="glassTitle" aria-valuetext="">

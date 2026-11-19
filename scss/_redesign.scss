@@ -615,3 +615,17 @@ html body .seg--icons .seg__btn[aria-pressed="false"]:hover { opacity: 1; }
   box-sizing: border-box;
 }
 .form-grid > .form-group { min-width: 0; }
+
+/* Khoản đọc từ ảnh đã có trong dữ liệu: nhãn nhỏ, không tô màu nhấn. */
+.history-import__tag {
+  display: inline-block;
+  margin-right: 0.375rem;
+  padding: 0 0.5rem;
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+  color: var(--text-3);
+  font-size: 0.75rem;
+  line-height: 1.5rem;
+  white-space: nowrap;
+}
+.history-import__item.is-saved .history-import__desc { opacity: 0.6; }

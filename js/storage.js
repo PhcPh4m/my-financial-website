@@ -71,9 +71,6 @@ function migrateCategoryKeys() {
     }
 }
 
-// Tên các cột trong file CSV, giống hàng tiêu đề của bảng tính Excel.
-const CSV_HEADERS = ['title', 'amount', 'type', 'category', 'status', 'date', 'wallet'];
-
 // TRANSACTIONS – CRUD
 
 // Kiểm tra một giao dịch đọc từ kho có đủ thông tin và đúng kiểu không. Nếu hỏng thì bỏ qua.
@@ -147,6 +144,14 @@ function migrateTransactions(list) {
         if (cleanCategory !== item.category) {
             item.category = cleanCategory;
             changed = true;
+        }
+        // Tên đọc từ OCR cũ có thể còn icon rời (« Apple, q VNPT). Làm sạch một lần.
+        if (typeof cleanBankDescription === 'function' && item.title) {
+            const cleanTitle = cleanBankDescription(item.title);
+            if (cleanTitle && cleanTitle !== item.title) {
+                item.title = cleanTitle;
+                changed = true;
+            }
         }
         return item;
     });
@@ -234,97 +239,6 @@ function toggleTransactionStatus(id) {
     return saveTransactions(list);
 }
 
-// STATISTICS
-// Only "completed" transactions count toward totals; "pending" ones are shown
-// in lists and counted separately.
-
-// Chỉ giữ lại các giao dịch thuộc một tháng.
-function filterByMonth(list, monthKey) {
-    return monthKey ? list.filter((t) => t.date.startsWith(monthKey)) : list;
-}
-
-// Tính tổng thu, tổng chi và số dư. Chỉ tính giao dịch đã hoàn thành.
-function summarize(list) {
-    let income = 0;
-    let expense = 0;
-    let completed = 0;
-    let pending = 0;
-
-    list.forEach((t) => {
-        if (t.status === 'completed') {
-            completed++;
-            if (t.type === 'income') income += t.amount;
-            else expense += t.amount;
-        } else {
-            pending++;
-        }
-    });
-
-    return { income, expense, balance: income - expense, total: list.length, completed, pending };
-}
-
-// So sánh một tháng với tháng ngay trước đó. Dùng cho badge % thay đổi trên các ô số liệu.
-function compareWithPreviousMonth(list, monthKey) {
-    return {
-        current: summarize(filterByMonth(list, monthKey)),
-        previous: summarize(filterByMonth(list, shiftMonth(monthKey, -1)))
-    };
-}
-
-// Cộng chi tiêu theo từng danh mục, xếp từ nhiều đến ít. Dùng cho biểu đồ tròn.
-function getExpenseByCategory(list) {
-    const map = new Map();
-    list.forEach((t) => {
-        if (t.type === 'expense' && t.status === 'completed') {
-            map.set(t.category, (map.get(t.category) || 0) + t.amount);
-        }
-    });
-    return [...map.entries()]
-        .map(([category, amount]) => ({ category, amount }))
-        .sort((a, b) => b.amount - a.amount);
-}
-
-// Cộng chi tiêu theo từng ngày trong tháng. Dùng cho biểu đồ cột theo ngày.
-function getDailyExpense(list, monthKey) {
-    if (!/^\d{4}-\d{2}$/.test(monthKey || '')) return { labels: [], values: [] };
-
-    const [year, month] = monthKey.split('-').map(Number);
-    const daysInMonth = new Date(year, month, 0).getDate();
-    const totals = new Array(daysInMonth).fill(0);
-
-    list.forEach((t) => {
-        if (t.type === 'expense' && t.status === 'completed' && t.date.startsWith(monthKey)) {
-            totals[Number(t.date.slice(8, 10)) - 1] += t.amount;
-        }
-    });
-
-    return {
-        labels: totals.map((_, i) => String(i + 1).padStart(2, '0')),
-        values: totals
-    };
-}
-
-// Tính thu, chi và số dư từng tháng theo thứ tự thời gian. Dùng cho biểu đồ cột và bảng.
-function getMonthlySeries(list) {
-    const map = new Map();
-    list.forEach((t) => {
-        if (t.status !== 'completed') return;
-        const key = t.date.slice(0, 7);
-        const row = map.get(key) || { month: key, income: 0, expense: 0 };
-        if (t.type === 'income') row.income += t.amount;
-        else row.expense += t.amount;
-        map.set(key, row);
-    });
-
-    let running = 0;
-    return [...map.values()]
-        .sort((a, b) => a.month.localeCompare(b.month))
-        .map((row) => {
-            running += row.income - row.expense;
-            return { ...row, balance: running };
-        });
-}
-
 // BUDGET
 
 // Đọc số tiền ngân sách đã đặt.
@@ -388,20 +302,6 @@ function removeBudget() {
     }
 }
 
-// Tính đã tiêu bao nhiêu phần trăm ngân sách tháng và đang ở mức nào.
-function getBudgetStatus(monthKey) {
-    const budget = getBudget();
-    if (!budget) return null;
-
-    const spent = summarize(filterByMonth(getTransactions(), monthKey)).expense;
-    const percent = (spent / budget) * 100;
-    let level = 'ok';
-    if (percent >= 100) level = 'danger';
-    else if (percent >= 80) level = 'warning';
-
-    return { budget, spent, percent, level };
-}
-
 // CATEGORIES
 
 // Lấy danh mục đúng theo loại thu hoặc chi.
@@ -412,186 +312,6 @@ function getCategoriesFor(type) {
 // Gộp mọi danh mục (cả thu và chi) để đổ vào ô lọc.
 function getAllCategories() {
     return [...new Set([...EXPENSE_CATEGORIES, ...INCOME_CATEGORIES])];
-}
-
-// EXPORT
-
-// Xuất toàn bộ dữ liệu thành file JSON để sao lưu.
-function exportAsJSON() {
-    return JSON.stringify(
-        {
-            app: 'web-quan-ly-tai-chinh-ca-nhan',
-            version: 4,
-            exportedAt: new Date().toISOString(),
-            wallets: getWallets(),
-            walletTransfers: readWalletTransfers(),
-            budget: getBudget(),
-            categoryBudgets: getCategoryBudgets(),
-            recurringRules: getRecurringRules(),
-            transactions: getTransactions()
-        },
-        null,
-        2
-    );
-}
-
-// Bọc một ô trong dấu ngoặc kép nếu nội dung có dấu phẩy, để file CSV không bị lệch cột.
-function csvEscape(value) {
-    let s = String(value ?? '');
-    // Ô bắt đầu bằng = + - @ sẽ thành công thức khi mở bằng Excel. Thêm dấu ' phía trước để Excel coi là chữ.
-    if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;
-    return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
-}
-
-// Gỡ dấu ' mà exportAsCSV đã thêm, để dữ liệu nhập lại đúng như ban đầu.
-function unescapeCsvFormula(value) {
-    const s = String(value ?? '');
-    return /^'[=+\-@\t\r]/.test(s) ? s.slice(1) : s;
-}
-
-// Xuất dữ liệu thành file CSV, mở được bằng Excel.
-function exportAsCSV() {
-    const rows = [CSV_HEADERS.join(',')];
-    getTransactions().forEach((t) => {
-        const row = CSV_HEADERS.map((h) => (h === 'wallet' ? walletNameOf(t.walletId) : t[h]));
-        rows.push(row.map((v) => csvEscape(v)).join(','));
-    });
-    return '\uFEFF' + rows.join('\r\n');
-}
-
-// IMPORT
-
-// Đọc file CSV, tách từng dòng và từng ô.
-function parseCSV(text) {
-    const rows = [];
-    let row = [];
-    let field = '';
-    let inQuotes = false;
-
-    for (let i = 0; i < text.length; i++) {
-        const c = text[i];
-        if (inQuotes) {
-            if (c === '"') {
-                if (text[i + 1] === '"') { field += '"'; i++; }
-                else inQuotes = false;
-            } else {
-                field += c;
-            }
-        } else if (c === '"') {
-            inQuotes = true;
-        } else if (c === ',') {
-            row.push(field);
-            field = '';
-        } else if (c === '\n' || c === '\r') {
-            if (c === '\r' && text[i + 1] === '\n') i++;
-            row.push(field);
-            rows.push(row);
-            row = [];
-            field = '';
-        } else {
-            field += c;
-        }
-    }
-    if (field.length || row.length) {
-        row.push(field);
-        rows.push(row);
-    }
-    return rows.filter((r) => r.some((cell) => cell.trim() !== ''));
-}
-
-// Đổi các dòng CSV đã đọc thành danh sách giao dịch.
-function rowsToTransactions(rows) {
-    if (rows.length < 2) return [];
-    const headers = rows[0].map((h) => h.trim().toLowerCase());
-    const indexOf = (name) => headers.indexOf(name);
-
-    return rows.slice(1).map((cells) => {
-        const get = (name) => (indexOf(name) >= 0 ? cells[indexOf(name)] ?? '' : '');
-        return {
-            title: unescapeCsvFormula(get('title')),
-            amount: get('amount'),
-            type: get('type').trim().toLowerCase(),
-            category: unescapeCsvFormula(get('category')),
-            status: get('status').trim().toLowerCase(),
-            date: get('date').trim(),
-            wallet: unescapeCsvFormula(get('wallet'))
-        };
-    });
-}
-
-// Nhập dữ liệu từ file JSON hoặc CSV: thêm dòng đúng, bỏ dòng sai và báo số dòng đã bỏ.
-function importTransactions(text, format) {
-    const clean = text.replace(/^\uFEFF/, '');
-    let candidates;
-
-    if (format === 'json') {
-        const data = JSON.parse(clean);
-        if (!data || !Array.isArray(data.transactions)) {
-            throw new Error('File JSON không đúng định dạng (thiếu mảng "transactions").');
-        }
-        candidates = data.transactions;
-    } else {
-        // Phân tích nội dung CSV thành các dòng, rồi đổi mỗi dòng thành giao dịch.
-        candidates = rowsToTransactions(parseCSV(clean));
-        if (candidates.length === 0) {
-            throw new Error('File CSV trống hoặc thiếu dòng tiêu đề.');
-        }
-    }
-
-    // Khôi phục ví trước để giao dịch trong file tìm đúng ví (thêm vào, không ghi đè).
-    if (format === 'json' && Array.isArray(JSON.parse(clean).wallets)) {
-        const haveW = new Set(getWallets().map((w) => w.id));
-        const extraW = JSON.parse(clean).wallets.filter((w) => isValidWallet(w) && !haveW.has(w.id));
-        if (extraW.length) saveWallets([...getWallets(), ...extraW]);
-    }
-    if (format === 'json' && Array.isArray(JSON.parse(clean).walletTransfers)) {
-        const haveT = new Set(readWalletTransfers().map((t) => t.id));
-        const known = new Set(getWallets().map((w) => w.id));
-        const extraT = JSON.parse(clean).walletTransfers.filter((t) =>
-            isValidWalletTransfer(t) && !haveT.has(t.id) && known.has(t.from) && known.has(t.to) && t.from !== t.to);
-        if (extraT.length) saveWalletTransfers([...readWalletTransfers(), ...extraT]);
-    }
-
-    const existing = getTransactions();
-    const all = existing.slice();
-    const valid = [];
-    let skipped = 0;
-    candidates.forEach((raw) => {
-        // Kiểm tra số gốc trước khi làm tròn: số lẻ như 45000,4 phải bị bỏ, không được đổi thành 45000 âm thầm.
-        const hasAmount = raw && raw.amount !== '' && raw.amount !== undefined && raw.amount !== null;
-        if (hasAmount && !Number.isInteger(Number(raw.amount))) {
-            skipped++;
-            return;
-        }
-        const normalized = normalizeTransaction({ ...(raw || {}), walletId: resolveWalletId(raw) });
-        if (validateTransaction(normalized).isValid) {
-            const tx = { ...normalized, id: nextId(all), createdDate: nowText() };
-            all.push(tx);
-            valid.push(tx);
-        } else {
-            skipped++;
-        }
-    });
-
-    if (!saveTransactions([...existing, ...valid])) {
-        throw new Error('Không lưu được dữ liệu nhập vào trình duyệt (bộ nhớ có thể đã đầy).');
-    }
-
-    // Bản sao lưu v3 có thêm ngân sách danh mục và giao dịch định kỳ. Khôi phục theo kiểu thêm vào, không ghi đè.
-    if (format === 'json') {
-        const data = JSON.parse(clean);
-        if (data.categoryBudgets && typeof data.categoryBudgets === 'object') {
-            Object.entries(data.categoryBudgets).forEach(([name, value]) => {
-                if (EXPENSE_CATEGORIES.includes(name) || INCOME_CATEGORIES.includes(name)) setCategoryBudget(name, value);
-            });
-        }
-        if (Array.isArray(data.recurringRules)) {
-            const have = new Set(getRecurringRules().map((r) => r.id));
-            const extra = data.recurringRules.filter((r) => isValidRecurringRule(r) && !have.has(r.id));
-            if (extra.length) saveRecurringRules([...getRecurringRules(), ...extra]);
-        }
-    }
-    return { imported: valid.length, skipped };
 }
 
 // HOÀN TÁC
@@ -696,49 +416,6 @@ function removeRecurringRule(id) {
     return saveRecurringRules(getRecurringRules().filter((r) => r.id !== id));
 }
 
-// Tạo các giao dịch còn thiếu từ quy tắc định kỳ, từ tháng bắt đầu tới tháng hiện tại.
-// Mỗi (quy tắc, tháng) chỉ tạo một lần nhờ trường ruleKey, nên chạy nhiều lần vẫn không bị trùng.
-// Không tạo giao dịch cho ngày chưa tới.
-function materializeRecurring(now = new Date()) {
-    const rules = getRecurringRules();
-    if (rules.length === 0) return 0;
-
-    const todayISO = toISODate(now);
-    const currentMonth = todayISO.slice(0, 7);
-    const existing = getTransactions();
-    const done = new Set(existing.map((t) => t.ruleKey).filter(Boolean));
-    let counter = maxIdNumber(existing);
-    const created = [];
-
-    rules.forEach((rule) => {
-        let month = rule.startMonth;
-        const last = rule.endMonth && rule.endMonth < currentMonth ? rule.endMonth : currentMonth;
-        while (month <= last) {
-            const key = `${rule.id}|${month}`;
-            const date = `${month}-${String(rule.day).padStart(2, '0')}`;
-            if (!done.has(key) && date <= todayISO) {
-                counter++;
-                created.push({
-                    id: 'GD' + String(counter).padStart(3, '0'),
-                    title: rule.title,
-                    amount: rule.amount,
-                    type: rule.type,
-                    category: rule.category,
-                    status: 'completed',
-                    date,
-                    createdDate: nowText(now),
-                    ruleKey: key
-                });
-                done.add(key);
-            }
-            month = shiftMonth(month, 1);
-        }
-    });
-
-    if (created.length && !saveTransactions([...existing, ...created])) return 0;
-    return created.length;
-}
-
 // RESET
 
 // Xóa sạch toàn bộ giao dịch, ngân sách, ngân sách danh mục và giao dịch định kỳ.
@@ -840,30 +517,6 @@ function removeWallet(id) {
     return saveWallets(readWallets().filter((w) => w.id !== id));
 }
 
-// Số dư từng ví: số dư đầu + thu - chi của giao dịch đã hoàn thành (cùng quy tắc với phần số dư chung).
-function getWalletBalances() {
-    const txs = getTransactions();
-    const transfers = readWalletTransfers();
-    return getWallets().map((w) => {
-        let balance = w.openingBalance;
-        txs.forEach((t) => {
-            if (t.walletId !== w.id || t.status !== 'completed') return;
-            balance += t.type === 'income' ? t.amount : -t.amount;
-        });
-        // Chuyển tiền giữa ví: không tính là thu hay chi, chỉ đổi số dư giữa hai ví.
-        transfers.forEach((tr) => {
-            if (tr.from === w.id) balance -= tr.amount;
-            if (tr.to === w.id) balance += tr.amount;
-        });
-        return { ...w, balance };
-    });
-}
-
-// Tổng tài sản: cộng số dư của mọi ví. Chuyển tiền giữa ví không làm tổng đổi.
-function getTotalAssets() {
-    return getWalletBalances().reduce((sum, w) => sum + w.balance, 0);
-}
-
 // KHOẢN VAY VÀ NỢ: số tiền còn nợ, lưu riêng để không lẫn vào giao dịch thu chi.
 function isValidDebt(d) {
     return Boolean(
@@ -902,15 +555,6 @@ function addDebt(name, balance) {
 
 function removeDebt(id) {
     saveDebts(readDebts().filter((d) => d.id !== id));
-}
-
-function getTotalDebts() {
-    return readDebts().reduce((sum, d) => sum + d.balance, 0);
-}
-
-// Tài sản ròng = tổng số dư các ví − tổng nợ còn lại.
-function getNetWorth() {
-    return getTotalAssets() - getTotalDebts();
 }
 
 // Danh sách chuyển tiền giữa ví đã lưu. Bỏ bản ghi hỏng.

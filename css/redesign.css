@@ -85,13 +85,6 @@
   .kpi { border-radius: 1rem; }
 }
 
-/* Thanh trên: xóa hẳn đường kẻ ngang ở đáy (ghi đè mọi nguồn khác). */
-html body .topbar {
-  background: transparent !important;
-  border-bottom: 0 !important;
-  box-shadow: none !important;
-}
-
 /* Nhãn tab: khi mở ra thì hiện đủ chữ, không cắt. */
 .topbar.is-expanded .nav-link__label,
 .topbar:hover .nav-link__label {
@@ -101,11 +94,11 @@ html body .topbar {
 
 /* Thanh tab điều hướng: bo tròn hoàn toàn (viên thuốc), ghi đè mọi quy tắc cũ. */
 html body .topbar .nav-tabs {
-  border-radius: 999px !important;
+  border-radius: 999px;
 }
 html body .topbar .nav-tabs .nav-link,
 html body .topbar .nav-tabs__pill {
-  border-radius: 999px !important;
+  border-radius: 999px;
 }
 
 /* Đặt ngân sách: nằm trên thẻ tiến độ ở cột trái, nút chiếm đủ chiều ngang. */
@@ -577,11 +570,11 @@ html body .nav-link[aria-current="page"] { color: var(--accent); }
 
 /* Thanh trên: chỉ khung trong (topbar__inner) có kính; dải ngoài trong suốt, không tô màu bão hòa. */
 html body .topbar {
-  background: transparent !important;
-  border-bottom: 0 !important;
-  box-shadow: none !important;
-  -webkit-backdrop-filter: none !important;
-  backdrop-filter: none !important;
+  background: transparent;
+  border-bottom: 0;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
 }
 
 /* Nút sáng/tối dạng icon: mặt trời và mặt trăng. Icon đang chọn dùng màu nhấn, icon còn lại dùng màu chữ nhạt hơn. */
@@ -648,17 +641,20 @@ html body .alert.budget-card {
 /* ===== Bản kính (v1.10.8-glass): theo ảnh giao diện tham khảo, áp dụng cho mọi bảng màu ===== */
 :root {
   /* Thời lượng chuyển động dùng chung: mở/đóng hộp thoại, khối chi tiết, mục hướng dẫn. */
+  --glass: color-mix(in srgb, var(--surface) min(85%, calc(30% * var(--glass-mul, 1))), transparent);
+  --glass-strong: color-mix(in srgb, var(--surface) min(85%, calc(52% * var(--glass-mul, 1))), transparent);
+  --glass-border: rgba(255, 255, 255, 0.17);
   --motion-fast: 0.15s;
+  --motion-quick: 0.2s;
+  --motion-mid: 0.3s;
   --motion-base: 0.45s;
+  --motion-slow: 0.6s;
   --motion-ease: cubic-bezier(0.32, 0.72, 0, 1);
-  --glass: color-mix(in srgb, var(--surface) min(100%, calc(30% * var(--glass-mul, 1))), transparent);
-  --glass-strong: color-mix(in srgb, var(--surface) min(100%, calc(52% * var(--glass-mul, 1))), transparent);
-  --glass-border: color-mix(in srgb, var(--accent) 18%, transparent);
   --shadow-lift: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 24px 48px -28px rgba(0, 0, 0, 0.7);
 }
 :root[data-theme="light"] {
-  --glass: color-mix(in srgb, var(--surface) min(100%, calc(70% * var(--glass-mul, 1))), transparent);
-  --glass-border: color-mix(in srgb, var(--accent) 22%, #fff);
+  --glass: color-mix(in srgb, var(--surface) min(85%, calc(70% * var(--glass-mul, 1))), transparent);
+  --glass-border: color-mix(in srgb, #fff 90%, transparent);
   --shadow-lift: inset 0 1px 0 #ffffff, 0 20px 40px -26px rgba(19, 40, 58, 0.3);
 }
 .panel,
@@ -700,3 +696,17 @@ html body .alert.budget-card {
   box-sizing: border-box;
 }
 .form-grid > .form-group { min-width: 0; }
+
+/* Khoản đọc từ ảnh đã có trong dữ liệu: nhãn nhỏ, không tô màu nhấn. */
+.history-import__tag {
+  display: inline-block;
+  margin-right: 0.375rem;
+  padding: 0 0.5rem;
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+  color: var(--text-3);
+  font-size: 0.75rem;
+  line-height: 1.5rem;
+  white-space: nowrap;
+}
+.history-import__item.is-saved .history-import__desc { opacity: 0.6; }

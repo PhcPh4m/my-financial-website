@@ -290,6 +290,8 @@ function closeModal(id) {
 function dismissModal(modal) {
     if (modal.id === 'confirmModal') {
         $('confirmCancel').click();
+    } else if (modal.id === 'editModal') {
+        exitEditMode();
     } else {
         hideModal(modal);
     }

@@ -27,7 +27,7 @@ function applyGlass(v) {
     const t = v / 100;
     const root = document.documentElement;
     const mul = t <= 0.5 ? 1.84 * t : 1 + 2.2 * (t - 0.5);
-    const blur = t <= 0.5 ? 44 * t : 22 + 36 * (t - 0.5);
+    const blur = 4 + 12 * t;
     root.style.setProperty('--glass-mul', String(mul));
     root.style.setProperty('--glass-blur', `${blur.toFixed(1)}px`);
     root.style.setProperty('--glass-sat', `${(100 + 120 * t).toFixed(0)}%`);

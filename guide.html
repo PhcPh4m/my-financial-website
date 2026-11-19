@@ -5,13 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="description" content="Hướng dẫn sử dụng Web Quản lý Tài chính Cá nhân cho người mới">
         <meta name="theme-color" content="#0B1A26">
-    <script>try{var r=document.documentElement,s=JSON.parse(localStorage.getItem("app_settings")||"{}");if(localStorage.getItem("app_theme")==="light")r.dataset.theme="light";if(s.palette)r.dataset.palette=s.palette;var v=typeof s.glass=="number"?s.glass:({soft:25,medium:50,strong:80})[s.glass];if(v==null)v=50;var t=v/100,m=t<=.5?1.84*t:1+2.2*(t-.5),b=t<=.5?44*t:22+36*(t-.5);r.style.setProperty("--glass-mul",m);r.style.setProperty("--glass-blur",b.toFixed(1)+"px");r.style.setProperty("--glass-sat",(100+120*t).toFixed(0)+"%");}catch(e){}</script>
+    <script>try{var r=document.documentElement,s=JSON.parse(localStorage.getItem("app_settings")||"{}");if(localStorage.getItem("app_theme")==="light")r.dataset.theme="light";if(s.palette)r.dataset.palette=s.palette;var v=typeof s.glass=="number"?s.glass:({soft:25,medium:50,strong:80})[s.glass];if(v==null)v=50;var t=v/100,m=t<=.5?1.84*t:1+2.2*(t-.5),b=4+12*t;r.style.setProperty("--glass-mul",m);r.style.setProperty("--glass-blur",b.toFixed(1)+"px");r.style.setProperty("--glass-sat",(100+120*t).toFixed(0)+"%");}catch(e){}</script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
     <title>Hướng dẫn - Quản lý Tài chính Cá nhân</title>
     <script>document.documentElement.classList.add('js');</script>
     <link rel="stylesheet" href="css/guide.css">
+    <link rel="stylesheet" href="css/shared.css">
+    <link rel="stylesheet" href="css/effects/glass.css">
+    <link rel="stylesheet" href="css/effects/motion.css">
     <link rel="stylesheet" href="css/palettes.css">
     <link rel="stylesheet" href="css/redesign.css">
     <script src="js/motion.js"></script>
@@ -75,6 +78,7 @@
                         <li><a href="#backup">Sao lưu</a></li>
                         <li><a href="#shortcuts">Phím tắt</a></li>
                         <li><a href="#about">Thông tin ứng dụng</a></li>
+                        <li><a href="#ai">Phân tích bằng AI</a></li>
                         <li><a href="#trial">Lưu ý khi sử dụng</a></li>
                         <li><a href="#faq">Hỏi đáp</a></li>
                     </ul>
@@ -223,7 +227,7 @@
                     <h3>Bảng màu</h3>
                     <p>Mỗi bảng màu có một tông nền và một màu nhấn riêng. Nút, thanh tab và mục đang chọn sẽ theo màu nhấn. Dù chọn bảng nào, màu thu nhập luôn là xanh lá và màu chi tiêu luôn là đỏ, để bạn không nhầm.</p>
                     <h3>Độ mờ của khung</h3>
-                    <p>Khung nội dung và thanh điều hướng dùng kính mờ. Kéo thanh Độ mờ kính để khung trong suốt hơn hoặc đục hơn. Ở mức thấp nhất, khung gần như trong suốt, chỉ còn viền mảnh.</p>
+                    <p>Khung nội dung và thanh điều hướng dùng kính mờ. Kéo thanh Độ đục kính: mức 0 là trong suốt hoàn toàn, chỉ còn viền mảnh. Kéo sang phải để khung đục dần.</p>
                     <h3>Biểu tượng</h3>
                     <p>Các danh mục dùng biểu tượng nét thay cho emoji. Nếu trước đây bạn đã có giao dịch với emoji trong tên danh mục, app sẽ tự bỏ emoji khi mở. Số liệu không thay đổi.</p>
                 </section>
@@ -238,7 +242,7 @@
                         <tbody>
                             <tr><th scope="row">Sao lưu</th><td>JSON</td><td>Giữ giao dịch, ngân sách, ngân sách theo danh mục và giao dịch định kỳ. Thu nhập tháng không có trong file.</td></tr>
                             <tr><th scope="row">Mở bằng Excel</th><td>CSV</td><td>Dùng để tự phân tích trong Excel hoặc Google Sheets.</td></tr>
-                            <tr><th scope="row">Nhập lại</th><td>JSON hoặc CSV</td><td>Chỉ thêm giao dịch. Dòng sai định dạng bị bỏ qua. Dữ liệu hiện có không bị ghi đè.</td></tr>
+                            <tr><th scope="row">Nhập lại</th><td>JSON hoặc CSV</td><td>Chỉ thêm giao dịch. Khoản đã có (cùng ngày, số tiền và loại) sẽ bị bỏ qua. Dòng sai định dạng cũng bị bỏ qua. Dữ liệu hiện có không bị ghi đè.</td></tr>
                         </tbody>
                     </table>
                     <p>Lưu ý: nhập file JSON không khôi phục ngân sách và giao dịch định kỳ. Sau khi nhập trên máy mới, bạn cần đặt lại hai mục đó.</p>
@@ -268,6 +272,27 @@
                     <p>Khi có bản mới, số phiên bản ở trên sẽ thay đổi. Dữ liệu của bạn vẫn được giữ nguyên khi cập nhật, miễn là bạn dùng cùng trình duyệt và cùng địa chỉ.</p>
                 </section>
 
+                <section class="guide-section" id="ai">
+                    <h2>Phân tích bằng AI</h2>
+                    <p>Bạn có thể gửi dữ liệu chi tiêu cho một dịch vụ AI để hỏi về thói quen chi tiêu của mình. Ứng dụng không tự gửi dữ liệu đi đâu cả, việc gửi là do bạn quyết định.</p>
+                    <p class="guide-note"><strong>Lưu ý về quyền riêng tư:</strong> khi tải file lên dịch vụ AI, dữ liệu sẽ đến máy chủ của dịch vụ đó. Hãy kiểm tra cài đặt của dịch vụ để tắt việc dùng dữ liệu của bạn cho huấn luyện. Nếu không cần, hãy xóa cột tên giao dịch trước khi gửi.</p>
+                    <h3>Các bước</h3>
+                    <ul class="guide-list">
+                        <li>Vào trang Giao dịch và bấm <strong>Xuất CSV (Excel)</strong>. Mỗi file CSV chỉ chứa một bảng: giao dịch, số dư ví hoặc chuyển tiền.</li>
+                        <li>Mở file bằng Excel. Nếu muốn, xóa cột tên giao dịch rồi lưu lại.</li>
+                        <li>Tải file lên dịch vụ AI và đặt câu hỏi.</li>
+                    </ul>
+                    <h3>Câu hỏi gợi ý</h3>
+                    <ul class="guide-list">
+                        <li>Tháng này tôi chi nhiều nhất vào danh mục nào?</li>
+                        <li>Có khoản chi nào tăng bất thường so với các tháng trước không?</li>
+                        <li>Gợi ý cách cắt giảm chi tiêu cho danh mục lớn nhất.</li>
+                    </ul>
+                    <h3>Đọc file CSV</h3>
+                    <p>Cột <strong>loai_dong</strong> cho biết mỗi dòng là gì: <strong>giao_dich</strong> là giao dịch, <strong>so_du_vi</strong> là số dư từng ví, <strong>chuyen_tien</strong> là chuyển tiền giữa các ví. Chuyển tiền không tính là thu hay chi.</p>
+                    <p class="guide-note"><strong>Lưu ý:</strong> file này để phân tích, không dùng để khôi phục dữ liệu. Muốn khôi phục, dùng file sao lưu JSON.</p>
+                </section>
+
                 <section class="guide-section" id="trial">
                     <h2>Lưu ý khi sử dụng</h2>
                     <p>Đây là bản thử, nên một số chỗ có thể chưa hoàn thiện. Cảm ơn bạn đã dùng thử.</p>
@@ -281,7 +306,7 @@
                     <h3>Xuất và nhập file sao lưu</h3>
                     <ul class="guide-list">
                         <li>Vào trang Giao dịch, bấm <strong>Xuất JSON (backup)</strong> để lưu dữ liệu thành file. File này giúp bạn không mất dữ liệu khi đổi trình duyệt hoặc thiết bị.</li>
-                        <li>Muốn nhập lại, vào trang Giao dịch, bấm <strong>Nhập JSON/CSV</strong> và chọn đúng file đã lưu.</li>
+                        <li>Muốn nhập lại, vào trang Giao dịch, bấm <strong>Nhập JSON/CSV</strong> và chọn đúng file đã lưu. Khoản đã có (cùng ngày, số tiền và loại) sẽ được bỏ qua, nên nhập lại cùng một file nhiều lần không làm tăng số giao dịch.</li>
                     </ul>
                     <p class="guide-note"><strong>Lưu ý:</strong> nếu muốn đồng bộ giữa điện thoại và máy tính, sau khi sao lưu hãy tải file lên Zalo Cloud, Google Drive hoặc dịch vụ lưu trữ bạn đang dùng. Trên máy kia, chỉ cần tải file về và nhập theo các bước trên.</p>
                     <h3>Gửi góp ý</h3>

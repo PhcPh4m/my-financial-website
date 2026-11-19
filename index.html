@@ -6,13 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Web Quản lý Tài chính Cá nhân - ghi chép thu chi, đặt ngân sách và theo dõi số dư">
         <meta name="theme-color" content="#0B1A26">
-    <script>try{var r=document.documentElement,s=JSON.parse(localStorage.getItem("app_settings")||"{}");if(localStorage.getItem("app_theme")==="light")r.dataset.theme="light";if(s.palette)r.dataset.palette=s.palette;var v=typeof s.glass=="number"?s.glass:({soft:25,medium:50,strong:80})[s.glass];if(v==null)v=50;var t=v/100,m=t<=.5?1.84*t:1+2.2*(t-.5),b=t<=.5?44*t:22+36*(t-.5);r.style.setProperty("--glass-mul",m);r.style.setProperty("--glass-blur",b.toFixed(1)+"px");r.style.setProperty("--glass-sat",(100+120*t).toFixed(0)+"%");}catch(e){}</script>
+    <script>try{var r=document.documentElement,s=JSON.parse(localStorage.getItem("app_settings")||"{}");if(localStorage.getItem("app_theme")==="light")r.dataset.theme="light";if(s.palette)r.dataset.palette=s.palette;var v=typeof s.glass=="number"?s.glass:({soft:25,medium:50,strong:80})[s.glass];if(v==null)v=50;var t=v/100,m=t<=.5?1.84*t:1+2.2*(t-.5),b=4+12*t;r.style.setProperty("--glass-mul",m);r.style.setProperty("--glass-blur",b.toFixed(1)+"px");r.style.setProperty("--glass-sat",(100+120*t).toFixed(0)+"%");}catch(e){}</script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
     <title>Quản lý Tài chính Cá nhân</title>
     <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="css/tools.css">
+    <link rel="stylesheet" href="css/shared.css">
+    <link rel="stylesheet" href="css/effects/glass.css">
+    <link rel="stylesheet" href="css/effects/motion.css">
+    <link rel="stylesheet" href="css/effects/tabs.css">
     <link rel="stylesheet" href="css/palettes.css">
     <link rel="stylesheet" href="css/redesign.css">
     <script src="js/motion.js"></script>
@@ -379,6 +383,16 @@
 
     <!-- WALLET MODAL -->
     <!-- Quản lý ví: xem số dư, thêm ví mới, xóa ví (trừ ví Mặc định). -->
+    <div class="modal" id="editModal" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
+        <div class="modal__content">
+            <div class="modal__header">
+                <h2 class="modal__title" id="editModalTitle"><i data-icon="pencil"></i> Sửa giao dịch</h2>
+                <button type="button" class="modal__close" id="closeEditModal" aria-label="Đóng">&times;</button>
+            </div>
+            <div class="modal__body" id="editModalBody"></div>
+        </div>
+    </div>
+
     <div class="modal" id="walletModal" role="dialog" aria-modal="true" aria-labelledby="walletTitle">
         <div class="modal__content">
             <div class="modal__header">
@@ -487,6 +501,8 @@
     <script src="js/transition.js"></script>
     <script src="js/topbar.js"></script>
     <script src="js/storage.js"></script>
+    <script src="js/calculations.js"></script>
+    <script src="js/import-export.js"></script>
     <script src="js/calc.js"></script>
     <script src="js/quickadd.js"></script>
     <script src="js/api.js"></script>

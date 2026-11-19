@@ -23,7 +23,6 @@ const QUICK_INCOME_RULES = [
     [/(nhận|thu nhập|bán|được cho|nhận tiền)/iu, { type: 'income', category: 'Khác' }]
 ];
 
-const DAY_MS = 24 * 60 * 60 * 1000;
 
 // Đổi chuỗi số tiền thành số: 45k, 1.5tr, 45.000, 3,5tr, 200 ngàn...
 function parseAmountToken(raw, suffix) {

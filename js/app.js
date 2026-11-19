@@ -194,8 +194,35 @@ function enterEditMode(tx) {
     $('submitBtn').textContent = 'Cập nhật';
     $('cancelEditBtn').hidden = false;
     clearFieldErrors();
-    $('transactionForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    $('title').focus();
+}
+
+// Form sửa nằm trong hộp thoại riêng. Form gốc được chuyển sang đó và trả về chỗ cũ khi đóng.
+function openEditModal() {
+    const form = $('transactionForm');
+    const body = $('editModalBody');
+    if (form.parentNode !== body) {
+        state.formHome = { parent: form.parentNode, next: form.nextSibling };
+        body.appendChild(form);
+    }
+    openModal('editModal');
+}
+
+// Đóng hộp thoại sửa với hiệu ứng, rồi trả form về chỗ cũ sau khi hiệu ứng xong.
+function closeEditModal() {
+    const modal = $('editModal');
+    if (!modal) return;
+    hideModal(modal);
+    setTimeout(restoreTxForm, modal.classList.contains('is-closing') ? 470 : 0);
+}
+
+function restoreTxForm() {
+    const modal = $('editModal');
+    if (modal && modal.classList.contains('active')) return;
+    const form = $('transactionForm');
+    if (state.formHome && form.parentNode === $('editModalBody')) {
+        state.formHome.parent.insertBefore(form, state.formHome.next);
+    }
+    state.formHome = null;
 }
 
 // Thoát chế độ sửa và xóa form về trạng thái để nhập giao dịch mới.
@@ -209,6 +236,7 @@ function exitEditMode() {
     $('submitBtn').textContent = 'Thêm giao dịch';
     $('cancelEditBtn').hidden = true;
     clearFieldErrors();
+    closeEditModal();
 }
 
 // Chạy khi bấm nút lưu: kiểm tra dữ liệu, thêm hoặc cập nhật giao dịch, rồi vẽ lại màn hình.
@@ -244,6 +272,7 @@ function bindForm() {
     $('transactionForm').addEventListener('submit', handleSubmit);
     $('type').addEventListener('change', () => populateCategories());
     $('cancelEditBtn').addEventListener('click', exitEditMode);
+    $('closeEditModal').addEventListener('click', exitEditMode);
     $('resetFormBtn').addEventListener('click', exitEditMode);
     $('monthlyIncome').addEventListener('change', saveMonthlyIncomeFromForm);
     // Ô này nằm trong form: Enter ở đây chỉ lưu thu nhập, không gửi form thêm giao dịch.
@@ -396,7 +425,10 @@ function bindList() {
             refresh();
         } else if (action === 'edit') {
             const tx = getTransactionById(id);
-            if (tx) enterEditMode(tx);
+            if (tx) {
+                openEditModal();
+                enterEditMode(tx);
+            }
         } else if (action === 'delete') {
             const ok = await confirmDialog('Xóa giao dịch', 'Bạn chắc chắn muốn xóa giao dịch này?', 'Xóa');
             if (!ok) return;
@@ -571,8 +603,11 @@ function bindToolbar() {
         try {
             const text = await file.text();
             const format = file.name.toLowerCase().endsWith('.json') ? 'json' : 'csv';
-            const { imported, skipped } = importTransactions(text, format);
-            showToast(`Đã nhập ${imported} giao dịch${skipped ? `, bỏ qua ${skipped} dòng không hợp lệ` : ''}.`);
+            const { imported, skipped, duplicates } = importTransactions(text, format);
+            const notes = [];
+            if (duplicates) notes.push(`bỏ qua ${duplicates} giao dịch đã có`);
+            if (skipped) notes.push(`bỏ qua ${skipped} dòng không hợp lệ`);
+            showToast(`Đã nhập ${imported} giao dịch${notes.length ? `, ${notes.join(', ')}` : ''}.`);
             refresh();
         } catch (error) {
             showToast(`Nhập thất bại: ${error.message}`, 'danger', 5000);

@@ -1,0 +1,112 @@
+// Hiệu ứng chuyển động: chuyển trang, modal, thông báo, nút.
+/* Chuyển trang trong cùng tab: trang vào mờ dần từ dưới lên, trang đi mờ dần lên trên. */
+body.page-enter .page {
+  animation: page-in 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+body.page-leave .page {
+  animation: page-out 0.26s ease-in both;
+}
+
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes page-out {
+  to { opacity: 0; transform: translateY(-8px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.page-enter .page,
+  body.page-leave .page {
+    animation: none;
+  }
+
+  .weather-widget__refresh {
+    transition: none;
+  }
+
+  .nav-tabs__pill {
+    transition: none;
+  }
+}
+
+/* Chuyển động thành phần: modal trượt lên nhẹ, thông báo hiện dần, nút co nhẹ khi nhấn, thanh tiến độ co giãn bằng transform. */
+.modal.active .modal__content {
+  animation: sheet-in var(--motion-base) var(--motion-ease) both;
+}
+
+@keyframes sheet-in {
+  from { opacity: 0; transform: translateY(16px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+
+.toast {
+  animation: toast-in var(--motion-mid) var(--motion-ease) both;
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+.btn {
+  transition: transform var(--motion-fast) var(--motion-ease), color var(--motion-fast) ease, background-color var(--motion-fast) ease, border-color var(--motion-fast) ease;
+}
+
+.btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal.active .modal__content,
+  .toast {
+    animation: none;
+  }
+
+  .btn:active:not(:disabled) {
+    transform: none;
+  }
+
+  .progress__bar,
+  .category-item__fill {
+    transition: none;
+  }
+}
+
+/* Khối tiêu đề trên cùng chạy cùng nhịp với nội dung: vào trang cùng lúc, ra khỏi trang cùng lúc.
+   Không còn cảnh tiêu đề đứng yên trong khi nội dung trống. */
+body.page-enter .topbar {
+  animation: topbar-in 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+body.page-enter .brand {
+  animation: brand-in 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) 0.06s both;
+}
+
+body.page-leave .topbar {
+  animation: topbar-out 0.26s ease-in both;
+}
+
+@keyframes topbar-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes brand-in {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes topbar-out {
+  to { opacity: 0; transform: translateY(-6px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.page-enter .topbar,
+  body.page-enter .brand,
+  body.page-leave .topbar {
+    animation: none;
+  }
+}
