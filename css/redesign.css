@@ -700,3 +700,4 @@ html body .alert.budget-card {
   box-sizing: border-box;
 }
 .form-grid > .form-group { min-width: 0; }
+.form-input[type="date"], .form-input[type="month"] { width: 100%; max-width: 100%; min-width: 0; -webkit-appearance: none; appearance: none; }
