@@ -686,3 +686,17 @@ html body .alert.budget-card {
   .modal.is-closing,
   .modal.is-closing .modal__content { animation: none; }
 }
+
+/* v1.10.19: thanh tab một hàng trên điện thoại; ô ngày, tháng, loại cùng chiều cao. */
+@media (max-width: 600px) {
+  .tabs { flex-wrap: nowrap; }
+  .tabs__btn { min-width: 0; flex: 1 1 0; padding: 0.45rem 0.4rem; font-size: 0.8125rem; white-space: nowrap; }
+}
+.form-input[type="date"],
+.form-input[type="month"],
+.form-select {
+  height: 2.25rem;
+  min-height: 2.25rem;
+  box-sizing: border-box;
+}
+.form-grid > .form-group { min-width: 0; }

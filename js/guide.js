@@ -6,6 +6,32 @@
     const toc = document.querySelector('.guide-toc');
     const pill = document.querySelector('.guide-toc__pill');
     const links = Array.from(document.querySelectorAll('.guide-toc a'));
+    const tocToggle = document.querySelector('.guide-toc__toggle');
+    const tocNarrow = window.matchMedia('(max-width: 860px)');
+
+    // Trên điện thoại: nút hiện tên mục đang đọc, bấm để mở hoặc thu danh sách.
+    function syncToggle(i) {
+        if (!tocToggle) return;
+        const h = sections[i] && sections[i].querySelector('h2');
+        const label = tocToggle.querySelector('.guide-toc__toggle-label');
+        if (label && h) label.textContent = h.textContent;
+    }
+
+    function setCollapsed(collapsed) {
+        if (!toc || !tocToggle) return;
+        toc.classList.toggle('is-collapsed', collapsed);
+        tocToggle.setAttribute('aria-expanded', String(!collapsed));
+        if (current >= 0) markToc(current);
+    }
+
+    if (toc && tocToggle && tocNarrow.matches) {
+        toc.classList.add('is-collapsed');
+        tocToggle.setAttribute('aria-expanded', 'false');
+    }
+    if (tocToggle) {
+        tocToggle.addEventListener('click', () => setCollapsed(!toc.classList.contains('is-collapsed')));
+        links.forEach((a) => a.addEventListener('click', () => { if (tocNarrow.matches) setCollapsed(true); }));
+    }
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const LEAVE_MS = 300;
     let current = -1;
@@ -29,6 +55,7 @@
 
     function markToc(i) {
         const id = sections[i].id;
+        syncToggle(i);
         let activeLink = null;
         links.forEach((a) => {
             const match = a.getAttribute('href') === '#' + id;

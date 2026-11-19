@@ -601,3 +601,17 @@ html body .topbar {
 .seg--icons .seg__btn i { width: 1.125rem; height: 1.125rem; }
 html body .seg--icons .seg__btn[aria-pressed="true"] { color: var(--accent); opacity: 1; }
 html body .seg--icons .seg__btn[aria-pressed="false"]:hover { opacity: 1; }
+
+/* v1.10.19: thanh tab một hàng trên điện thoại; ô ngày, tháng, loại cùng chiều cao. */
+@media (max-width: 600px) {
+  .tabs { flex-wrap: nowrap; }
+  .tabs__btn { min-width: 0; flex: 1 1 0; padding: 0.45rem 0.4rem; font-size: 0.8125rem; white-space: nowrap; }
+}
+.form-input[type="date"],
+.form-input[type="month"],
+.form-select {
+  height: 2.25rem;
+  min-height: 2.25rem;
+  box-sizing: border-box;
+}
+.form-grid > .form-group { min-width: 0; }

@@ -41,7 +41,9 @@
             <!-- Mục lục: bấm để nhảy tới phần cần xem. Trên màn hình nhỏ mục lục nằm trên đầu trang. -->
             <nav class="guide-toc" aria-label="Mục lục">
                 <p class="guide-toc__title">Nội dung</p>
+                <button type="button" class="guide-toc__toggle" aria-expanded="true" aria-controls="guideTocList"><span class="guide-toc__toggle-label">Nội dung</span><span class="guide-toc__chev" aria-hidden="true">&#9662;</span></button>
                 <span class="guide-toc__pill" aria-hidden="true"></span>
+                <div class="guide-toc__list" id="guideTocList">
                 <div class="guide-toc__group">
                     <p class="guide-toc__label">Bắt đầu</p>
                     <ul>
@@ -75,6 +77,7 @@
                         <li><a href="#about">Thông tin ứng dụng</a></li>
                         <li><a href="#faq">Hỏi đáp</a></li>
                     </ul>
+                </div>
                 </div>
             </nav>
 

@@ -577,3 +577,30 @@ html.js .guide-section.is-leaving {
     color: var(--text-3);
   }
 }
+
+/* Mục lục trên điện thoại (v1.10.19): thu gọn thành một nút hiện mục đang đọc, bấm để mở danh sách. */
+.guide-toc__toggle { display: none; }
+@media (max-width: 860px) {
+  .guide-toc__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.625rem 0.875rem;
+    border: 1px solid var(--glass-border);
+    border-radius: 0.75rem;
+    background: var(--glass);
+    color: var(--text);
+    font: inherit;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+  }
+  .guide-toc__title { display: none; }
+  .guide-toc__chev { color: var(--text-3); transition: transform 0.3s ease; }
+  .guide-toc:not(.is-collapsed) .guide-toc__chev { transform: rotate(180deg); }
+  .guide-toc.is-collapsed .guide-toc__list,
+  .guide-toc.is-collapsed .guide-toc__pill { display: none; }
+  .guide-toc__list { margin-top: 0.5rem; }
+}
