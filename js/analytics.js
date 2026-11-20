@@ -252,18 +252,24 @@ function initAnalyticsTabs() {
     };
 
     const show = (name, animate = true) => {
+        if (animate && swapBusy()) return;
         tabs.forEach((t) => {
             const on = t.dataset.tab === name;
             t.setAttribute('aria-selected', String(on));
             t.tabIndex = on ? 0 : -1;
         });
-        document.querySelectorAll('.tab-panel').forEach((p) => {
-            p.hidden = p.id !== `panel-${name}`;
-        });
-        // Biểu đồ vẽ lúc đang ẩn có kích thước 0, nên vẽ lại khi nhóm được hiện.
-        const panel = document.getElementById(`panel-${name}`);
-        if (panel) resizeChartsIn(panel);
         movePill(animate);
+        // Biểu đồ vẽ lúc đang ẩn có kích thước 0, nên vẽ lại khi nhóm được hiện.
+        const showPanels = () => {
+            document.querySelectorAll('.tab-panel').forEach((p) => {
+                p.hidden = p.id !== `panel-${name}`;
+            });
+            const panel = document.getElementById(`panel-${name}`);
+            if (panel) resizeChartsIn(panel);
+        };
+        if (!animate) { showPanels(); return; }
+        const outgoing = Array.from(document.querySelectorAll('.tab-panel')).filter((p) => p.id !== `panel-${name}`);
+        swapBlock(outgoing, showPanels);
     };
 
     tabs.forEach((tab, i) => {

@@ -1,29 +1,5 @@
 // GIAO DỊCH ĐỊNH KỲ VÀ CHIA TIỀN NHÓM: hai tab ở trang Giao dịch.
 
-function setResult(id, lines) {
-    const box = $(id);
-    box.replaceChildren();
-    lines.forEach(([label, value, tone]) => {
-        const row = document.createElement('div');
-        row.className = 'tool-result__row' + (tone ? ` tool-result__row--${tone}` : '');
-        const l = document.createElement('span');
-        l.textContent = label;
-        const v = document.createElement('strong');
-        v.textContent = value;
-        row.append(l, v);
-        box.appendChild(row);
-    });
-}
-
-function setMessage(id, text) {
-    const box = $(id);
-    box.replaceChildren();
-    const p = document.createElement('p');
-    p.className = 'form-hint';
-    p.textContent = text;
-    box.appendChild(p);
-}
-
 function addSplitRow(name = '', paid = '') {
     const row = document.createElement('div');
     row.className = 'split-row';

@@ -34,14 +34,7 @@
   }
 }
 
-.budget-compare__row {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  font-size: 0.875rem;
-  color: var(--text-2);
-  font-variant-numeric: tabular-nums;
-}
+
 
 .chart-grid {
   display: grid;
@@ -162,13 +155,9 @@
   grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
-.chart-card--hero {
-  grid-column: 1 / -1;
-}
 
-.chart-card--hero .chart-card__box {
-  height: 16rem;
-}
+
+
 
 .chart-card--side {
   grid-column: span 2;
@@ -188,9 +177,7 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .chart-card--side,
-  .chart-card--main,
-  .chart-card--hero {
+  .chart-card--side, .chart-card--main {
     grid-column: 1 / -1;
   }
 }
@@ -290,10 +277,7 @@
   padding: 0.5rem 0.75rem;
 }
 
-.analytics-page .budget-compare .budget-ring {
-  width: 3.25rem;
-  height: 3.25rem;
-}
+
 
 .analytics-page .budget-compare .budget-card__text {
   gap: 0;

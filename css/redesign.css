@@ -1,14 +1,9 @@
-// ----------------------------------------------------------------------------
-// Redesign: bo tròn, mềm hơn cho khung nội dung, thẻ KPI, nút và ô nhập.
-// Không đổi phần đầu trang (thanh trên, điều hướng), ID/class mà JS dùng,
-// transition/animation/keyframes, bảng màu.
-// ----------------------------------------------------------------------------
+/* ----------------------------------------------------------------------------
+   Redesign: bo tròn, mềm hơn cho khung nội dung, thẻ KPI, nút và ô nhập.
+   Không đổi phần đầu trang (thanh trên, điều hướng), ID/class mà JS dùng,
+   transition/animation/keyframes, bảng màu.
+   ---------------------------------------------------------------------------- */
 
-// Thanh trên: khung kính bo tròn nổi trên nền. Không còn đường kẻ ngang dưới thanh.
-.topbar {
-  background: transparent;
-  border-bottom: 0;
-}
 .topbar__inner {
   max-width: calc(80rem - 3rem);
   margin: 0.75rem auto 0;
@@ -23,13 +18,6 @@
 .brand__title { font-size: 1.0625rem; font-weight: 700; letter-spacing: -0.01em; }
 .brand__sub { font-size: 0.75rem; }
 
-// Nhóm tab: viên thuốc.
-.nav-tabs {
-  border-radius: 999px;
-  padding: 0.3rem;
-  background: var(--input);
-  border: 1px solid var(--border);
-}
 .nav-tabs__pill { border-radius: 999px; }
 .nav-tabs .nav-link { border-radius: 999px; }
 .nav-link[aria-current="page"] { color: var(--accent); }
@@ -38,8 +26,6 @@
   .topbar__inner { margin-top: 0.5rem; padding: 0.5rem 0.75rem; border-radius: 1rem; }
 }
 
-// Khung nội dung: bo lớn hơn, khoảng thở rộng hơn.
-.page { gap: 1.25rem; padding: 1.75rem 1.5rem 2.5rem; }
 .panel {
   padding: 1.375rem 1.5rem;
   border-radius: 1.25rem;
@@ -49,8 +35,6 @@
 .panel__title,
 .chart-card__title { font-size: 0.9375rem; letter-spacing: -0.005em; }
 
-// Thẻ KPI: số lớn, nhãn nhỏ, góc bo lớn như mẫu.
-.kpis { gap: 1rem; }
 .kpi {
   padding: 1.125rem 1.25rem 1.0625rem;
   border-radius: 1.25rem;
@@ -66,24 +50,13 @@
 }
 .kpi__note { color: var(--text-3); }
 
-// Nút: viên thuốc, nhấn màu accent.
-.btn { border-radius: 999px; }
 .btn--primary {
   background: var(--accent);
   color: var(--accent-on);
   border-color: transparent;
 }
 
-// Ô nhập: bo tròn đồng bộ với thẻ.
-.form-input,
-.form-select { border-radius: 0.75rem; }
 
-// Trên điện thoại: thu khoảng cách, giữ bo tròn.
-@media (max-width: 640px) {
-  .page { padding: 1.25rem 1rem 2rem; }
-  .panel { padding: 1.125rem; border-radius: 1rem; }
-  .kpi { border-radius: 1rem; }
-}
 
 /* Nhãn tab: khi mở ra thì hiện đủ chữ, không cắt. */
 .topbar.is-expanded .nav-link__label,
@@ -156,35 +129,14 @@ html body .topbar .nav-tabs__pill {
 }
 
 /* ---------- Bước 4: Cài đặt dạng danh sách ---------- */
-.settings-list {
-  padding: 0.5rem 1.5rem;
-  display: flex;
-  flex-direction: column;
-  max-width: 52rem;
-  margin: 0 auto;
-}
-.set-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 1.1rem 0;
-  border-bottom: 1px solid var(--border);
-  flex-wrap: wrap;
-}
-.set-row:last-of-type { border-bottom: 0; }
-.set-row__text { flex: 1 1 16rem; min-width: 0; }
-.set-row__title {
-  margin: 0 0 0.25rem;
-  font-size: 0.9375rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-}
-.set-row__desc { margin: 0; color: var(--text-3); font-size: 0.8125rem; line-height: 1.5; }
-.settings-list > .form-hint { margin: 0.75rem 0 0.25rem; }
-.seg--wrap { flex-wrap: wrap; justify-content: flex-end; }
+
+
+
+
+
+
+
+
 
 /* Công tắc giảm chuyển động. */
 .switch { position: relative; display: inline-flex; cursor: pointer; }
@@ -196,7 +148,7 @@ html body .topbar .nav-tabs__pill {
   background: var(--input);
   border: 1px solid var(--border);
   position: relative;
-  transition: background 0.25s ease, border-color 0.25s ease;
+  transition: background var(--motion-mid) ease, border-color var(--motion-mid) ease;
 }
 .switch__thumb {
   position: absolute;
@@ -207,7 +159,7 @@ html body .topbar .nav-tabs__pill {
   border-radius: 50%;
   background: var(--text-2);
   transform: translateY(-50%);
-  transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1), background 0.25s ease;
+  transition: transform var(--motion-mid) var(--motion-ease), background var(--motion-mid) ease;
 }
 .switch input:checked + .switch__track { background: var(--accent); border-color: transparent; }
 .switch input:checked + .switch__track .switch__thumb { transform: translate(1.25rem, -50%); background: var(--accent-on); }
@@ -267,7 +219,7 @@ html[data-reduce-motion="on"] *::after {
   border-top: 1px solid var(--border);
 }
 .settings__heading + .settings__row { border-top: 0; }
-.settings__row--stack { flex-direction: column; align-items: stretch; }
+
 .settings__text { flex: 1 1 14rem; min-width: 0; }
 .settings__title {
   margin: 0 0 0.25rem;
@@ -301,7 +253,7 @@ html[data-reduce-motion="on"] *::after {
   font: inherit;
   text-align: left;
   cursor: pointer;
-  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  transition: border-color var(--motion-mid) ease, box-shadow var(--motion-mid) ease;
 }
 .palette-card:hover { border-color: var(--text-3); }
 .palette-card[aria-pressed="true"] {
@@ -473,7 +425,7 @@ html[data-reduce-motion="on"] *::after {
 }
 
 /* Sửa lưới bảng màu (v96): bỏ khoảng trống thừa, thẻ không kéo giãn, 2 hàng x 5. */
-.settings__row--stack .settings__text { flex: none; width: 100%; }
+
 .palette-grid {
   grid-template-columns: repeat(5, minmax(0, 1fr));
   align-items: start;
@@ -698,15 +650,5 @@ html body .alert.budget-card {
 .form-grid > .form-group { min-width: 0; }
 
 /* Khoản đọc từ ảnh đã có trong dữ liệu: nhãn nhỏ, không tô màu nhấn. */
-.history-import__tag {
-  display: inline-block;
-  margin-right: 0.375rem;
-  padding: 0 0.5rem;
-  border: 1px solid var(--glass-border);
-  border-radius: 999px;
-  color: var(--text-3);
-  font-size: 0.75rem;
-  line-height: 1.5rem;
-  white-space: nowrap;
-}
+
 .history-import__item.is-saved .history-import__desc { opacity: 0.6; }

@@ -4,16 +4,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-.kpi__value,
-.transaction__amount,
-.money-preview,
-.tool-result__row strong,
-.category-item__amount,
-.budget-card__text,
-.budget-ring__value,
-.kpi__badge,
-.brand__sub,
-.amount-arrow {
+.kpi__value, .transaction__amount, .money-preview, .tool-result__row strong, .category-item__amount, .budget-card__text, .kpi__badge, .brand__sub, .amount-arrow {
   font-variant-numeric: tabular-nums lining-nums;
 }
 

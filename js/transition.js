@@ -1,6 +1,5 @@
 // Chuyển trang trong cùng một tab: thanh kính ở menu trượt tới tab mới, trang cũ mờ dần, rồi mới mở trang mới.
 // Không mở tab mới. Ctrl/Cmd/Shift-click vẫn để trình duyệt xử lý vì đó là thao tác chủ động của người dùng.
-const PAGE_LEAVE_MS = 340; // đủ thời gian để thanh kính trượt xong trước khi đổi trang
 
 function currentNavLink() {
     return document.querySelector('.nav-link[aria-current="page"]');
@@ -58,7 +57,7 @@ function initPageTransitions() {
         }
         body.classList.remove('page-enter');
         body.classList.add('page-leave');
-        setTimeout(() => window.location.assign(href), PAGE_LEAVE_MS);
+        setTimeout(() => window.location.assign(href), motionTokens.ms('mid')); // đủ thời gian để thanh kính trượt xong trước khi đổi trang
     });
 
     // Bấm Quay lại: trình duyệt có thể khôi phục trang đã rời đi với class cũ, nên xóa đi.
@@ -82,7 +81,7 @@ function initPageTransitions() {
 initPageTransitions();
 
 // Thanh kính bám theo tab trong lúc nhãn đang mở rộng hoặc thu gọn (không đổi hiệu ứng chuyển trang).
-function followNavPill(ms = 620) {
+function followNavPill(ms = motionTokens.ms('slow')) {
     const end = performance.now() + ms;
     const step = () => {
         moveNavPill(currentNavLink(), false);

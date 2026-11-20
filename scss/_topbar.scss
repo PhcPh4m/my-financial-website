@@ -58,7 +58,7 @@
   box-shadow: var(--shadow-lift);
   pointer-events: none;
   transform: translateX(0);
-  transition: transform 0.38s cubic-bezier(0.32, 0.72, 0, 1);
+  transition: transform var(--motion-base) var(--motion-ease);
 }
 
 .nav-tabs__pill::after {
@@ -92,23 +92,7 @@
   }
 }
 
-.theme-toggle {
-  width: 2.25rem;
-  height: 2.25rem;
-  display: inline-grid;
-  place-items: center;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: var(--input);
-  color: var(--text-2);
-  cursor: pointer;
-  transition: color var(--motion-fast) ease, border-color var(--motion-fast) ease;
 
-  &:hover {
-    color: var(--text);
-    border-color: var(--border-strong);
-  }
-}
 
 
 /* Tiêu đề thanh trên: chữ gọn, icon không khung, phụ đề mờ. */

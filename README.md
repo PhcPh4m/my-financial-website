@@ -4,7 +4,7 @@ Quản lý Tài chính Cá nhân là một ứng dụng web giúp bạn ghi ché
 
 Ứng dụng là **web tĩnh**: chạy hoàn toàn trên trình duyệt, không có máy chủ, và dữ liệu được lưu ngay trên thiết bị của bạn trong `localStorage`. Không cần đăng ký tài khoản.
 
-**Phiên bản hiện tại: 1.10.19 (bản thử).** Lịch sử thay đổi ở cuối file.
+**Phiên bản hiện tại: 1.10.25 (bản thử).** Lịch sử thay đổi ở cuối file.
 
 ## Có gì trong ứng dụng
 

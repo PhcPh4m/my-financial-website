@@ -176,7 +176,7 @@ svg {
   box-shadow: var(--shadow-lift);
   pointer-events: none;
   transform: translateX(0);
-  transition: transform 0.38s cubic-bezier(0.32, 0.72, 0, 1);
+  transition: transform var(--motion-base) var(--motion-ease);
 }
 .nav-tabs__pill::after {
   content: "";
@@ -205,22 +205,8 @@ svg {
   color: var(--text);
   font-weight: 600;
 }
-.theme-toggle {
-  width: 2.25rem;
-  height: 2.25rem;
-  display: inline-grid;
-  place-items: center;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: var(--input);
-  color: var(--text-2);
-  cursor: pointer;
-  transition: color var(--motion-fast) ease, border-color var(--motion-fast) ease;
-}
-.theme-toggle:hover {
-  color: var(--text);
-  border-color: var(--border-strong);
-}
+
+
 .page {
   width: 100%;
   max-width: 80rem;
@@ -309,9 +295,7 @@ svg {
   padding: 0.3rem 0.65rem;
   font-size: 0.8125rem;
 }
-.btn--full {
-  width: 100%;
-}
+
 .btn-action {
   display: inline-flex;
   align-items: center;
@@ -519,16 +503,7 @@ body {
   font-feature-settings: "kern" 1, "liga" 1;
   -webkit-font-smoothing: antialiased;
 }
-.kpi__value,
-.transaction__amount,
-.money-preview,
-.tool-result__row strong,
-.category-item__amount,
-.budget-card__text,
-.budget-ring__value,
-.kpi__badge,
-.brand__sub,
-.amount-arrow {
+.kpi__value, .transaction__amount, .money-preview, .tool-result__row strong, .category-item__amount, .budget-card__text, .kpi__badge, .brand__sub, .amount-arrow {
   font-variant-numeric: tabular-nums lining-nums;
 }
 .kpi__value {

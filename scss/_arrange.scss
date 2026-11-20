@@ -16,22 +16,13 @@
 }
 
 // Hàng trên cùng cột giữa: thanh ngân sách (trái) và khung thêm giao dịch (phải).
-.main-top {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 1rem;
-  align-items: start;
-  margin-bottom: 1rem;
-}
+
 
 @media (max-width: 1100px) {
-  .main-top {
-    grid-template-columns: minmax(0, 1fr);
-  }
+  
 }
 
 // Trang Công cụ: nhóm thao tác chính và nhóm máy tính phụ, mỗi nhóm có lưới riêng.
-.tools-grid--primary,
 .tools-grid--calc {
   margin-bottom: 0;
 }

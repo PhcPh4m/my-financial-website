@@ -173,8 +173,8 @@
                 <section class="panel tools" aria-label="Thao tác phụ: dữ liệu">
                 <button class="btn" id="exportJsonBtn" type="button"><i data-icon="download"></i> Xuất JSON (backup)</button>
                 <button class="btn" id="exportCsvBtn" type="button"><i data-icon="download"></i> Xuất CSV (Excel)</button>
-                <button class="btn" id="importBtn" type="button"><i data-icon="upload"></i> Nhập JSON / CSV</button>
-                <input type="file" id="importFile" accept=".json,.csv,application/json,text/csv" hidden>
+                <button class="btn" id="importBtn" type="button"><i data-icon="upload"></i> Nhập JSON</button>
+                <input type="file" id="importFile" accept=".json,application/json" hidden>
                 <button class="btn btn--danger tools__end" id="clearDataBtn" type="button"><i data-icon="trash"></i> Xóa toàn bộ dữ liệu</button>
                 </section>
                 </div>
@@ -195,6 +195,11 @@
                 <div class="tab-panel" id="panel-add" role="tabpanel" aria-labelledby="tab-add">
                     <section class="panel form-section" aria-labelledby="formTitle">
                     <h2 class="panel__title" id="formTitle"><i data-icon="plus"></i> Thêm giao dịch</h2>
+                    <div class="seg seg--toggle" id="modeChoice" role="group" aria-label="Loại mục nhập">
+                    <span class="seg__pill" aria-hidden="true"></span>
+                    <button type="button" class="seg__btn" id="modeTxBtn" aria-pressed="true">Giao dịch</button>
+                    <button type="button" class="seg__btn" id="modeLoanBtn" aria-pressed="false">Khoản vay</button>
+                    </div>
                     <div class="quick-add">
                     <label class="form-label" for="quickAddInput">Nhập nhanh</label>
                     <div class="quick-add__row">
@@ -277,6 +282,11 @@
                     </select>
                     <small class="form-error" id="err-status" aria-live="polite"></small>
                     </div>
+                    <div class="form-group form-group--wide">
+                    <label class="form-label"><input type="checkbox" id="personTransfer"> Chuyển cho cá nhân</label>
+                    <input type="text" id="recipient" class="form-input" maxlength="80" placeholder="Tên người nhận" autocomplete="off" hidden>
+                    <small class="form-error" id="err-recipient" aria-live="polite"></small>
+                    </div>
                     </div>
                     <div class="form-actions">
                     <button type="button" class="btn" id="cancelEditBtn" hidden>Hủy sửa</button>
@@ -284,65 +294,92 @@
                     <button type="submit" class="btn btn--primary" id="submitBtn">Thêm giao dịch</button>
                     </div>
                     </form>
+                    <div id="loanForm" hidden>
+            <div class="tool-form">
+            <div class="form-group form-group--wide"><label class="form-label" for="instLender">Công ty tài chính</label><select id="instLender" class="form-select"></select></div>
+            <div class="form-group form-group--wide" id="instOtherGroup" hidden><label class="form-label" for="instOther">Tên công ty (như trong tiêu đề giao dịch)</label><input type="text" id="instOther" class="form-input" maxlength="60" placeholder="VD: Tên như trên sao kê"></div>
+            <div class="form-group"><label class="form-label" for="instPrincipal">Số tiền vay (VND)</label><input type="number" id="instPrincipal" class="form-input" data-money min="1" step="1000" inputmode="numeric" placeholder="VD: 5000000"></div>
+            <div class="form-group"><label class="form-label" for="instPayment">Số tiền trả mỗi kỳ (VND)</label><input type="number" id="instPayment" class="form-input" data-money min="1" step="1" inputmode="numeric" placeholder="VD: 886802"></div>
+            <div class="form-group"><label class="form-label" for="instMonths">Số kỳ</label><input type="number" id="instMonths" class="form-input" min="1" max="360" step="1" inputmode="numeric" placeholder="VD: 7"></div>
+            <div class="form-group"><label class="form-label" for="instFirstDue">Ngày kỳ đầu</label><input type="date" id="instFirstDue" class="form-input"></div>
+            </div>
+            <div class="form-actions"><button type="button" class="btn btn--primary" id="instAddBtn"><i data-icon="plus"></i> Thêm khoản vay</button></div>
+            <p class="form-error" id="instError" aria-live="polite"></p>
+                    </div>
                     </section>
                     </div>
 
                 <div class="tab-panel" id="panel-list" role="tabpanel" aria-labelledby="tab-list" hidden>
-                    <section class="panel" aria-labelledby="filterTitle">
-                    <h2 class="panel__title" id="filterTitle"><i data-icon="search"></i> Tìm kiếm &amp; lọc</h2>
-                    <div class="filters">
-                    <div class="filter-group filter-group--search">
-                    <label class="form-label" for="searchInput">Từ khóa</label>
-                    <input type="search" id="searchInput" class="form-input" placeholder="Tên hoặc danh mục...">
+                                        <section class="panel" id="searchCard" aria-labelledby="filterTitle">
+                                        <h2 class="panel__title" id="filterTitle"><i data-icon="search"></i> Tìm kiếm &amp; lọc</h2>
+                                        <div class="filters__bar">
+                                        <div class="filter-group filter-group--search">
+                                        <label class="form-label" for="searchInput">Từ khóa</label>
+                                        <input type="search" id="searchInput" class="form-input" placeholder="Tên, số tiền, danh mục, ngày...">
+                                        </div>
+                                        <div class="filter-group filter-group--sort">
+                                        <label class="form-label" for="sortSelect">Sắp xếp</label>
+                                        <select id="sortSelect" class="form-select">
+                                        <option value="date-desc">Ngày mới nhất</option>
+                                        <option value="date-asc">Ngày cũ nhất</option>
+                                        <option value="amount-desc">Số tiền giảm dần</option>
+                                        <option value="amount-asc">Số tiền tăng dần</option>
+                                        </select>
+                                        </div>
+                                        <button type="button" class="btn btn--small filters__toggle" id="filterToggleBtn" aria-expanded="false" aria-controls="filterMore"><i data-icon="filter"></i> Bộ lọc</button>
+                                        </div>
+                                        <div class="filters filters-more" id="filterMore" hidden>
+<div class="filter-group">
+                                        <label class="form-label" for="typeFilter">Loại</label>
+                                        <select id="typeFilter" class="form-select">
+                                        <option value="">Tất cả</option>
+                                        <option value="income">Thu nhập</option>
+                                        <option value="expense">Chi tiêu</option>
+                                        </select>
+                                        </div>
+                                        <div class="filter-group">
+                                        <label class="form-label" for="categoryFilter">Danh mục</label>
+                                        <select id="categoryFilter" class="form-select">
+                                        <option value="">Tất cả</option>
+                                        </select>
+                                        </div>
+                                        <div class="filter-group">
+                                        <label class="form-label" for="statusFilter">Trạng thái</label>
+                                        <select id="statusFilter" class="form-select">
+                                        <option value="">Tất cả</option>
+                                        <option value="completed">Hoàn thành</option>
+                                        <option value="pending">Chưa thanh toán</option>
+                                        </select>
+                                        </div>
+                                        <div class="filter-group">
+                                        <label class="form-label" for="monthFilter">Tháng</label>
+                                        <input type="month" lang="en" id="monthFilter" class="form-input">
+                                        </div>
+                                                            </div>
+                                        <div class="filters__footer">
+                                        <span id="listCount">Hiển thị 0 giao dịch</span>
+                                        <button type="button" class="btn btn--small" id="clearFiltersBtn">Xóa bộ lọc</button>
+                                        </div>
+                                        </section>
+                                        <section class="panel list-card" id="listCard" aria-labelledby="listTitle">
+                    <div class="list-card__head">
+                    <h2 class="panel__title" id="listTitle"><i data-icon="credit-card"></i> <span id="listTitleText">Danh sách giao dịch</span></h2>
+                    <div class="seg seg--compact" id="listChoice" role="group" aria-label="Xem trong danh sách">
+                    <span class="seg__pill" aria-hidden="true"></span>
+                    <button type="button" class="seg__btn" id="listModeTxBtn" aria-pressed="true">Giao dịch</button>
+                    <button type="button" class="seg__btn" id="listModeLoanBtn" aria-pressed="false">Khoản trả góp</button>
                     </div>
-                    <div class="filter-group">
-                    <label class="form-label" for="typeFilter">Loại</label>
-                    <select id="typeFilter" class="form-select">
-                    <option value="">Tất cả</option>
-                    <option value="income">Thu nhập</option>
-                    <option value="expense">Chi tiêu</option>
-                    </select>
                     </div>
-                    <div class="filter-group">
-                    <label class="form-label" for="categoryFilter">Danh mục</label>
-                    <select id="categoryFilter" class="form-select">
-                    <option value="">Tất cả</option>
-                    </select>
+                    <div class="loans-section list-view--loan" hidden>
+                    <div class="loan-list" id="loanList"></div>
                     </div>
-                    <div class="filter-group">
-                    <label class="form-label" for="statusFilter">Trạng thái</label>
-                    <select id="statusFilter" class="form-select">
-                    <option value="">Tất cả</option>
-                    <option value="completed">Hoàn thành</option>
-                    <option value="pending">Chưa thanh toán</option>
-                    </select>
-                    </div>
-                    <div class="filter-group">
-                    <label class="form-label" for="monthFilter">Tháng</label>
-                    <input type="month" lang="en" id="monthFilter" class="form-input">
-                    </div>
-                    <div class="filter-group">
-                    <label class="form-label" for="sortSelect">Sắp xếp</label>
-                    <select id="sortSelect" class="form-select">
-                    <option value="date-desc">Ngày mới nhất</option>
-                    <option value="date-asc">Ngày cũ nhất</option>
-                    <option value="amount-desc">Số tiền giảm dần</option>
-                    <option value="amount-asc">Số tiền tăng dần</option>
-                    </select>
-                    </div>
-                    </div>
-                    <div class="filters__footer">
-                    <span id="listCount">Hiển thị 0 giao dịch</span>
-                    <button type="button" class="btn btn--small" id="clearFiltersBtn">Xóa bộ lọc</button>
-                    </div>
-                    </section>
-                    <section class="panel transactions-section" aria-labelledby="listTitle">
-                    <h2 class="panel__title" id="listTitle"><i data-icon="credit-card"></i> Danh sách giao dịch</h2>
+                    <div class="transactions-section list-view--tx">
                     <div class="transactions-list" id="transactionsList" aria-live="polite">
                     <div class="empty-state"><i data-icon="inbox"></i> Đang tải...</div>
                     </div>
                     <div class="load-more" id="loadMoreWrap" hidden>
                     <button type="button" class="btn" id="loadMoreBtn">Xem thêm</button>
+                    </div>
                     </div>
                     </section>
                 </div>
@@ -505,6 +542,9 @@
     <script src="js/calculations.js"></script>
     <script src="js/import-export.js"></script>
     <script src="js/calc.js"></script>
+    <script src="js/loans.js"></script>
+    <script src="js/bank-rates.js"></script>
+    <script src="js/loan-form.js"></script>
     <script src="js/quickadd.js"></script>
     <script src="js/api.js"></script>
     <script src="js/recurring-split.js"></script>

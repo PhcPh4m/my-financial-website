@@ -132,7 +132,7 @@ function getTotalAssets() {
 }
 
 function getTotalDebts() {
-    return readDebts().reduce((sum, d) => sum + d.balance, 0);
+    return readDebts().reduce((sum, d) => sum + d.balance, 0) + getActiveLoanDebt();
 }
 
 // Tạo các giao dịch còn thiếu từ quy tắc định kỳ, từ tháng bắt đầu tới tháng hiện tại.

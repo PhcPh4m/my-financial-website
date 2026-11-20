@@ -9,30 +9,6 @@ function readNumber(id) {
     return Number.isFinite(n) ? n : null;
 }
 
-function setResult(id, lines) {
-    const box = $(id);
-    box.replaceChildren();
-    lines.forEach(([label, value, tone]) => {
-        const row = document.createElement('div');
-        row.className = 'tool-result__row' + (tone ? ` tool-result__row--${tone}` : '');
-        const l = document.createElement('span');
-        l.textContent = label;
-        const v = document.createElement('strong');
-        v.textContent = value;
-        row.append(l, v);
-        box.appendChild(row);
-    });
-}
-
-function setMessage(id, text) {
-    const box = $(id);
-    box.replaceChildren();
-    const p = document.createElement('p');
-    p.className = 'form-hint';
-    p.textContent = text;
-    box.appendChild(p);
-}
-
 // MỤC TIÊU TIẾT KIỆM
 
 // Gợi ý tiết kiệm mỗi tháng: trung bình chênh lệch thu chi của tối đa 3 tháng gần nhất có dữ liệu.
@@ -212,7 +188,7 @@ function bindHelpToggles() {
             anim = body.animate([
                 { height: from + 'px', opacity: opening ? 0 : 1, transform: `translateY(${opening ? -6 : 0}px)` },
                 { height: to + 'px', opacity: opening ? 1 : 0, transform: `translateY(${opening ? 0 : -6}px)` }
-            ], { duration: 260, easing: 'cubic-bezier(0.2, 0.7, 0.2, 1)' });
+            ], { duration: motionTokens.ms('mid'), easing: motionTokens.ease() });
             anim.onfinish = () => {
                 if (!opening) details.open = false;
                 closing = false;
@@ -233,6 +209,10 @@ onAppReady(() => {
     ['compPrincipal', 'compMonthly', 'compRate', 'compYears', 'compInflation'].forEach((id) => $(id).addEventListener('input', updateCompound));
     ['loanPrincipal', 'loanRate', 'loanMonths'].forEach((id) => $(id).addEventListener('input', updateLoan));
     fillLoanSources();
+    fillLoanPick();
+    $('loanPick').addEventListener('change', applyLoanPick);
+    ['loanPrincipal', 'loanPayment', 'loanMonths', 'loanRate', 'loanMode'].forEach((id) => $(id).addEventListener('input', clearLoanPick));
+    $('loanMode').addEventListener('change', clearLoanPick);
     $('loanSource').addEventListener('change', updateLoanSource);
     $('loanMode').addEventListener('change', updateLoanMode);
     $('loanPayment').addEventListener('input', updateLoan);
@@ -245,3 +225,69 @@ onAppReady(() => {
     updateTax();
     bindHelpToggles();
 });
+
+// VAY TRẢ GÓP ĐỀU: đọc khoản đã thêm ở trang Giao dịch, điền sẵn số liệu và vẽ bảng từng kỳ.
+function fillLoanPick() {
+    const select = $('loanPick');
+    select.innerHTML = '<option value="">-- Nhập tay --</option>';
+    readLoans().forEach((loan) => {
+        const opt = document.createElement('option');
+        opt.value = loan.id;
+        opt.textContent = `${loan.lenderName} · ${formatCurrency(loan.principal)} · ${loan.months} kỳ`;
+        select.appendChild(opt);
+    });
+}
+
+function applyLoanPick() {
+    const loan = readLoans().find((l) => l.id === $('loanPick').value);
+    if (loan) {
+        $('loanPrincipal').value = loan.principal;
+        $('loanPayment').value = loan.payment;
+        $('loanMonths').value = loan.months;
+        $('loanMode').value = 'payment';
+        updateLoanMode();
+    }
+    renderLoanSchedule();
+}
+
+// Khi người dùng tự sửa số liệu thì bỏ chọn khoản đã thêm, vì bảng không còn khớp.
+function clearLoanPick() {
+    $('loanPick').value = '';
+    renderLoanSchedule();
+}
+
+function renderLoanSchedule() {
+    const box = $('loanSchedule');
+    const loan = readLoans().find((l) => l.id === $('loanPick').value);
+    const rate = loan ? solveMonthlyRate(loan.principal, loan.payment, loan.months) : null;
+    if (!loan || rate === null) {
+        box.hidden = true;
+        box.innerHTML = '';
+        return;
+    }
+    const paidCount = loanProgress(loan, getTransactions()).paidCount;
+    let balance = loan.principal;
+    const rows = [];
+    for (let k = 0; k < loan.months; k++) {
+        const interest = balance * rate;
+        const principalPart = loan.payment - interest;
+        balance = Math.max(0, balance - principalPart);
+        const paid = k < paidCount;
+        rows.push(`<tr class="${paid ? 'is-paid' : ''}">
+            <td>${k + 1}</td>
+            <td>${formatDate(loanDueDate(loan.firstDue, k))}</td>
+            <td>${formatCurrency(Math.round(loan.payment))}</td>
+            <td>${formatCurrency(Math.round(interest))}</td>
+            <td>${formatCurrency(Math.round(principalPart))}</td>
+            <td>${formatCurrency(Math.round(balance))}</td>
+            <td>${paid ? 'Đã tick' : 'Chưa tick'}</td>
+        </tr>`);
+    }
+    box.hidden = false;
+    box.innerHTML = `
+        <table class="loan-schedule">
+            <thead><tr><th>Kỳ</th><th>Ngày</th><th>Tiền trả</th><th>Lãi</th><th>Gốc</th><th>Còn lại sau kỳ</th><th>Trạng thái</th></tr></thead>
+            <tbody>${rows.join('')}</tbody>
+        </table>
+        <p class="form-hint">Lãi suất ước tính ${(rate * 1200).toFixed(2)}%/năm, suy từ số tiền trả mỗi kỳ. Đây không phải lãi thật của công ty.</p>`;
+}

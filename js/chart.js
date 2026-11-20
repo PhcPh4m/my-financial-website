@@ -88,7 +88,7 @@ function drawPieChart(canvasId, labels, values) {
             responsive: true,
             maintainAspectRatio: false,
             cutout: '58%',
-            animation: { duration: 700, easing: 'easeOutCubic' },
+            animation: { duration: motionTokens.ms('slow'), easing: 'easeOutCubic' },
             plugins: {
                 legend: { ...legendStyle('right'), labels: { ...legendStyle('right').labels, padding: 12, boxWidth: 8, boxHeight: 8, font: { size: 12 } } },
                 tooltip: tooltipStyle({
@@ -125,7 +125,7 @@ function drawColumnChart(canvasId, labels, incomes, expenses) {
             responsive: true,
             maintainAspectRatio: false,
             interaction: { mode: 'index', intersect: false },
-            animation: { duration: 700, easing: 'easeOutCubic' },
+            animation: { duration: motionTokens.ms('slow'), easing: 'easeOutCubic' },
             plugins: {
                 legend: legendStyle('top'),
                 tooltip: tooltipStyle({
@@ -184,7 +184,7 @@ function drawDailyBarChart(canvasId, labels, values) {
             responsive: true,
             maintainAspectRatio: false,
             animation: {
-                duration: 900,
+                duration: motionTokens.ms('slow'),
                 easing: 'easeOutCubic',
                 delay: (ctx) => (ctx.type === 'data' ? ctx.dataIndex * 14 : 0)
             },

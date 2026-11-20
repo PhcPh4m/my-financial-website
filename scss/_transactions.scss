@@ -20,17 +20,7 @@
   overscroll-behavior: contain;
 }
 
-.layout__aside {
-  position: sticky;
-  top: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  max-height: calc(100vh - 2rem);
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  min-width: 0;
-}
+
 
 .layout__main {
   min-width: 0;
@@ -316,38 +306,11 @@
   display: none;
 }
 
-.progress {
-  position: relative;
-  height: 1.5rem;
-  margin-top: 0.75rem;
-  border-radius: 0.375rem;
-  background: var(--surface-2);
-  overflow: hidden;
-}
 
-.progress__bar {
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 100%;
-  height: 100%;
-  transform-origin: left center;
-  background: var(--accent);
-  transition: transform var(--motion-base) var(--motion-ease);
 
-  &--warning { background: var(--warn); }
-  &--danger { background: var(--expense); }
-}
 
-.progress__label {
-  position: absolute;
-  right: 0.5rem;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 0.75rem;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-  color: var(--text-2);
-}
+
+
 
 // Bộ lọc
 .filters {
@@ -487,41 +450,19 @@
   gap: 1rem;
 }
 
-.budget-ring {
-  --ring-color: var(--income);
-  position: relative;
-  width: 4.5rem;
-  height: 4.5rem;
-  flex-shrink: 0;
-}
 
-.budget-ring--warn { --ring-color: var(--warn); }
-.budget-ring--danger { --ring-color: var(--expense); }
 
-.budget-ring svg {
-  width: 100%;
-  height: 100%;
-  transform: rotate(-90deg);
-}
 
-.budget-ring circle {
-  fill: none;
-  stroke-width: 6;
-  stroke-linecap: round;
-}
 
-.budget-ring__track { stroke: var(--border); }
-.budget-ring__bar { stroke: var(--ring-color); transition: stroke-dashoffset var(--motion-slow) ease; }
 
-.budget-ring__value {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-}
+
+
+
+
+
+
+
+
 
 .budget-card__text {
   min-width: 0;
@@ -531,7 +472,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .budget-ring__bar { transition: none; }
+  
 }
 
 /* Đồng hồ ngân sách bán nguyệt: vạch chia, kim đánh dấu và số ở giữa. Màu theo mức (data-level). */
@@ -634,3 +575,42 @@
 .budget-strip .form-subsection { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; margin: 0; padding: 0; border: 0; }
 .budget-strip .form-subsection__title { margin: 0; }
 .budget-strip .form-hint { margin: 0; flex: 1 1 16rem; }
+
+/* Khoản trả góp: dùng lại hàng giao dịch, thêm phần chọn kỳ và tất toán. */
+.loan-list { display: grid; gap: 0.5rem; }
+.loan-item { display: grid; gap: 0.5rem; }
+.loan-item__remaining { display: grid; justify-items: end; gap: 0.125rem; font-variant-numeric: tabular-nums; }
+.loan-item__label { font-size: 0.75rem; opacity: 0.7; }
+.loan-item__value { font-weight: 500; }
+.loan-item__settled { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem 1rem; padding: 0.5rem 0.75rem; font-size: 0.875rem; border: 1px solid var(--border); border-radius: 10px; }
+.loan-item__settle { display: grid; gap: 0.5rem; padding: 0.75rem; border: 1px solid var(--border); border-radius: 10px; }
+.loan-item__settle[hidden] { display: none; }
+.loan-item__settle:not([hidden]) { animation: entry-in var(--motion-quick) var(--motion-ease) both; }
+.loan-item__settle-row { display: flex; gap: 0.5rem; }
+.loan-item__settle-row .form-select { flex: 1; min-width: 0; }
+.loan-item__ticks summary { cursor: pointer; font-size: 0.875rem; padding: 0.25rem 0; opacity: 0.8; }
+.loan-tick-list { list-style: none; margin: 0; padding: 0.25rem 0 0; display: grid; gap: 0.125rem; }
+.loan-tick label { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; align-items: center; gap: 0.75rem; padding: 0.5rem; border-radius: 8px; cursor: pointer; transition: background-color var(--motion-quick) var(--motion-ease); }
+.loan-tick label:hover { background: var(--surface); }
+.loan-tick__title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.loan-tick__date, .loan-tick__amount { font-size: 0.875rem; font-variant-numeric: tabular-nums; white-space: nowrap; opacity: 0.75; }
+
+/* Buoc 28: khối tìm kiếm thu gọn, thanh chuyển nhỏ, bộ lọc mở bằng nút. */
+html body .seg.seg--compact { align-self: flex-start; width: auto; margin: 0 0 1rem; }
+html body .seg--compact .seg__btn { flex: none; }
+.filters__bar { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 0.75rem; margin-bottom: 0.75rem; }
+.filters__bar .filter-group--search { flex: 1 1 16rem; min-width: 0; }
+.filters__bar .filter-group--sort { flex: 0 0 12rem; }
+.filters__toggle { display: inline-flex; align-items: center; gap: 0.375rem; height: 2.5rem; }
+.filters-more[hidden] { display: none; }
+.filters-more:not([hidden]) { animation: entry-in var(--motion-base) var(--motion-ease) both; }
+
+/* Thẻ danh sách gộp: tiêu đề và thanh chuyển cùng một hàng, nội dung bên dưới. */
+.list-card__head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.75rem; }
+.list-card__head .panel__title { margin: 0; }
+html body .list-card__head .seg.seg--compact { margin: 0; }
+
+/* Đổi Giao dịch / Khoản trả góp: cả khối tìm kiếm và thẻ danh sách hiện dần, trượt lên như khi mở tab. */
+/* Đặt sau tab-in của .tab-panel > .panel (effects/tabs), nên phải đủ độ đặc hiệu để chạy lại được. */
+.tab-panel:not([hidden]) > .panel.card-replay { animation: entry-in var(--motion-base) var(--motion-ease) both; }
+@media (prefers-reduced-motion: reduce) { .tab-panel:not([hidden]) > .panel.card-replay { animation: none; } }

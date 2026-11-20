@@ -118,6 +118,9 @@ function migrateStoredData() {
     ensureDefaultWallet();
 }
 
+// Tên người nhận viết HOA toàn bộ, ví dụ "Thanh toán cho PHAM NGOC TRUONG (MBBank)".
+const PERSON_TITLE_RE = /^Thanh toán cho\s+((?:[A-ZÀ-Ỹ]+\s+)*[A-ZÀ-Ỹ]+)(?=\s*\(|\s*$)/;
+
 // Chuyển dữ liệu cũ sang định dạng mới: mã GD..., và createdDate thay cho createdAt.
 // Chỉ ghi lại kho khi có thay đổi, nên các lần sau không làm gì thêm.
 function migrateTransactions(list) {
@@ -152,6 +155,16 @@ function migrateTransactions(list) {
             const cleanTitle = cleanBankDescription(item.title);
             if (cleanTitle && cleanTitle !== item.title) {
                 item.title = cleanTitle;
+                changed = true;
+            }
+        }
+        // Gán cờ chuyển cho cá nhân một lần: chỉ khi tên người nhận viết HOA toàn bộ (kiểu tên trên sao kê).
+        // Tên cơ sở hay thương hiệu viết thường (Grab, LIEM BARBER) không được gán tự động.
+        if (item.personTransfer === undefined && item.title) {
+            const m = PERSON_TITLE_RE.exec(item.title);
+            if (m) {
+                item.personTransfer = true;
+                item.recipient = m[1].trim().slice(0, 80);
                 changed = true;
             }
         }

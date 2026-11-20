@@ -80,7 +80,7 @@
                 if (anim) anim.cancel();
                 anim = null;
                 applyFinal(opening);
-                if (opening) countUp(body, 900);
+                if (opening) countUp(body, motionTokens.ms('slow'));
                 return;
             }
 
@@ -112,9 +112,9 @@
             anim = body.animate([
                 { height: fromVisH + 'px', paddingTop: opening && fromH < 1 ? '0px' : fromPt, paddingBottom: opening && fromH < 1 ? '0px' : fromPb, opacity: opening ? 0 : 1, transform: `translateY(${opening ? -6 : 0}px)` },
                 { height: toH + 'px', paddingTop: toPt, paddingBottom: toPb, opacity: opening ? 1 : 0, transform: `translateY(${opening ? 0 : -6}px)` }
-            ], { duration: 450, easing: 'cubic-bezier(0.32, 0.72, 0, 1)', fill: 'forwards' });
+            ], { duration: motionTokens.ms('base'), easing: motionTokens.ease(), fill: 'forwards' });
 
-            if (opening) countUp(body, 900);
+            if (opening) countUp(body, motionTokens.ms('slow'));
             const current = anim;
             current.onfinish = () => {
                 current.cancel();
@@ -124,5 +124,10 @@
         });
     }
 
-    document.querySelectorAll('details[data-animate]').forEach(bind);
+    // Gắn cho các khối được vẽ sau này (danh sách khoản trả góp). Mỗi khối chỉ gắn một lần.
+    function bindAll(root) {
+        root.querySelectorAll('details[data-animate]:not([data-bound])').forEach((d) => { d.dataset.bound = '1'; bind(d); });
+    }
+    window.bindDetailsAnim = bindAll;
+    bindAll(document);
 })();

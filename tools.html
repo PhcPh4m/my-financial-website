@@ -45,7 +45,7 @@
         <h2 class="section-caption" id="calcTitle">Máy tính nhanh</h2>
         <div class="tools-grid tools-grid--calc" aria-labelledby="calcTitle">
 
-            <section class="panel tool-card" aria-labelledby="taxTitle">
+        <section class="panel tool-card" aria-labelledby="taxTitle">
             <h2 class="panel__title" id="taxTitle"><i data-icon="chart"></i> Thuế thu nhập cá nhân</h2>
             <p class="form-hint">Tính theo tháng: trừ bảo hiểm bắt buộc 10,5%, giảm trừ bản thân và người phụ thuộc, rồi áp thuế lũy tiến.</p>
             <div class="tool-form">
@@ -97,6 +97,7 @@
             <h2 class="panel__title" id="loanTitle"><i data-icon="calendar"></i> Vay trả góp đều</h2>
             <p class="form-hint">Tính số tiền phải trả mỗi tháng theo công thức trả góp đều (gốc và lãi).</p>
             <div class="tool-form">
+            <div class="form-group form-group--wide"><label class="form-label" for="loanPick">Khoản đã thêm</label><select id="loanPick" class="form-select"></select><small class="form-hint">Chọn khoản đã thêm ở trang Giao dịch để điền số liệu và xem bảng từng kỳ.</small></div>
             <div class="form-group form-group--wide"><label class="form-label" for="loanSource">Ngân hàng hoặc công ty tài chính</label><select id="loanSource" class="form-select"></select><small class="form-hint" id="loanSourceInfo" aria-live="polite"></small></div>
             <div class="form-group form-group--wide"><label class="form-label" for="loanMode">Cách tính</label><select id="loanMode" class="form-select"><option value="rate">Tôi biết lãi suất</option><option value="payment">Tôi biết số tiền trả mỗi tháng</option></select></div>
             <div class="form-group"><label class="form-label" for="loanPrincipal">Số tiền vay (VND)</label><input type="number" id="loanPrincipal" class="form-input" data-money min="1" step="1000000" inputmode="numeric" placeholder="VD: 500000000"></div>
@@ -105,6 +106,7 @@
             <div class="form-group form-group--wide"><label class="form-label" for="loanMonths">Số tháng trả</label><input type="number" id="loanMonths" class="form-input" min="1" max="360" step="1" inputmode="numeric" value="60"></div>
             </div>
             <div class="tool-result" id="loanResult" aria-live="polite"></div>
+            <div class="loan-schedule-wrap" id="loanSchedule" hidden></div>
             <details class="loan-help">
                 <summary>Các con số này nghĩa là gì?</summary>
                 <div class="loan-help__body"><dl>
@@ -142,6 +144,7 @@
     <script src="js/storage.js"></script>
     <script src="js/calculations.js"></script>
     <script src="js/calc.js"></script>
+    <script src="js/loans.js"></script>
     <script src="js/bank-rates.js"></script>
     <script src="js/tools.js"></script>
 </body>

@@ -69,7 +69,7 @@ function flashSwitch() {
     const root = document.documentElement;
     root.classList.add('is-switching');
     clearTimeout(switchTimer);
-    switchTimer = setTimeout(() => root.classList.remove('is-switching'), 650);
+    switchTimer = setTimeout(() => root.classList.remove('is-switching'), motionTokens.ms('slow'));
 }
 
 // Cập nhật số hiển thị và phần đã kéo của thanh trượt độ mờ.

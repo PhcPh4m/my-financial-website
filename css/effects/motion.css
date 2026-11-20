@@ -1,10 +1,10 @@
 /* Hiệu ứng chuyển động: chuyển trang, modal, thông báo, nút. Chỉnh tại scss/effects/_motion.scss. */
 body.page-enter .page {
-  animation: page-in 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation: page-in var(--motion-base) var(--motion-ease) both;
 }
 
 body.page-leave .page {
-  animation: page-out 0.26s ease-in both;
+  animation: page-out var(--motion-mid) var(--motion-ease) both;
 }
 
 @keyframes page-in {
@@ -70,6 +70,9 @@ body.page-leave .page {
   transform: scale(0.97);
 }
 
+/* Đổi nội dung trong khối (thẻ, form): phần cũ đi theo đúng kiểu chuyển trang lớn (page-out, --motion-mid). !important để thắng entry-in và tab-in. */
+.swap-leave, .tab-panel:not([hidden]) > .panel.swap-leave, .tab-panel:not([hidden]) > .panel.card-replay.swap-leave { animation: page-out var(--motion-mid) var(--motion-ease) both !important; }
+
 @media (prefers-reduced-motion: reduce) {
   .modal.active .modal__content,
   .toast {
@@ -81,11 +84,11 @@ body.page-leave .page {
 }
 
 body.page-enter .brand {
-  animation: brand-in 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) 0.06s both;
+  animation: brand-in var(--motion-base) var(--motion-ease) 0.06s both;
 }
 
 body.page-leave .topbar {
-  animation: topbar-out 0.26s ease-in both;
+  animation: topbar-out var(--motion-mid) var(--motion-ease) both;
 }
 
 @keyframes topbar-in {
@@ -135,16 +138,15 @@ body.page-leave .topbar {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .progress__bar,
   .category-item__fill {
     transition: none;
   }
 }
 
 body.page-enter .topbar {
-  animation: topbar-in 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation: topbar-in var(--motion-base) var(--motion-ease) both;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .budget-ring__bar { transition: none; }
+  
 }

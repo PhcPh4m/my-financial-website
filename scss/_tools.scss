@@ -157,3 +157,9 @@
 }
 
 .loan-help__body { overflow: hidden; }
+
+// Bảng lịch trả góp
+.loan-schedule-wrap { overflow-x: auto; margin-top: 0.75rem; }
+.loan-schedule { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.loan-schedule th, .loan-schedule td { padding: 0.4rem 0.5rem; text-align: left; white-space: nowrap; border-bottom: 1px solid rgba(128, 128, 128, 0.2); }
+.loan-schedule tr.is-paid td { opacity: 0.6; }

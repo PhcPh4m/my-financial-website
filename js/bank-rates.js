@@ -44,7 +44,8 @@ const BANK_RATES = [
     // Công ty tài chính tiêu dùng
     { id: 'fec', name: 'FE Credit', type: 'finance', url: 'https://www.fecredit.com.vn', rateMin: null, rateMax: null, updated: null },
     { id: 'hc', name: 'Home Credit', type: 'finance', url: 'https://www.homecredit.vn', rateMin: null, rateMax: null, updated: null },
-    { id: 'hds', name: 'HD Saison', type: 'finance', url: 'https://www.hdsaison.com.vn', rateMin: null, rateMax: null, updated: null },
+    { id: 'f88', name: 'F88', type: 'finance', url: 'https://f88.vn', rateMin: null, rateMax: null, updated: null },
+  { id: 'hds', name: 'HD Saison', type: 'finance', url: 'https://www.hdsaison.com.vn', rateMin: null, rateMax: null, updated: null },
     { id: 'mcr', name: 'Mcredit', type: 'finance', url: 'https://www.mcredit.com.vn', rateMin: null, rateMax: null, updated: null },
     { id: 'shf', name: 'Shinhan Finance', type: 'finance', url: 'https://www.shinhanfinance.com.vn', rateMin: null, rateMax: null, updated: null }
 ];

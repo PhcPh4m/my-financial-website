@@ -4,6 +4,7 @@ const PAGE_SIZE = 10;
 // Ghi nhớ đang sửa giao dịch nào, đang lọc gì và đang hiện bao nhiêu dòng.
 const state = {
     editingId: null,
+    personTouched: false,
     search: '',
     type: '',
     category: '',
@@ -48,6 +49,12 @@ function bindQuickAdd() {
             $('quickAddError').textContent = parsed.error;
             input.classList.add('is-invalid');
             return;
+        }
+        // Nhập nhanh "Thanh toán cho [tên] (...)" cũng tự gán cờ người nhận.
+        const recipient = suggestRecipient(parsed.title);
+        if (recipient) {
+            parsed.personTransfer = true;
+            parsed.recipient = recipient;
         }
         const saved = addTransaction(parsed);
         if (!saved) {
@@ -113,6 +120,7 @@ function refresh() {
     renderSummary();
     renderBudgetAlert();
     renderList();
+    if (typeof renderLoans === 'function') renderLoans();
 }
 
 // FORM
@@ -158,8 +166,33 @@ function readForm() {
         category: $('category').value,
         status: $('status').value,
         date: $('date').value,
-        walletId: $('wallet').value || DEFAULT_WALLET_ID
+        walletId: $('wallet').value || DEFAULT_WALLET_ID,
+        personTransfer: $('personTransfer').checked,
+        recipient: $('recipient').value.trim()
     };
+}
+
+// Tiêu đề dạng "Thanh toán cho [tên] (...)" được gợi ý là chuyển cho cá nhân. Trả về tên, hoặc null.
+// Cùng quy tắc với luồng nhập từ ảnh. Người dùng vẫn có thể bỏ tick.
+function suggestRecipient(title) {
+    const m = /^Thanh toán cho\s+(.+?)\s*\(/i.exec(String(title ?? ''));
+    return m ? m[1].trim().slice(0, 80) : null;
+}
+
+// Hiện hoặc ẩn ô tên người nhận theo ô tích.
+function syncRecipientVisibility() {
+    $('recipient').hidden = !$('personTransfer').checked;
+    if (!$('personTransfer').checked) $('err-recipient').textContent = '';
+}
+
+// Khi đang gõ tiêu đề, tự tích và điền tên nếu khớp mẫu. Không ghi đè khi người dùng đã tự chọn.
+function suggestPersonFromTitle() {
+    if (state.personTouched) return;
+    const name = suggestRecipient($('title').value);
+    if (!name) return;
+    $('personTransfer').checked = true;
+    if (!$('recipient').value.trim()) $('recipient').value = name;
+    syncRecipientVisibility();
 }
 
 // Hiện chữ đỏ dưới ô nhập sai và tô viền đỏ cho ô đó.
@@ -189,6 +222,10 @@ function enterEditMode(tx) {
     $('status').value = tx.status;
     $('date').value = tx.date;
     populateWallets(tx.walletId);
+    $('personTransfer').checked = Boolean(tx.personTransfer);
+    $('recipient').value = tx.recipient || '';
+    state.personTouched = true;
+    syncRecipientVisibility();
 
     $('formTitle').innerHTML = '<i data-icon="pencil"></i> Sửa giao dịch';
     $('submitBtn').textContent = 'Cập nhật';
@@ -212,7 +249,7 @@ function closeEditModal() {
     const modal = $('editModal');
     if (!modal) return;
     hideModal(modal);
-    setTimeout(restoreTxForm, modal.classList.contains('is-closing') ? 470 : 0);
+    setTimeout(restoreTxForm, modal.classList.contains('is-closing') ? motionTokens.ms('base') : 0);
 }
 
 function restoreTxForm() {
@@ -232,6 +269,8 @@ function exitEditMode() {
     setDefaultDate();
     populateCategories();
     populateWallets();
+    state.personTouched = false;
+    syncRecipientVisibility();
     $('formTitle').innerHTML = '<i data-icon="plus"></i> Thêm giao dịch';
     $('submitBtn').textContent = 'Thêm giao dịch';
     $('cancelEditBtn').hidden = true;
@@ -245,6 +284,13 @@ function handleSubmit(e) {
     const data = readForm();
     const { isValid, errors } = validateTransaction(data);
     showFieldErrors(errors);
+
+    if (data.personTransfer && !data.recipient) {
+        $('err-recipient').textContent = 'Nhập tên người nhận hoặc bỏ tick "Chuyển cho cá nhân".';
+        $('recipient').focus();
+        return;
+    }
+    $('err-recipient').textContent = '';
 
     if (!isValid) {
         const firstInvalid = document.querySelector('.is-invalid');
@@ -270,6 +316,12 @@ function handleSubmit(e) {
 // Gắn "tai nghe" cho form: khi bấm lưu, đổi loại thu/chi, hủy sửa hay làm mới thì hàm tương ứng sẽ chạy.
 function bindForm() {
     $('transactionForm').addEventListener('submit', handleSubmit);
+    $('title').addEventListener('input', suggestPersonFromTitle);
+    $('personTransfer').addEventListener('change', () => {
+        state.personTouched = true;
+        syncRecipientVisibility();
+    });
+    $('recipient').addEventListener('input', () => { state.personTouched = true; });
     $('type').addEventListener('change', () => populateCategories());
     $('cancelEditBtn').addEventListener('click', exitEditMode);
     $('closeEditModal').addEventListener('click', exitEditMode);
@@ -309,7 +361,7 @@ function bindFilters() {
     const onChange = (key, el) => () => {
         state[key] = el.value;
         state.visibleCount = PAGE_SIZE;
-        renderList();
+        renderListViews();
     };
 
     $('searchInput').addEventListener('input', onChange('search', $('searchInput')));
@@ -317,18 +369,38 @@ function bindFilters() {
     $('categoryFilter').addEventListener('change', onChange('category', $('categoryFilter')));
     $('statusFilter').addEventListener('change', onChange('status', $('statusFilter')));
     $('monthFilter').addEventListener('change', onChange('month', $('monthFilter')));
-    $('sortSelect').addEventListener('change', onChange('sort', $('sortSelect')));
+
+    // Sắp xếp dùng chung một ô, nhưng mỗi chế độ giữ lựa chọn riêng.
+    $('sortSelect').addEventListener('change', () => {
+        if (loanView.active) loanView.sort = $('sortSelect').value;
+        else state.sort = $('sortSelect').value;
+        state.visibleCount = PAGE_SIZE;
+        renderListViews();
+    });
+
+    $('filterToggleBtn').addEventListener('click', () => {
+        const more = $('filterMore');
+        const opening = more.hidden;
+        $('filterToggleBtn').setAttribute('aria-expanded', String(opening));
+        if (opening) { more.hidden = false; return; }
+        swapBlock([more], () => { more.hidden = true; });
+    });
 
     $('clearFiltersBtn').addEventListener('click', () => {
         Object.assign(state, { search: '', type: '', category: '', status: '', month: '', sort: 'date-desc', visibleCount: PAGE_SIZE });
         ['searchInput', 'typeFilter', 'categoryFilter', 'statusFilter', 'monthFilter'].forEach((id) => { $(id).value = ''; });
-        $('sortSelect').value = 'date-desc';
-        renderList();
+        if (loanView.active) {
+            loanView.sort = 'next-asc';
+            $('sortSelect').value = 'next-asc';
+        } else {
+            $('sortSelect').value = 'date-desc';
+        }
+        renderListViews();
     });
 
     $('loadMoreBtn').addEventListener('click', () => {
         state.visibleCount += PAGE_SIZE;
-        renderList();
+        renderListViews();
     });
 }
 
@@ -357,6 +429,12 @@ function applyFilters(list) {
 // LIST
 
 // Vẽ danh sách giao dịch lên màn hình, chỉ hiện số dòng được phép.
+// Vẽ lại danh sách giao dịch, và khoản trả góp nếu đang xem chế độ này.
+function renderListViews() {
+    renderList();
+    if (loanView.active) renderLoans();
+}
+
 function renderList() {
     const all = getTransactions();
     const filtered = applyFilters(all);
@@ -590,7 +668,7 @@ function bindToolbar() {
 
     $('exportCsvBtn').addEventListener('click', () => {
         downloadFile(`giao-dich_${toISODate()}.csv`, exportAsCSV(), 'text/csv');
-        showToast('Đã xuất file CSV.');
+        showToast('Đã xuất file CSV ẩn danh.');
     });
 
     $('importBtn').addEventListener('click', () => $('importFile').click());
@@ -602,8 +680,7 @@ function bindToolbar() {
 
         try {
             const text = await file.text();
-            const format = file.name.toLowerCase().endsWith('.json') ? 'json' : 'csv';
-            const { imported, skipped, duplicates } = importTransactions(text, format);
+            const { imported, skipped, duplicates } = importTransactions(text);
             const notes = [];
             if (duplicates) notes.push(`bỏ qua ${duplicates} giao dịch đã có`);
             if (skipped) notes.push(`bỏ qua ${skipped} dòng không hợp lệ`);
@@ -697,15 +774,22 @@ function bindWeather() {
 function showTxTab(name, animate = true) {
     const tabs = Array.from(document.querySelectorAll('.layout__main .tabs__btn'));
     if (!tabs.length) return;
+    if (animate && swapBusy()) return;
+    // Tab và viên trượt đổi ngay, nội dung cũ đi rồi nội dung mới vào, cùng nhịp chuyển trang lớn.
     tabs.forEach((tab) => {
         const on = tab.dataset.tab === name;
         tab.setAttribute('aria-selected', String(on));
         tab.tabIndex = on ? 0 : -1;
     });
-    document.querySelectorAll('.layout__main .tab-panel').forEach((p) => {
-        p.hidden = p.id !== `panel-${name}`;
-    });
     movePill(animate);
+    const showPanels = () => {
+        document.querySelectorAll('.layout__main .tab-panel').forEach((p) => {
+            p.hidden = p.id !== `panel-${name}`;
+        });
+    };
+    if (!animate) { showPanels(); return; }
+    const outgoing = Array.from(document.querySelectorAll('.layout__main .tab-panel')).filter((p) => p.id !== `panel-${name}`);
+    swapBlock(outgoing, showPanels);
 }
 
 // Đặt viên trượt dưới tab đang chọn. animate=false khi tải trang hoặc đổi cỡ màn hình.
@@ -825,12 +909,19 @@ function renderNetWorth() {
         ? 'Tiền trong các ví, sau khi trừ số đang nợ'
         : 'Chưa có khoản nợ, bằng toàn bộ tiền trong các ví';
     const items = readDebts();
-    $('debtList').innerHTML = items.length
+    // Khoản trả góp còn phải trả hiện cùng danh sách nhưng không xóa ở đây. Quản lý ở mục Công cụ.
+    const txs = getTransactions();
+    const loanRows = readLoans().map((l) => ({ l, p: loanProgress(l, txs) })).filter((x) => !x.p.done);
+    $('debtList').innerHTML = (items.length || loanRows.length)
         ? items.map((d) => `
             <li class="debt-row">
                 <span class="debt-row__name">${escapeHtml(d.name)}</span>
                 <span class="debt-row__amount">${formatCurrency(d.balance)}</span>
                 <button type="button" class="btn btn--small btn--danger" data-remove-debt="${escapeHtml(d.id)}">Xóa</button>
+            </li>`).join('') + loanRows.map(({ l, p }) => `
+            <li class="debt-row">
+                <span class="debt-row__name">Trả góp ${escapeHtml(l.lenderName)} (còn ${p.remainingPayments} kỳ)</span>
+                <span class="debt-row__amount">${formatCurrency(p.remainingTotal)}</span>
             </li>`).join('')
         : '<li class="debt-row debt-row--empty">Chưa có khoản nợ.</li>';
 }

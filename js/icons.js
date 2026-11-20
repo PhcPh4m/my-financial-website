@@ -13,6 +13,7 @@ const ICON_PATHS = {
     calendar:     '<rect x="3.5" y="5" width="17" height="15.5" rx="4"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
     folder:       '<path d="M3 8.5a3 3 0 0 1 3-3h3.2c.6 0 1.1.3 1.5.8l1 1.2h6.3a3 3 0 0 1 3 3V17a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3z"/>',
     inbox:        '<path d="M4 13.5 6.5 5.5h11L20 13.5"/><path d="M4 13.5v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4h-4.5l-1.2 2h-4.6l-1.2-2z"/>',
+    filter:       '<path d="M4 5h16l-6 7.5V19l-4-2v-4.5z"/>',
     search:       '<circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/>',
     plus:         '<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>',
     pencil:       '<path d="M4 20l1-4.5L15.5 5a2.1 2.1 0 0 1 3 3L8 18.5z"/><path d="M14 6.5l3 3"/>',

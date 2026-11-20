@@ -33,7 +33,7 @@
         links.forEach((a) => a.addEventListener('click', () => { if (tocNarrow.matches) setCollapsed(true); }));
     }
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const LEAVE_MS = 180;
+    const LEAVE_MS = motionTokens.ms('quick');
     let current = -1;
     let leaveTimer = null;
     let seq = 0;
@@ -73,7 +73,7 @@
         el.style.overflow = 'clip';
         el.style.height = from + 'px';
         void el.offsetHeight;
-        el.style.transition = 'height 0.5s cubic-bezier(0.32, 0.72, 0, 1)';
+        el.style.transition = `height ${motionTokens.ms('base')}ms ${motionTokens.ease()}`;
         el.style.height = to + 'px';
         let done = false;
         const finish = () => {
@@ -86,7 +86,7 @@
             el.removeEventListener('transitionend', finish);
         };
         el.addEventListener('transitionend', finish);
-        setTimeout(finish, 650);
+        setTimeout(finish, motionTokens.ms('slow'));
     }
 
     function enter(i, dir) {
@@ -107,7 +107,7 @@
                 resolve();
             };
             window.addEventListener('scrollend', finish);
-            setTimeout(finish, 450);
+            setTimeout(finish, motionTokens.ms('base'));
         });
     }
 
@@ -173,7 +173,7 @@
     const progressLabel = document.getElementById('guideProgressLabel');
     const progressTrack = progressEl && progressEl.querySelector('.guide-progress__track');
     const PROGRESS_KEY = 'guide_progress_v1';
-    const PAGE_LEAVE_MS = 340;
+    const PAGE_LEAVE_MS = motionTokens.ms('mid');
     const trackProgress = !!progressEl && !(() => { try { return localStorage.getItem('guide_ack_v1'); } catch (e) { return null; } })();
     const visited = new Set();
     let finished = false;
@@ -226,4 +226,18 @@
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => markToc(current));
     show(indexFromHash(), true);
     ready = true;
+})();
+
+// Ghi chú chỉ một dòng thì căn giữa, từ hai dòng trở lên giữ căn trái.
+// ResizeObserver tự đo khi khung được hiện và khi đổi cỡ màn hình, nên không cần gọi lại khi đổi mục.
+(function () {
+    if (!('ResizeObserver' in window)) return;
+    const measure = (el) => {
+        const cs = getComputedStyle(el);
+        const lh = parseFloat(cs.lineHeight) || parseFloat(cs.fontSize) * 1.5;
+        const h = el.getBoundingClientRect().height - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom) - parseFloat(cs.borderTopWidth) - parseFloat(cs.borderBottomWidth);
+        el.classList.toggle('is-single', h > 0 && h <= lh * 1.5);
+    };
+    const ro = new ResizeObserver((entries) => entries.forEach((e) => measure(e.target)));
+    document.querySelectorAll('.guide-note').forEach((el) => ro.observe(el));
 })();

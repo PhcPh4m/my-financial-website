@@ -278,7 +278,7 @@ function hideModal(modal) {
     }
     modal.classList.add('is-closing');
     clearTimeout(modal._closeTimer);
-    modal._closeTimer = setTimeout(() => modal.classList.remove('is-closing'), 460);
+    modal._closeTimer = setTimeout(() => modal.classList.remove('is-closing'), motionTokens.ms('base'));
 }
 
 function closeModal(id) {
@@ -469,7 +469,7 @@ function animateBudgetGauges(root) {
 
         if (reduce) { draw(1); return; }
 
-        const dur = 1000;
+        const dur = motionTokens.ms('slow');
         const start = performance.now();
         const step = (now) => {
             const t = Math.min(1, (now - start) / dur);
@@ -496,7 +496,7 @@ function countTo(el, to, format = formatCurrency) {
         return;
     }
 
-    const dur = 900;
+    const dur = motionTokens.ms('slow');
     const start = performance.now();
     const step = (now) => {
         const t = Math.min(1, (now - start) / dur);
@@ -509,3 +509,27 @@ function countTo(el, to, format = formatCurrency) {
 
 const formatCount = (n) => String(Math.round(n));
 
+// Hiện kết quả công cụ: mỗi dòng là [nhãn, giá trị, tone (good/bad hoặc trống)].
+function setResult(id, lines) {
+    const box = $(id);
+    box.replaceChildren();
+    lines.forEach(([label, value, tone]) => {
+        const row = document.createElement('div');
+        row.className = 'tool-result__row' + (tone ? ` tool-result__row--${tone}` : '');
+        const l = document.createElement('span');
+        l.textContent = label;
+        const v = document.createElement('strong');
+        v.textContent = value;
+        row.append(l, v);
+        box.appendChild(row);
+    });
+}
+
+function setMessage(id, text) {
+    const box = $(id);
+    box.replaceChildren();
+    const p = document.createElement('p');
+    p.className = 'form-hint';
+    p.textContent = text;
+    box.appendChild(p);
+}
