@@ -98,11 +98,25 @@ const HISTORY_MEMORY_KEY = 'history_category_memory';
         return prepareOcrCanvas(img, { minWidth: HISTORY_MIN_WIDTH, maxScale: 2.5 });
     }
 
+    // Trả về tên người nhận nếu tiêu đề có dạng "Thanh toán cho [tên] (...)", ngược lại trả về null.
+    function detectPersonRecipient(desc) {
+        const m = /^Thanh toán cho\s+(.+?)\s*\(/i.exec(desc || '');
+        return m ? m[1].trim() : null;
+    }
+
     function renderList() {
         const wallets = getWallets();
         const walletOptions = (selected) => wallets
             .map((w) => `<option value="${escapeHtml(w.id)}" ${w.id === selected ? 'selected' : ''}>${escapeHtml(w.name)}</option>`)
             .join('');
+        // Dòng "Thanh toán cho [tên] (...)" được gợi ý là chuyển cho cá nhân. Chỉ đoán một lần khi đọc ảnh.
+        items.forEach((it) => {
+            if (it.personTransfer === undefined) {
+                const name = detectPersonRecipient(it.description);
+                it.personTransfer = Boolean(name);
+                it.recipient = name || '';
+            }
+        });
         $('historyList').innerHTML = items.map((it, i) => {
             const cats = getCategoriesFor(it.type);
             // Khoản đã có trong dữ liệu: hiện nhãn và bỏ tick sẵn, để không thêm lại.
@@ -110,9 +124,8 @@ const HISTORY_MEMORY_KEY = 'history_category_memory';
             const checked = it.checked && !saved;
             return `
             <li class="history-import__item${saved ? ' is-saved' : ''}">
-                <input type="checkbox" class="history-import__check" data-i="${i}" data-field="checked" ${checked ? 'checked' : ''} aria-label="Thêm giao dịch này">${saved ? '<span class="history-import__tag">Đã có</span>' : ''}
+                <input type="checkbox" class="history-import__check" data-i="${i}" data-field="checked" ${checked ? 'checked' : ''} aria-label="Thêm giao dịch này">
                 <input type="date" class="form-input" data-i="${i}" data-field="date" value="${it.date || ''}" aria-label="Ngày">
-                <input type="text" class="form-input history-import__desc" data-i="${i}" data-field="description" maxlength="100" value="${escapeHtml(it.description)}" aria-label="Nội dung">
                 <input type="text" inputmode="numeric" class="form-input history-import__amount" data-i="${i}" data-field="amount" value="${it.amount}" aria-label="Số tiền">
                 <select class="form-select" data-i="${i}" data-field="type" aria-label="Thu hoặc chi">
                     <option value="expense" ${it.type === 'expense' ? 'selected' : ''}>Chi</option>
@@ -122,6 +135,9 @@ const HISTORY_MEMORY_KEY = 'history_category_memory';
                     ${cats.map((c) => `<option value="${escapeHtml(c)}" ${c === it.category ? 'selected' : ''}>${escapeHtml(c)}</option>`).join('')}
                 </select>
                 <select class="form-select" data-i="${i}" data-field="walletId" aria-label="Ví">${walletOptions(it.walletId)}</select>
+                <label class="history-import__person"><input type="checkbox" data-i="${i}" data-field="personTransfer" ${it.personTransfer ? 'checked' : ''}> Chuyển cho cá nhân</label>
+                <input type="text" class="form-input history-import__desc" data-i="${i}" data-field="description" maxlength="100" value="${escapeHtml(it.description)}" aria-label="Nội dung">
+                ${it.personTransfer ? `<input type="text" class="form-input history-import__recipient" data-i="${i}" data-field="recipient" maxlength="80" value="${escapeHtml(it.recipient || '')}" placeholder="Tên người nhận" aria-label="Người nhận">` : ''}
             </li>`;
         }).join('');
         updateCount();
@@ -194,6 +210,8 @@ const HISTORY_MEMORY_KEY = 'history_category_memory';
             date: it.date,
             status: 'completed',
             walletId: it.walletId,
+            personTransfer: Boolean(it.personTransfer),
+            recipient: it.personTransfer ? (it.recipient || '') : '',
         })));
         resetPanel();
         refresh();
@@ -225,6 +243,12 @@ const HISTORY_MEMORY_KEY = 'history_category_memory';
                 e.target.value = e.target.value.replace(/\D/g, '');
             }
             if (field === 'walletId') it.walletId = e.target.value;
+            if (field === 'recipient') it.recipient = e.target.value;
+            if (field === 'personTransfer') {
+                it.personTransfer = e.target.checked;
+                renderList();
+                return;
+            }
             if (field === 'category') {
                 it.category = e.target.value;
                 it.manual = true;

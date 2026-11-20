@@ -62,7 +62,7 @@ function cleanBankDescription(text) {
         .replace(/\s+([:,.;])/g, '$1')
         .split(/\s+/)
         .filter(Boolean)
-        .filter((tok) => !/^[a-z]$/.test(tok))                 // chữ thường rời: q, s
+        .filter((tok) => !/^\p{Ll}$/u.test(tok))               // chữ thường rời, kể cả có dấu: q, s, é
         .filter((tok) => /[\p{L}\p{N}]/u.test(tok))            // ký hiệu rời: [ ] ( ) :
         .filter((tok) => !/^\d+[\]\)\}\|]+$/.test(tok));       // số kèm ngoặc: 8]
     return tokens

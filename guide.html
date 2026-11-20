@@ -78,6 +78,7 @@
                         <li><a href="#backup">Sao lưu</a></li>
                         <li><a href="#shortcuts">Phím tắt</a></li>
                         <li><a href="#about">Thông tin ứng dụng</a></li>
+                        <li><a href="#privacy">Quyền riêng tư</a></li>
                         <li><a href="#ai">Phân tích bằng AI</a></li>
                         <li><a href="#trial">Lưu ý khi sử dụng</a></li>
                         <li><a href="#faq">Hỏi đáp</a></li>
@@ -87,6 +88,17 @@
             </nav>
 
             <div class="guide-content">
+                <!-- Thanh tiến trình: chỉ hiện khi người dùng chưa xác nhận đã đọc. Mỗi mục đọc tới sẽ tăng thanh. -->
+                <div class="guide-progress" id="guideProgress" hidden>
+                    <div class="guide-progress__head">
+                        <span class="guide-progress__label" id="guideProgressLabel">Đã đọc 0/0 mục</span>
+                        <span class="guide-progress__hint" id="guideProgressHint" hidden>Hướng dẫn này được mở vì bạn chưa xác nhận đã đọc.</span>
+                    </div>
+                    <div class="guide-progress__track" role="progressbar" aria-label="Tiến độ đọc hướng dẫn" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                        <span class="guide-progress__fill" id="guideProgressFill"></span>
+                    </div>
+                </div>
+
                 <section class="guide-section" id="start">
                     <h2>Bắt đầu trong 3 bước</h2>
                     <p>Nếu bạn chưa từng ghi chép chi tiêu, đừng lo. Chỉ cần làm theo ba bước dưới đây là đủ để app bắt đầu có ích. Mỗi bước mất khoảng một phút.</p>
@@ -270,6 +282,15 @@
                     </ul>
                     <p>Giao dịch, ngân sách và số dư của bạn không được gửi lên máy chủ nào. Nếu bạn xóa dữ liệu trình duyệt, các khoản đã ghi sẽ mất, nên hãy xuất file sao lưu định kỳ.</p>
                     <p>Khi có bản mới, số phiên bản ở trên sẽ thay đổi. Dữ liệu của bạn vẫn được giữ nguyên khi cập nhật, miễn là bạn dùng cùng trình duyệt và cùng địa chỉ.</p>
+                </section>
+
+                <section class="guide-section" id="privacy">
+                    <h2>Quyền riêng tư và tên người khác</h2>
+                    <p>Dữ liệu của bạn chỉ nằm trong trình duyệt này. Phần dưới đây nói về những chỗ có thể lộ thông tin khi bạn xuất file.</p>
+                    <p><strong>File JSON (sao lưu)</strong> chứa đầy đủ mọi thứ: tên giao dịch, số tiền, ngày và ví. Tên giao dịch có thể chứa tên người hoặc tên cơ sở bạn đã chuyển tiền. Đây là dữ liệu gốc của bạn, không đưa file này cho AI hay người khác.</p>
+                    <p><strong>File CSV (phân tích)</strong> hiện vẫn có cột tên giao dịch. Trước khi tải lên dịch vụ AI, hãy xóa cột này trong Excel. Một bản CSV đã ẩn danh sẽ có trong bản sau.</p>
+                    <p><strong>Tên người khác:</strong> khi chuyển tiền cho một cá nhân, bạn có thể ghi tên người đó trong tiêu đề. Nếu không muốn tên đó đi theo dữ liệu, hãy ghi tiêu đề chung như "Chuyển cho shipper".</p>
+                    <p><strong>Tên người nước ngoài:</strong> tính năng nhận diện tên người hiện ưu tiên tên tiếng Việt. Tên nước ngoài chưa được nhận diện tự động, nên nếu gặp trường hợp này, hãy góp ý trong mục Gửi góp ý để chúng tôi ưu tiên sau.</p>
                 </section>
 
                 <section class="guide-section" id="ai">

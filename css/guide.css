@@ -534,3 +534,63 @@ html.js .guide-section.is-leaving {
   .guide-toc.is-collapsed .guide-toc__pill { display: none; }
   .guide-toc__list { margin-top: 0.5rem; }
 }
+
+/* ===== Thanh tiến trình đọc hướng dẫn (người dùng mới) ===== */
+.guide-progress {
+  position: sticky;
+  top: 1rem;
+  z-index: 5;
+  margin: 0 0 1rem;
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--glass-border);
+  border-radius: 1rem;
+  background: var(--glass-strong);
+  -webkit-backdrop-filter: var(--blur);
+  backdrop-filter: var(--blur);
+  box-shadow: var(--shadow-lift);
+}
+.guide-progress[hidden] { display: none; }
+.guide-progress__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+  margin-bottom: 0.625rem;
+}
+.guide-progress__label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text);
+}
+.guide-progress__hint {
+  font-size: 0.8125rem;
+  color: var(--text-3);
+}
+.guide-progress__hint[hidden] { display: none; }
+.guide-progress__track {
+  position: relative;
+  height: 0.5rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--accent-soft);
+}
+.guide-progress__fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  transition: width 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+}
+.guide-progress.is-complete .guide-progress__fill {
+  animation: guide-progress-pulse 0.9s ease-in-out;
+}
+@keyframes guide-progress-pulse {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.35); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .guide-progress__fill { transition: none; }
+  .guide-progress.is-complete .guide-progress__fill { animation: none; }
+}

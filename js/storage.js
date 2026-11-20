@@ -83,7 +83,9 @@ function isStoredTransaction(t) {
         ['income', 'expense'].includes(t.type) &&
         ['completed', 'pending'].includes(t.status) &&
         isValidISODate(t.date) &&
-        (t.walletId === undefined || typeof t.walletId === 'string')
+        (t.walletId === undefined || typeof t.walletId === 'string') &&
+        (t.personTransfer === undefined || typeof t.personTransfer === 'boolean') &&
+        (t.recipient === undefined || typeof t.recipient === 'string')
     );
 }
 
@@ -194,8 +196,10 @@ function nowText(date = new Date()) {
 }
 
 // Dọn dữ liệu cho gọn: chỉ giữ các trường cần thiết và đúng kiểu.
+// Cờ "chuyển cho cá nhân" và tên người nhận chỉ được ghi khi dữ liệu đầu vào có trường đó,
+// để sửa giao dịch từ form (không có trường này) không làm mất cờ đã đặt.
 function normalizeTransaction(data) {
-    return {
+    const out = {
         title: String(data.title ?? '').trim(),
         amount: Math.round(Number(data.amount)),
         type: data.type,
@@ -204,6 +208,11 @@ function normalizeTransaction(data) {
         date: data.date,
         walletId: data.walletId || DEFAULT_WALLET_ID
     };
+    if (typeof data.personTransfer === 'boolean') {
+        out.personTransfer = data.personTransfer;
+        out.recipient = data.personTransfer ? String(data.recipient ?? '').trim().slice(0, 80) : '';
+    }
+    return out;
 }
 
 // Tìm một giao dịch theo mã. Không có thì trả về rỗng.
